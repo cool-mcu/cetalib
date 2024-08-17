@@ -2,7 +2,7 @@
 
 cetalib is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit)
 
-[<img src="cool-mcu/cetalib/blob/main/assets/arduino-ide-cetalib-code-completion.png?raw=true" width="500px">](https://www.cool-mcu.com/pages/robot-kit)
+[<img src="./assets/pico-iot-robot-complete-hi-res.jpg?raw=true" width="500px">](https://www.cool-mcu.com/pages/robot-kit)
 
 This robot and library support the learning objectives of our [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
 
@@ -50,7 +50,7 @@ float distance = myRobot->rangefinder->get_distance();
 ```
 The autocomplete feature of the Arduino 2.x IDE automatically lists all available functions for a specific module, simplifying the coding process:
 
-[<img src="assets/arduino-ide-cetalib-code-completion.png?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
+[<img src="./assets/arduino-ide-cetalib-code-completion.png?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
 
 # Documentation
 
