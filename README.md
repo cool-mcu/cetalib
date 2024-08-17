@@ -1,12 +1,12 @@
 # cetalib Library for Arduino
 
-cetalib is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit)
+**cetalib** is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit)
 
 [<img src="./assets/pico-iot-robot-complete-hi-res.JPG?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
 
 This robot and library support the learning objectives of our [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
 
-## Primary Modules of the Library
+## Primary Modules in the Library
 * [board](https://github.com/cool-mcu/cetalib/blob/main/docs/board.md)
   * Provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER
 * [diffDrive](https://github.com/cool-mcu/cetalib/blob/main/docs/diffDrive.md)
@@ -23,6 +23,9 @@ This robot and library support the learning objectives of our [RPi Pico Robotics
   * Provides basic functions for controlling a SG92R Servo motor
 
 # Dependencies
+
+The following libraries and cores need to be installed into your Arduino environment:
+
 * [ArduinoMqttClient](https://github.com/arduino-libraries/ArduinoMqttClient)
 * [ArduinoJson](https://github.com/bblanchon/ArduinoJson)
 * [Arduino_LSM6DSOX](https://github.com/arduino-libraries/Arduino_LSM6DSOX)
@@ -30,10 +33,10 @@ This robot and library support the learning objectives of our [RPi Pico Robotics
 
 # Installation
 
-We recommend use of [Arduino IDE v2.x](https://www.arduino.cc/en/software)
+We recommend using [Arduino IDE v2.x](https://www.arduino.cc/en/software) with this library.
 
-1. Install dependent Core and Libraries in Arduino
-2. Clone/download a .zip file of the repository
+1. Install dependent Core and Libraries into your Arduino environment
+2. Clone/download a .zip file of this repository
 3. [Import the .zip library into Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries/#importing-a-zip-library) 
 
 # Using the Library
@@ -42,7 +45,7 @@ To use this library:
 // Include the library
 #include <cetalib.h>
 
-// Define & initialize a pointer to the CETALIB functions
+// Define & initialize a pointer to the CETALIB INTERFACE functions
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
 // Access a function in a specific module
