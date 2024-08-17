@@ -11,31 +11,29 @@ Pico WH GPIO Pin Connections:
 
 For detailed description of robot components, schematic and step-by-step robot assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
-Methods:
+## Methods:
 * [initialize()](<#void-initializevoid>)
 * [tasks()](<#void-tasksvoid>)
 * [led_on()](<#void-led_onvoid>)
 
-## Methods
-
-### `void initialize(void)`
+## `void initialize(void)`
 
 Initialize pin settings and module state variables. Must be called once in Setup() before use.
 
-#### Syntax
+### Syntax
 
 ```c++
 myRobot->board->initialize();
 ```
-#### Parameters
+### Parameters
 
 None.
 
-#### Returns
+### Returns
 
 None.
 
-#### Example
+### Example
 
 ```c++
 #include <cetalib.h>
@@ -51,31 +49,30 @@ void loop() {
 }
 ```
 
-#### See also
+### See also
 
 * [initialize()](<#void-initializevoid>)
 * [tasks()](<#void-tasksvoid>)
 * [led_on()](<#void-led_onvoid>)
 
----
-### `void tasks(void)`
+## `void tasks(void)`
 
 Run all background tasks to maintain LED and SWITCH state.
 
-#### Syntax
+### Syntax
 
 ```c++
 myRobot->board->tasks();
 ```
-#### Parameters
+### Parameters
 
 None.
 
-#### Returns
+### Returns
 
 None.
 
-#### Example
+### Example
 
 ```c++
 #include <cetalib.h>
@@ -94,7 +91,7 @@ void loop() {
 }
 ```
 
-#### See also
+### See also
 
 * [initialize()](<#void initialize(void)>)
 * [readAcceleration()](#readacceleration)
@@ -103,25 +100,25 @@ void loop() {
 * [gyroscopeAvailable()](#gyroscopeavailable)
 * [accelerationSampleRate()](#accelerationsamplerate)
 * [gyroscopeSampleRate()](#gyroscopesamplerate)
----
-### `void led_on(void)`
+
+## `void led_on(void)`
 
 Turn on the USER LED.
 
-#### Syntax
+### Syntax
 
 ```c++
 myRobot->board->led_on();
 ```
-#### Parameters
+### Parameters
 
 None.
 
-#### Returns
+### Returns
 
 None.
 
-#### Example
+### Example
 
 ```c++
 #include <cetalib.h>
@@ -139,8 +136,7 @@ void loop() {
   delay(1000);
 }
 ```
-
-#### See also
+### See also
 
 * [initialize()](<#void initialize(void)>)
 * [readAcceleration()](#readacceleration)
