@@ -2,16 +2,19 @@
 
 This module provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER on the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit)
 
+<img src="../assets/board-assembly.JPG?raw=true">
+
 Pico WH GPIO Pin Connections:
 * GP14: USER LED
 * GP15: USER SWITCH
 * GP28/ADC2: USER POTENTIOMETER
 
-For detailed schematic and step-by-step robot assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
+For detailed description of robot components, schematic and step-by-step robot assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
 Methods:
-* [initialize()](<#void initialize(void)>)
-* [tasks()](<#void tasks(void)>)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
 
 ## Methods
 
@@ -50,13 +53,9 @@ void loop() {
 
 #### See also
 
-* [initialize()](<#void initialize(void)>)
-* [tasks()](<#void tasks(void)>)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
 
 ---
 ### `void tasks(void)`
@@ -92,6 +91,52 @@ void loop() {
   if (myRobot->board->is_button_pressed()) {
     myRobot->board->led_toggle();
   }
+}
+```
+
+#### See also
+
+* [initialize()](<#void initialize(void)>)
+* [readAcceleration()](#readacceleration)
+* [readGyroscope()](#readgyroscope)
+* [accelerationAvailable()](#accelerationavailable)
+* [gyroscopeAvailable()](#gyroscopeavailable)
+* [accelerationSampleRate()](#accelerationsamplerate)
+* [gyroscopeSampleRate()](#gyroscopesamplerate)
+---
+### `void led_on(void)`
+
+Turn on the USER LED.
+
+#### Syntax
+
+```c++
+myRobot->board->led_on();
+```
+#### Parameters
+
+None.
+
+#### Returns
+
+None.
+
+#### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+}
+
+void loop() {
+  myRobot->board->led_on();
+  delay(100);
+  myRobot->board->led_off();
+  delay(1000);
 }
 ```
 
