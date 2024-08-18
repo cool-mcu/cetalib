@@ -15,10 +15,13 @@ For detailed description of robot components, schematic and step-by-step robot a
 * [initialize()](<#void-initializevoid>)
 * [tasks()](<#void-tasksvoid>)
 * [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
 
 ## `void initialize(void)`
 
-Initialize pin settings and module state variables. Must be called once in Setup() before use.
+Initialize pin settings and module state variables. Must be called once in setup() before use.
 
 ### Syntax
 
@@ -54,10 +57,11 @@ void loop() {
 * [initialize()](<#void-initializevoid>)
 * [tasks()](<#void-tasksvoid>)
 * [led_on()](<#void-led_onvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
 
 ## `void tasks(void)`
 
-Run all background tasks to maintain LED and SWITCH state.
+Run all background tasks to maintain LED and SWITCH state for certain methods. Must be called regularly in the loop() function.
 
 ### Syntax
 
@@ -134,6 +138,137 @@ void loop() {
   delay(100);
   myRobot->board->led_off();
   delay(1000);
+}
+```
+### See also
+
+* [initialize()](<#void initialize(void)>)
+* [readAcceleration()](#readacceleration)
+* [readGyroscope()](#readgyroscope)
+* [accelerationAvailable()](#accelerationavailable)
+* [gyroscopeAvailable()](#gyroscopeavailable)
+* [accelerationSampleRate()](#accelerationsamplerate)
+* [gyroscopeSampleRate()](#gyroscopesamplerate)
+
+## `void led_off(void)`
+
+Turn off the USER LED.
+
+### Syntax
+
+```c++
+myRobot->board->led_of();
+```
+### Parameters
+
+None.
+
+### Returns
+
+None.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+}
+
+void loop() {
+  myRobot->board->led_on();
+  delay(100);
+  myRobot->board->led_off();
+  delay(1000);
+}
+```
+### See also
+
+* [initialize()](<#void initialize(void)>)
+* [readAcceleration()](#readacceleration)
+* [readGyroscope()](#readgyroscope)
+* [accelerationAvailable()](#accelerationavailable)
+* [gyroscopeAvailable()](#gyroscopeavailable)
+* [accelerationSampleRate()](#accelerationsamplerate)
+* [gyroscopeSampleRate()](#gyroscopesamplerate)
+
+## `void led_toggle(void)`
+
+Toggle the USER LED state.
+
+### Syntax
+
+```c++
+myRobot->board->led_toggle();
+```
+### Parameters
+
+None.
+
+### Returns
+
+None.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+}
+
+void loop() {
+  myRobot->board->led_toggle();
+  delay(100);
+}
+```
+### See also
+
+* [initialize()](<#void initialize(void)>)
+* [readAcceleration()](#readacceleration)
+* [readGyroscope()](#readgyroscope)
+* [accelerationAvailable()](#accelerationavailable)
+* [gyroscopeAvailable()](#gyroscopeavailable)
+* [accelerationSampleRate()](#accelerationsamplerate)
+* [gyroscopeSampleRate()](#gyroscopesamplerate)
+
+## `void led_blink(int frequency)`
+
+Blink the USER LED at a certain rate.
+
+### Syntax
+
+```c++
+myRobot->board->led_blink(10);  // set the USER LED to blink @ 10 Hz
+```
+### Parameters
+
+* frequency: integer variable defining the blink frequency (range: 1-20 Hz)
+
+### Returns
+
+None.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->board->led_blink(10);
+}
+
+void loop() {
+  myRobot->board->tasks();
 }
 ```
 ### See also
