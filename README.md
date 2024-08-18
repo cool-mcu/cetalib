@@ -51,9 +51,9 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 // Access a function in a specific module
 float distance = myRobot->rangefinder->get_distance();
 ```
-The autocomplete feature of the Arduino 2.x IDE automatically lists all available functions for a specific module, simplifying the coding process:
+The autocomplete feature of the Arduino 2.x IDE automatically lists all available modules, then functions for a specific module, simplifying the coding process:
 
-[<img src="./assets/arduino-ide-cetalib-code-completion.png?raw=true" width="7500px">](https://www.cool-mcu.com/pages/robot-kit)
+[<video src="./assets/arduino-ide-autocomplete.mp4?raw=true" width="640" height="480" controls>]
 
 # Documentation
 

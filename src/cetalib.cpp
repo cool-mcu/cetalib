@@ -21,7 +21,7 @@
 
 /*** Global Variable Declarations *********************************************/
 extern const struct BOARD_INTERFACE BOARD;
-extern const struct MOTOR_INTERFACE MOTOR;
+//extern const struct MOTOR_INTERFACE MOTOR;
 extern const struct REFLECTANCE_INTERFACE REFLECTANCE;
 extern const struct SERVOARM_INTERFACE SERVOARM;
 extern const struct RANGEFINDER_INTERFACE RANGEFINDER;
@@ -31,7 +31,7 @@ extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE;
 
 extern const struct CETALIB_INTERFACE CETALIB = {
   .board = &BOARD,
-  .motor = &MOTOR,
+  //.motor = &MOTOR,
   .reflectance = &REFLECTANCE,
   .servoarm = &SERVOARM,
   .rangefinder = &RANGEFINDER,
