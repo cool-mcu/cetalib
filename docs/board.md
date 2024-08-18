@@ -1,6 +1,6 @@
 # board Module
 
-This module provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER on the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit)
+This module provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER on the [CETA IoT Robot (Kit #18-00019x)](https://www.cool-mcu.com/pages/robot-kit).
 
 <img src="../assets/board-assembly.JPG?raw=true">
 
@@ -18,6 +18,7 @@ For detailed description of robot components, schematic and step-by-step robot a
 * [led_off()](<#void-led_offvoid>)
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
 
 ## `void initialize(void)`
 
@@ -249,11 +250,16 @@ myRobot->board->led_blink(10);  // set the USER LED to blink @ 10 Hz
 ```
 ### Parameters
 
-* frequency: integer variable defining the blink frequency (range: 1-20 Hz)
+* frequency: integer variable defining the blink frequency (range: 1-20 Hz).
 
 ### Returns
 
 None.
+
+### Notes
+
+* Must call tasks() regularly in the main loop().
+* Use led_off() to disable flashing.
 
 ### Example
 
@@ -264,11 +270,65 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
 void setup() {
   myRobot->board->initialize();
-  myRobot->board->led_blink(10);
+  myRobot->board->led_blink(10); // set the USER LED to blink @ 10 Hz
 }
 
 void loop() {
   myRobot->board->tasks();
+  if (myRobot->board->is_button_pressed()) {
+    myRobot->board->led_off();  // turn off USER LED flashing
+  }
+}
+```
+### See also
+
+* [initialize()](<#void initialize(void)>)
+* [readAcceleration()](#readacceleration)
+* [readGyroscope()](#readgyroscope)
+* [accelerationAvailable()](#accelerationavailable)
+* [gyroscopeAvailable()](#gyroscopeavailable)
+* [accelerationSampleRate()](#accelerationsamplerate)
+* [gyroscopeSampleRate()](#gyroscopesamplerate)
+
+## `void led_pattern(int pattern)`
+
+Flash a specific "heartbeat" pattern on the USER LED
+
+### Syntax
+
+```c++
+myRobot->board->led_pattern(1);  // blink the USER LED using heartbeat pattern 1
+```
+### Parameters
+
+* pattern: integer variable defining the hearbeat pattern (patterns: 1-5).
+
+### Returns
+
+None.
+
+### Notes
+
+* Must call tasks() regularly in the main loop().
+* Use led_off() to disable the flashing.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->board->led_pattern(2); // blink the USER LED using heartbeat pattern 2
+}
+
+void loop() {
+  myRobot->board->tasks();
+  if (myRobot->board->is_button_pressed()) {
+    myRobot->board->led_off();  // turn off USER LED flashing
+  }
 }
 ```
 ### See also
