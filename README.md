@@ -53,7 +53,7 @@ float distance = myRobot->rangefinder->get_distance();
 ```
 The autocomplete feature of the Arduino 2.x IDE automatically lists all available modules, then functions for a specific module, simplifying the coding process:
 
-[<video src="./assets/arduino-ide-autocomplete.mp4?raw=true" width="640" height="480" controls>]
+<image src="./assets/arduino-ide-autocomplete.gif?raw=true">
 
 # Documentation
 
