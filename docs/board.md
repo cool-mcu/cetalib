@@ -33,11 +33,11 @@ myRobot->board->initialize();
 ```
 ### Parameters
 
-None.
+* None.
 
 ### Returns
 
-None.
+* None.
 
 ### Example
 
@@ -73,11 +73,11 @@ myRobot->board->tasks();
 ```
 ### Parameters
 
-None.
+* None.
 
 ### Returns
 
-None.
+* None.
 
 ### Example
 
@@ -119,11 +119,11 @@ myRobot->board->led_on();
 ```
 ### Parameters
 
-None.
+* None.
 
 ### Returns
 
-None.
+* None.
 
 ### Example
 
@@ -164,11 +164,11 @@ myRobot->board->led_of();
 ```
 ### Parameters
 
-None.
+* None.
 
 ### Returns
 
-None.
+* None.
 
 ### Example
 
@@ -209,11 +209,11 @@ myRobot->board->led_toggle();
 ```
 ### Parameters
 
-None.
+* None.
 
 ### Returns
 
-None.
+* None.
 
 ### Example
 
@@ -256,7 +256,7 @@ myRobot->board->led_blink(10);  // set the USER LED to blink @ 10 Hz
 
 ### Returns
 
-None.
+* None.
 
 ### Notes
 
@@ -307,7 +307,7 @@ myRobot->board->led_pattern(1);  // blink the USER LED using heartbeat pattern 1
 
 ### Returns
 
-None.
+* None.
 
 ### Notes
 
@@ -354,7 +354,7 @@ bool isButtonPressed = myRobot->board->is_button_pressed();
 ```
 ### Parameters
 
-None.
+* None.
 
 ### Returns
 
@@ -403,7 +403,7 @@ bool isButtonReleased = myRobot->board->is_button_released();
 ```
 ### Parameters
 
-None.
+* None.
 
 ### Returns
 
