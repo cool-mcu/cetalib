@@ -628,7 +628,7 @@ void setup() {
 }
 
 void loop() {
-  potValue = myRobot->board_get_potentiometer();
+  potValue = myRobot->board->get_potentiometer();
   Serial.println(potValue);
   delay(1000);
 }
