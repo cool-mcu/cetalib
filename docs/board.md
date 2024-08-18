@@ -19,6 +19,8 @@ For detailed description of robot components, schematic and step-by-step robot a
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
 
 ## `void initialize(void)`
 
@@ -328,6 +330,104 @@ void loop() {
   myRobot->board->tasks();
   if (myRobot->board->is_button_pressed()) {
     myRobot->board->led_off();  // turn off USER LED flashing
+  }
+}
+```
+### See also
+
+* [initialize()](<#void initialize(void)>)
+* [readAcceleration()](#readacceleration)
+* [readGyroscope()](#readgyroscope)
+* [accelerationAvailable()](#accelerationavailable)
+* [gyroscopeAvailable()](#gyroscopeavailable)
+* [accelerationSampleRate()](#accelerationsamplerate)
+* [gyroscopeSampleRate()](#gyroscopesamplerate)
+
+## `bool is_button_pressed(void)`
+
+Was the USER SWITCH pressed?
+
+### Syntax
+
+```c++
+bool isButtonPressed = myRobot->board->is_button_pressed();
+```
+### Parameters
+
+None.
+
+### Returns
+
+* boolean: TRUE if button was pressed, FALSE if button was not pressed.
+
+### Notes
+
+* Must call tasks() regularly in the main loop().
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+}
+
+void loop() {
+  myRobot->board->tasks();
+  if (myRobot->board->is_button_pressed()) {
+    myRobot->board->led_toggle();
+  }
+}
+```
+### See also
+
+* [initialize()](<#void initialize(void)>)
+* [readAcceleration()](#readacceleration)
+* [readGyroscope()](#readgyroscope)
+* [accelerationAvailable()](#accelerationavailable)
+* [gyroscopeAvailable()](#gyroscopeavailable)
+* [accelerationSampleRate()](#accelerationsamplerate)
+* [gyroscopeSampleRate()](#gyroscopesamplerate)
+
+## `bool is_button_released(void)`
+
+Was the USER SWITCH released?
+
+### Syntax
+
+```c++
+bool isButtonReleased = myRobot->board->is_button_released();
+```
+### Parameters
+
+None.
+
+### Returns
+
+* boolean: TRUE if button was released, FALSE if it wasn't.
+
+### Notes
+
+* Must call tasks() regularly in the main loop().
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+}
+
+void loop() {
+  myRobot->board->tasks();
+  if (myRobot->board->is_button_released()) {
+    myRobot->board->led_toggle();
   }
 }
 ```
