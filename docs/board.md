@@ -21,6 +21,9 @@ For detailed description of robot components, schematic and step-by-step robot a
 * [led_pattern()](<#void-led_patternint-pattern>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `void initialize(void)`
 
@@ -57,10 +60,17 @@ void loop() {
 
 ### See also
 
-* [initialize()](<#void-initializevoid>)
 * [tasks()](<#void-tasksvoid>)
 * [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
 * [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `void tasks(void)`
 
@@ -100,13 +110,17 @@ void loop() {
 
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `void led_on(void)`
 
@@ -145,13 +159,17 @@ void loop() {
 ```
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `void led_off(void)`
 
@@ -190,13 +208,17 @@ void loop() {
 ```
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `void led_toggle(void)`
 
@@ -233,13 +255,17 @@ void loop() {
 ```
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `void led_blink(int frequency)`
 
@@ -284,13 +310,17 @@ void loop() {
 ```
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `void led_pattern(int pattern)`
 
@@ -335,13 +365,17 @@ void loop() {
 ```
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `bool is_button_pressed(void)`
 
@@ -384,13 +418,17 @@ void loop() {
 ```
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
 
 ## `bool is_button_released(void)`
 
@@ -433,10 +471,178 @@ void loop() {
 ```
 ### See also
 
-* [initialize()](<#void initialize(void)>)
-* [readAcceleration()](#readacceleration)
-* [readGyroscope()](#readgyroscope)
-* [accelerationAvailable()](#accelerationavailable)
-* [gyroscopeAvailable()](#gyroscopeavailable)
-* [accelerationSampleRate()](#accelerationsamplerate)
-* [gyroscopeSampleRate()](#gyroscopesamplerate)
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
+
+## `int get_button_level(void)`
+
+Obtain the current pushbutton state.
+
+### Syntax
+
+```c++
+int buttonLevel = myRobot->board->get_button_level();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* integer: 0 if USER SWITCH is pressed, 1 if USER SWITCH is not pressed.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+}
+
+void loop() {
+  if (0 == myRobot->board->get_button_level()) {
+    myRobot->board->led_on();
+  }
+  else {
+    myRobot->board->led_off();
+  }
+}
+```
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
+
+## `void wait_for_button(void)`
+
+Blocking function. Waits for the USER BUTTON to be pressed.
+
+### Syntax
+
+```c++
+myRobot->board->wait_for_button();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* Beware - this is a blocking function!
+* Any LED flashing or blinking function is preserved while waiting for the pushbutton.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->board->wait_for_button(); // block here and wait for the pushbutton press
+  myRobot->board->led_pattern(3);
+}
+
+void loop() {
+  myRobot->board->tasks();  // flash the led pattern
+}
+```
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [get_potentiometer()](<#int-get_potentiometervoid>)
+
+## `int get_potentiometer(void)`
+
+Get current potentiometer reading (0-4095).
+
+### Syntax
+
+```c++
+int potValue = myRobot->board->get_potentiometer();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* integer: Digitized value of current potentiometer voltage (0 - 4095).
+
+### Notes
+
+* Pico input pin GP28/ADC2 is shared with both the potentiometer signal and the LEFT OPTO signal, so ensure that the POTENTIOMETER signal is connected to the ADC2 input before using this function, using a wire jumper or slider switch.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+int potValue;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+}
+
+void loop() {
+  potValue = myRobot->board_get_potentiometer();
+  Serial.println(potValue);
+  delay(1000);
+}
+```
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_pattern()](<#void-led_patternint-pattern>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
