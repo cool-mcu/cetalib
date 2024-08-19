@@ -198,7 +198,7 @@ myRobot->diffDrive->straight(0.2f);
 * Due to manufacturing variations, the motors on the robot will not spin at the same speed given identical effort inputs. 
 * A "Left/Right" effort compensation procedure must be performed to deliver "straight" motion when calling this function.
 
-Run the [diffDrive_set_straight](../examples/diffDrive_set_straight.ino) sketch to calibrate straight motion of the robot. 
+Run the [diffDrive_set_straight](../examples/diffDrive_set_straight/diffDrive_set_straight.ino) sketch to calibrate straight motion of the robot. 
 
 ### Example
 
