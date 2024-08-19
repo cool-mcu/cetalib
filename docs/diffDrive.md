@@ -16,18 +16,9 @@ Pico WH GPIO Pin Connections:
 For a detailed description of differential drive components and functionality, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
-* [initialize()](<#void-initializebool-left_flip_dir,-bool-right_flip_dir>)
-* [tasks()](<#void-tasksvoid>)
-* [led_on()](<#void-led_onvoid>)
-* [led_off()](<#void-led_offvoid>)
-* [led_toggle()](<#void-led_togglevoid>)
-* [led_blink()](<#void-led_blinkint-frequency>)
-* [led_pattern()](<#void-led_patternint-pattern>)
-* [is_button_pressed()](<#bool-is_button_pressedvoid>)
-* [is_button_released()](<#bool-is_button_releasedvoid>)
-* [get_button_level()](<#int-get_button_levelvoid>)
-* [wait_for_button()](<#void-wait_for_buttonvoid>)
-* [get_potentiometer()](<#int-get_potentiometervoid>)
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+
 
 ## `void initialize(bool left_flip_dir, bool right_flip_dir)`
 
@@ -40,12 +31,16 @@ myRobot->diffDrive->initialize(false, false);
 ```
 ### Parameters
 
-* left_flip_dir: boolean variable to set left motor spin direction
-* right_flip_dir: boolean variable to set right motor spin direction
+* **left_flip_dir**: boolean variable to set left motor spin direction
+* **right_flip_dir**: boolean variable to set right motor spin direction
 
-These parameters can compensate for reversed wiring on the motor terminals in software.
+These parameters allow software compensation for reversed wiring on the motor terminals.
 
 ### Returns
+
+* None.
+
+### Notes
 
 * None.
 
@@ -57,24 +52,59 @@ These parameters can compensate for reversed wiring on the motor terminals in so
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
 void setup() {
-  myRobot->board->initialize();
+  // initialize motors to spin in their default forward directions.
+  myRobot->diffDrive->initialize(false, false);
 }
 
 void loop() {
-  // Use the board functions here
+  // Use the other diffDrive functions here
 }
 ```
 
 ### See also
 
-* [tasks()](<#void-tasksvoid>)
-* [led_on()](<#void-led_onvoid>)
-* [led_off()](<#void-led_offvoid>)
-* [led_toggle()](<#void-led_togglevoid>)
-* [led_blink()](<#void-led_blinkint-frequency>)
-* [led_pattern()](<#void-led_patternint-pattern>)
-* [is_button_pressed()](<#bool-is_button_pressedvoid>)
-* [is_button_released()](<#bool-is_button_releasedvoid>)
-* [get_button_level()](<#int-get_button_levelvoid>)
-* [wait_for_button()](<#void-wait_for_buttonvoid>)
-* [get_potentiometer()](<#int-get_potentiometervoid>)
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+
+## `void set_efforts(float leftEffort, float rightEffort)`
+
+Sets the effort (applied voltage) to the motors. The robot will settle to a speed dictated by it's weight, or wheel friction. The range of values can be set from -1 for full effort in reverse, to 0 for no voltage or stopped, to +1 for full effort in the forward direction.
+
+### Syntax
+
+```c++
+myRobot->diffDrive->set_effort(0.20, 0.20);
+```
+### Parameters
+
+* **leftEffort**: float variable to set left motor effort (-1.00 to +1.00)
+* **rightEffort**: float variable to set right motor effort (-1.00 to +1.00)
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->diffDrive->initialize();
+}
+
+void loop() {
+  // Use the diffDrive functions here
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)

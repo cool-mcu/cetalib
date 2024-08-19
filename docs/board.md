@@ -278,7 +278,7 @@ myRobot->board->led_blink(10);  // set the USER LED to blink @ 10 Hz
 ```
 ### Parameters
 
-* frequency: integer variable defining the blink frequency (range: 1-20 Hz).
+* **frequency**: integer variable defining the blink frequency (range: 1-20 Hz).
 
 ### Returns
 
@@ -333,7 +333,7 @@ myRobot->board->led_pattern(1);  // blink the USER LED using heartbeat pattern 1
 ```
 ### Parameters
 
-* pattern: integer variable defining the hearbeat pattern (patterns: 1-5).
+* **pattern**: integer variable defining the hearbeat pattern (patterns: 1-5).
 
 ### Returns
 
@@ -392,7 +392,7 @@ bool isButtonPressed = myRobot->board->is_button_pressed();
 
 ### Returns
 
-* boolean: TRUE if button was pressed, FALSE if button was not pressed.
+* **boolean**: TRUE if button was pressed, FALSE if button was not pressed.
 
 ### Notes
 
@@ -445,7 +445,7 @@ bool isButtonReleased = myRobot->board->is_button_released();
 
 ### Returns
 
-* boolean: TRUE if button was released, FALSE if it wasn't.
+* **boolean**: TRUE if button was released, FALSE if it wasn't.
 
 ### Notes
 
@@ -498,7 +498,7 @@ int buttonLevel = myRobot->board->get_button_level();
 
 ### Returns
 
-* integer: 0 if USER SWITCH is pressed, 1 if USER SWITCH is not pressed.
+* **integer**: 0 if USER SWITCH is pressed, 1 if USER SWITCH is not pressed.
 
 ### Notes
 
@@ -606,7 +606,7 @@ int potValue = myRobot->board->get_potentiometer();
 
 ### Returns
 
-* integer: Digitized value of current potentiometer voltage (0 - 4095).
+* **integer**: Digitized value of current potentiometer voltage (0 - 4095).
 
 ### Notes
 
