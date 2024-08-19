@@ -5,15 +5,15 @@ The [CETA IoT Robot](https://www.cool-mcu.com/pages/robot-kit) is a mobile robot
 * **Set the motor efforts**, which is the average voltage suplied to the motors.
 * **Make point turns** for a desired number of degrees, either clockwise or countercloskwise
 
-The current robot design does not provide wheel speed feedback, so the robot will settle on an arbitrary speed, given a specific effort setting. 
+The current robot design does not provide wheel speed feedback, so the robot will settle on an arbitrary speed, given specific motor effort settings. 
 
-<img src="../assets/board-assembly.JPG?raw=true"><br>
+<img src="../assets/diffDrive-assembly.JPG?raw=true"><br>
   
 Pico WH GPIO Pin Connections:
 * GP4: LEFT MOTOR SERVO SIGNAL
 * GP5: RIGHT MOTOR SERVO SIGNAL
 
-For a detailed description of drive components and functionality, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
+For a detailed description of differential drive components and functionality, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
 * [initialize()](<#void-initializevoid>)
