@@ -19,9 +19,9 @@ For a detailed description of differential drive components, schematics, and fun
 
 ## Methods:
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
-* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+* [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
 * [stop()](<#void-stopvoid>)
-* [straight()](<#void-straightfloat-straightEffort>)
+* [straight()](<#void-straightfloat-straighteffort>)
 
 ## `void initialize(bool left_flip_dir, bool right_flip_dir)`
 
