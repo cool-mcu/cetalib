@@ -18,6 +18,7 @@ For a detailed description of differential drive components and functionality, [
 ## Methods:
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
 * [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+* [stop()](<#void-stopvoid>)
 
 
 ## `void initialize(bool left_flip_dir, bool right_flip_dir)`
@@ -113,6 +114,58 @@ void loop() {
   myRobot->board->tasks();
   if (myRobot->board->is_button_released()) {
     myRobot->diffDrive->set_efforts(0.0f, 0.0f);
+  }
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+
+## `void stop(void)`
+
+Stops the motors. Equivalent to "set_efforts(0.0f, 0.0f)".
+
+### Syntax
+
+```c++
+myRobot->diffDrive->stop();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Drive the robot forward until the USER SWITCH is pressed.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float left_effort = 0.2f;
+float right_effort = 0.2f;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->diffDrive->initialize(false, false);
+  myRobot->diffDrive->set_efforts(left_effort, right_effort);
+}
+
+void loop() {
+  myRobot->board->tasks();
+  if (myRobot->board->is_button_released()) {
+    myRobot->diffDrive->stop();
   }
 }
 ```
