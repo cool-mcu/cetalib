@@ -28,7 +28,7 @@ struct DIFFDRIVE_INTERFACE
   void (*set_efforts)(float leftEffort, float rightEffort);     // Set both motor efforts
   void (*stop)(void);                                           // Stop both motors
   void (*straight)(float straightEffort);                       // Set identical motor efforts and apply compensation for straight motion
-  void (*turn)(float turn_degrees, float turnEffort, int timeoutMs);  // Point-Turn the robot some relative heading, then exit when the heading is reached
+  void (*turn)(float turnDegrees, float turnEffort);            // Point-Turn the robot some relative heading, then exit when the heading is reached
   void (*clear_calibration)(void);                              // Delete EEPROM calibration data
   void (*save_straight_compensation)(float leftRightComp);      // Save straight speed calibration value in EEPROM
 };

@@ -80,7 +80,7 @@ void diffDrive_straight(float straightEffort)
     motor_set_efforts(leftMotorEffort, rightMotorEffort);
 }
 
-void diffDrive_turn(float turn_degrees, float turnEffort, int timeoutMs)
+void diffDrive_turn(float turnDegrees, float turnEffort)
 {
 
 }

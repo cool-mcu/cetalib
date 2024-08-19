@@ -34,7 +34,7 @@ void diffDrive_init(bool left_flip_dir, bool right_flip_dir);       // Initialli
 void diffDrive_set_efforts(float leftEffort, float rightEffort);    // Set both motor efforts
 void diffDrive_stop(void);                                          // Stop both motors
 void diffDrive_straight(float straightEffort);                      // Set identical motor efforts and apply compensation for straight motion
-void diffDrive_turn(float turn_degrees, float turnEffort, int timeoutMs);  // Point-Turn the robot some relative heading, then exit when the heading is reached
+void diffDrive_turn(float turnDegrees, float turnEffort);           // Point-Turn the robot some relative heading, then exit when the heading is reached
 void diffDrive_clear_calibration(void);                             // Delete EEPROM calibration data
 void diffDrive_save_straight_compensation(float leftRightComp);     // Save straight speed calibration value in EEPROM
 #endif /* DIFFDRIVE_H_ */
