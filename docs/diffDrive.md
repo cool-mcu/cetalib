@@ -108,7 +108,7 @@ void setup() {
 }
 
 void loop() {
-  myRobot-board->tasks()
+  myRobot->board->tasks();
   if (myRobot->board->is_button_released()) {
     myRobot->diffDrive->set_efforts(0.0f, 0.0f);
   }
