@@ -45,6 +45,8 @@ myRobot->board->initialize();
 ### Example
 
 ```c++
+// Initialize the board module, then do nothing.
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
