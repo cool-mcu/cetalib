@@ -7,7 +7,7 @@ The [CETA IoT Robot](https://www.cool-mcu.com/pages/robot-kit) is a mobile robot
 
 The current robot design does not provide wheel speed feedback, so the robot will settle on an arbitrary speed, given specific motor effort settings. 
 
-<img src="../assets/diffDrive-assembly.JPG?raw=true"><br>
+<img src="../assets/diffDrive-assembly.jpg?raw=true"><br>
   
 Pico WH GPIO Pin Connections:
 * GP4: LEFT MOTOR SERVO SIGNAL
