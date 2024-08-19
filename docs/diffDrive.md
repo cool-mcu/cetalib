@@ -86,21 +86,32 @@ myRobot->diffDrive->set_effort(0.20, 0.20);
 
 ### Notes
 
-* None.
+* Make sure the battery pack is connected to your robot.
+* Place a small box underneath robot when testing these functions, to lift the robot wheels off the ground!
 
 ### Example
 
 ```c++
+// Drive forward until the USER SWITCH is pressed
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
+float left_effort = 0.2f;
+float right_effort = 0.2f;
+
 void setup() {
-  myRobot->diffDrive->initialize();
+  myRobot->board->initialize();
+  myRobot->diffDrive->initialize(false, false);
+  myRobot->diffDrive->set_efforts(left_effort, right_effort);
 }
 
 void loop() {
-  // Use the diffDrive functions here
+  myRobot-board->tasks()
+  if (myRobot->board->is_button_released()) {
+    myRobot->diffDrive->set_efforts(0.0f, 0.0f);
+  }
 }
 ```
 
