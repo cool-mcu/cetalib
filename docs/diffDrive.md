@@ -19,6 +19,7 @@ For a detailed description of differential drive components and functionality, [
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
 * [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
 * [stop()](<#void-stopvoid>)
+* [straight()](<#void-straightfloat-straightEffort>)
 
 
 ## `void initialize(bool left_flip_dir, bool right_flip_dir)`
@@ -160,6 +161,60 @@ void setup() {
   myRobot->board->initialize();
   myRobot->diffDrive->initialize(false, false);
   myRobot->diffDrive->set_efforts(left_effort, right_effort);
+}
+
+void loop() {
+  myRobot->board->tasks();
+  if (myRobot->board->is_button_released()) {
+    myRobot->diffDrive->stop();
+  }
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+
+## `void straight(float straightEffort)`
+
+Applys effort to both motors, and applies compensation for straight motion.
+
+### Syntax
+
+```c++
+myRobot->diffDrive->straight(0.2f);
+```
+### Parameters
+
+* **straightEffort**: float variable used to set both motor efforts (-1.00 to +1.00)
+
+### Returns
+
+* None.
+
+### Notes
+
+* Due to manufacturing variations, the motors on the robot will not spin at the same speed given identical effort inputs. 
+* A "Left/Right" effort compensation procedure must be performed to deliver "straight" motion when calling this function.
+
+Run the [diffDrive_set_straight](../examples/diffDrive_set_straight.ino) sketch to calibrate straight motion of the robot. 
+
+### Example
+
+```c++
+// Drive the robot straight forward until the USER SWITCH is pressed.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float straight_effort = 0.2f;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->diffDrive->initialize(false, false);
+  myRobot->diffDrive->straight(straight_effort);
 }
 
 void loop() {
