@@ -47,6 +47,8 @@ These parameters allow software compensation for reversed wiring on the motor te
 ### Example
 
 ```c++
+// Initialize the diffDrive module, enabling the default forward direction for the motors.
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -92,7 +94,7 @@ myRobot->diffDrive->set_effort(0.20, 0.20);
 ### Example
 
 ```c++
-// Drive forward until the USER SWITCH is pressed
+// Drive the robot forward until the USER SWITCH is pressed.
 
 #include <cetalib.h>
 
