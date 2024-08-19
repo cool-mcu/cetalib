@@ -92,6 +92,8 @@ myRobot->board->tasks();
 ### Example
 
 ```c++
+// Toggle the USER LED whenever the USER SWITCH is pressed
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -142,6 +144,8 @@ myRobot->board->led_on();
 ### Example
 
 ```c++
+// Blink the USER LED once every second
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -178,7 +182,7 @@ Turn off the USER LED.
 ### Syntax
 
 ```c++
-myRobot->board->led_of();
+myRobot->board->led_off();
 ```
 ### Parameters
 
@@ -191,6 +195,8 @@ myRobot->board->led_of();
 ### Example
 
 ```c++
+// Blink the USER LED once every second
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -240,6 +246,8 @@ myRobot->board->led_toggle();
 ### Example
 
 ```c++
+// Toggle the USER LED every 100mS
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -292,6 +300,8 @@ myRobot->board->led_blink(10);  // set the USER LED to blink @ 10 Hz
 ### Example
 
 ```c++
+// Set USER LED to blink @ 10Hz. Turn it off when USER SWITCH is pressed.
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -347,6 +357,8 @@ myRobot->board->led_pattern(1);  // blink the USER LED using heartbeat pattern 1
 ### Example
 
 ```c++
+// Enable USER LED heartbeat pattern #2. Disable flashing when USER SWITCH pressed.
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -401,6 +413,8 @@ bool isButtonPressed = myRobot->board->is_button_pressed();
 ### Example
 
 ```c++
+// Toggle the USER LED whenever the USER SWITCH is pressed.
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -454,6 +468,8 @@ bool isButtonReleased = myRobot->board->is_button_released();
 ### Example
 
 ```c++
+// Toggle the USER LED whenever the USER SWITCH is released.
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -507,6 +523,8 @@ int buttonLevel = myRobot->board->get_button_level();
 ### Example
 
 ```c++
+// Set USER LED state to match current USER SWITCH state (pressed/released)
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -563,6 +581,8 @@ myRobot->board->wait_for_button();
 ### Example
 
 ```c++
+// Wait for USER SWITCH to be pressed, then enable USER LED flashing pattern #3
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -615,6 +635,8 @@ int potValue = myRobot->board->get_potentiometer();
 ### Example
 
 ```c++
+// Read/Display the USER POTENTIOMETER value every second
+
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
