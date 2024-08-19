@@ -94,7 +94,7 @@ myRobot->board->tasks();
 ### Example
 
 ```c++
-// Toggle the USER LED whenever the USER SWITCH is pressed
+// Toggle the USER LED whenever the USER SWITCH is pressed.
 
 #include <cetalib.h>
 
@@ -146,7 +146,7 @@ myRobot->board->led_on();
 ### Example
 
 ```c++
-// Blink the USER LED once every second
+// Blink the USER LED once every second.
 
 #include <cetalib.h>
 
@@ -197,7 +197,7 @@ myRobot->board->led_off();
 ### Example
 
 ```c++
-// Blink the USER LED once every second
+// Blink the USER LED once every second.
 
 #include <cetalib.h>
 
@@ -248,7 +248,7 @@ myRobot->board->led_toggle();
 ### Example
 
 ```c++
-// Toggle the USER LED every 100mS
+// Toggle the USER LED every 100mS.
 
 #include <cetalib.h>
 
@@ -525,7 +525,7 @@ int buttonLevel = myRobot->board->get_button_level();
 ### Example
 
 ```c++
-// Set USER LED state to match current USER SWITCH state (pressed/released)
+// Set USER LED state to match current USER SWITCH state (pressed/released).
 
 #include <cetalib.h>
 
@@ -583,7 +583,7 @@ myRobot->board->wait_for_button();
 ### Example
 
 ```c++
-// Wait for USER SWITCH to be pressed, then enable USER LED flashing pattern #3
+// Wait for USER SWITCH to be pressed, then enable USER LED flashing pattern #3.
 
 #include <cetalib.h>
 
@@ -637,7 +637,7 @@ int potValue = myRobot->board->get_potentiometer();
 ### Example
 
 ```c++
-// Read/Display the USER POTENTIOMETER value every second
+// Read/Display the USER POTENTIOMETER value every second.
 
 #include <cetalib.h>
 
