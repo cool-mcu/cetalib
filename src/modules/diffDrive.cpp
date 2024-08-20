@@ -82,7 +82,24 @@ void diffDrive_straight(float straightEffort)
 
 void diffDrive_turn(float turnDegrees, float turnEffort)
 {
+    imu_reset_heading();
+    if (turnEffort > 0)
+    {
 
+    }
+    else if (turnEffort < 0)
+    {
+
+    }
+    else
+    {
+        return;
+    }
+    do
+    {
+        imu_tasks();
+    } while (imu_get_heading() < turnDegrees);
+    motor_set_efforts(0, 0);
 }
 
 void diffDrive_clear_calibration(void)

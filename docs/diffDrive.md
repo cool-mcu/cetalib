@@ -15,7 +15,7 @@ Pico WH GPIO Pin Connections:
 * GP18: I2C SDA SIGNAL for ADAFRUIT LSM6DSOX IMU
 * GP19: I2C SCL SIGNAL for ADAFRUIT LSM6DSOX IMU
 
-For a detailed description of differential drive components, schematics, and functionality, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
+For detailed lessons covering differential drive components, schematics, and functionality, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
