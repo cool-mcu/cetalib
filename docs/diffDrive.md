@@ -269,8 +269,8 @@ Run the [imu_get_temperature_heading](../examples/imu_get_temperature_heading/im
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
-float straight_effort = 0.2f;
-float turn_effort = 0.2f;
+float straight_effort = 0.15f;
+float turn_effort = 0.1f;
 float turn_degrees = 90.0f;
 
 void setup() {
@@ -301,6 +301,7 @@ void loop() {
     myRobot->diffDrive->turn(turn_degrees, turn_effort);
     myRobot->diffDrive->straight(straight_effort);
     delay(2000);
+    myRobot->diffDrive->stop();
   }
 }
 ```

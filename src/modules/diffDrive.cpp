@@ -83,8 +83,13 @@ void diffDrive_straight(float straightEffort)
 
 void diffDrive_turn(float turnDegrees, float turnEffort)
 {
+    //unsigned long currentSampleTime, prevSampleTime;
+    //const long sampleInterval = 100;
+    float heading;
     double temp = turnDegrees / 360.0;
     float turn_degrees = 360.0f * float(temp - floor(temp));
+    Serial.print("Turn Degrees: ");
+    Serial.println(turn_degrees);
     imu_reset_heading();
     if (turnEffort > 0)
     {
@@ -103,7 +108,14 @@ void diffDrive_turn(float turnDegrees, float turnEffort)
     do
     {
         imu_tasks();
-    } while (imu_get_heading() < turn_degrees);
+        heading = imu_get_heading();
+        //currentSampleTime = millis();
+        //if ((currentSampleTime - prevSampleTime) >= sampleInterval) {
+        //    prevSampleTime = currentSampleTime;
+        //    Serial.print("Heading: ");
+        //    Serial.println(heading);
+        //}
+    } while (abs(heading) < turn_degrees);
     motor_set_efforts(0, 0);
 }
 
