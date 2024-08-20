@@ -234,7 +234,7 @@ void loop() {
 
 ## `void turn(float turnDegrees, float turnEffort)`
 
-Point-turn the robot some relative heading given in **turnDegrees**, and exit the function when the heading has been reached. **turnEffort** is bounded from -1.00 (turn counterclockwise the relative heading at full effort) to  1.00 (turn clockwise the relative heading at full speed).
+Point-turn the robot some relative heading given in **turnDegrees**, and exit the function when the heading has been reached. **turnEffort** is bounded from -1.00 (turn counterclockwise the relative heading at full effort) to  1.00 (turn clockwise the relative heading at full effort).
 
 Uses the IMU to determine the heading of the robot.
 
@@ -263,7 +263,8 @@ Run the [imu_get_temperature_heading](../examples/imu_get_temperature_heading/im
 
 ```c++
 // Run a square path when the USER SWITCH is pressed.
-// Assumes IMU & straight motion are already calibrated
+// Assumes IMU is already calibrated
+// Motor effort settings are preset to produce "straight" motion by experimentation
 
 #include <cetalib.h>
 
