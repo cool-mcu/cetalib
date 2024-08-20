@@ -22,6 +22,7 @@ For a detailed description of differential drive components, schematics, and fun
 * [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
 * [stop()](<#void-stopvoid>)
 * [straight()](<#void-straightfloat-straighteffort>)
+* [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
 
 ## `void initialize(bool left_flip_dir, bool right_flip_dir)`
 
@@ -231,4 +232,80 @@ void loop() {
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
 * [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
 
-[def]: <#void-straightfloat-straightEffort>
+## `void turn(float turnDegrees, float turnEffort)`
+
+Point-turn the robot some relative heading given in **turnDegrees**, and exit the function when the heading has been reached. **turnEffort** is bounded from -1.00 (turn counterclockwise the relative heading at full effort) to  1.00 (turn clockwise the relative heading at full speed).
+
+Uses the IMU to determine the heading of the robot.
+
+### Syntax
+
+```c++
+myRobot->diffDrive->turn(90, 0.2f); // execute clockwise point-turn with effort of 0.2
+```
+### Parameters
+
+* **turnDegrees**: float variable used to set the relative target heading
+* **turnEffort**: float variable used to set the point-turn effort
+
+### Returns
+
+* None.
+
+### Notes
+
+* IMU must be connected and calibrated.
+* Function blocks while point-turn is executed.
+
+Run the [imu_get_temperature_heading](../examples/imu_get_temperature_heading/imu_get_temperature_heading.ino) sketch to calibrate straight motion of the robot. 
+
+### Example
+
+```c++
+// Run a square path when the USER SWITCH is pressed.
+// Assumes IMU & straight motion are already calibrated
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float straight_effort = 0.2f;
+float turn_effort = 0.2f;
+float turn_degrees = 90.0f;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->diffDrive->initialize(false, false);
+  if (!myRobot->imu->initialize())
+  {
+    myRobot->board->led_pattern(5); // flash the USER LED if IMU not available
+    while (1) {
+      myRobot->board->tasks();
+    }
+  }
+}
+
+void loop() {
+  myRobot->board->tasks();
+  myRobot->imu->tasks();
+  if (myRobot->board->is_button_released()) {
+    myRobot->diffDrive->straight(straight_effort);
+    delay(2000);
+    myRobot->diffDrive->turn(turn_degrees, turn_effort);
+    myRobot->diffDrive->straight(straight_effort);
+    delay(2000);
+    myRobot->diffDrive->turn(turn_degrees, turn_effort);
+    myRobot->diffDrive->straight(straight_effort);
+    delay(2000);
+    myRobot->diffDrive->turn(turn_degrees, turn_effort);
+    myRobot->diffDrive->straight(straight_effort);
+    delay(2000);
+  }
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+
