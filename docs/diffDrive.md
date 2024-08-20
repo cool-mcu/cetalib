@@ -35,8 +35,8 @@ myRobot->diffDrive->initialize(false, false);
 ```
 ### Parameters
 
-* **left_flip_dir**: boolean variable to set left motor spin direction
-* **right_flip_dir**: boolean variable to set right motor spin direction
+* **left_flip_dir**: boolean variable to set left motor spin direction (true, false)
+* **right_flip_dir**: boolean variable to set right motor spin direction (true, false)
 
 These parameters allow software compensation for reversed wiring on the motor terminals.
 
@@ -245,8 +245,8 @@ myRobot->diffDrive->turn(90, 0.2f); // execute clockwise point-turn with effort 
 ```
 ### Parameters
 
-* **turnDegrees**: float variable used to set the relative target heading
-* **turnEffort**: float variable used to set the point-turn effort
+* **turnDegrees**: float variable used to set the relative target heading in degrees (0 to 360)
+* **turnEffort**: float variable used to set the point-turn effort (-1.00 to +1.00)
 
 ### Returns
 
@@ -283,6 +283,7 @@ void setup() {
       myRobot->board->tasks();
     }
   }
+  myRobot->board->led_pattern(1); // indicate readiness
 }
 
 void loop() {

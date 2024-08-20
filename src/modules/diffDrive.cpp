@@ -16,6 +16,7 @@
 /** Include Files *************************************************************/
 #include <Arduino.h>            // Required for Arduino functions
 #include <EEPROM.h>             // Required for EEPROM emulation functions
+#include <math.h>               // Required for standard C math library routines
 #include "motor.h"              // "motor" functions
 #include "imu.h"                // "imu" functions
 #include "board.h"              // "board" functions
@@ -82,14 +83,18 @@ void diffDrive_straight(float straightEffort)
 
 void diffDrive_turn(float turnDegrees, float turnEffort)
 {
+    double temp = turnDegrees / 360.0;
+    float turn_degrees = 360.0f * float(temp - floor(temp));
     imu_reset_heading();
     if (turnEffort > 0)
     {
-
+        // turn cw
+        motor_set_efforts(turnEffort, -turnEffort);
     }
     else if (turnEffort < 0)
     {
-
+        // turn ccw
+        motor_set_efforts(-turnEffort, turnEffort);
     }
     else
     {
@@ -98,7 +103,7 @@ void diffDrive_turn(float turnDegrees, float turnEffort)
     do
     {
         imu_tasks();
-    } while (imu_get_heading() < turnDegrees);
+    } while (imu_get_heading() < turn_degrees);
     motor_set_efforts(0, 0);
 }
 
