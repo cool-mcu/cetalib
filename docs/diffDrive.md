@@ -104,7 +104,7 @@ myRobot->diffDrive->set_effort(0.20, 0.20);
 ### Example
 
 ```c++
-// Drive the robot forward until the USER SWITCH is pressed.
+// Drive the robot forward until the USER SWITCH is pressed, then stop.
 
 #include <cetalib.h>
 
@@ -121,7 +121,7 @@ void setup() {
 
 void loop() {
   myRobot->board->tasks();
-  if (myRobot->board->is_button_released()) {
+  if (myRobot->board->is_button_pressed()) {
     myRobot->diffDrive->set_efforts(0.0f, 0.0f);
   }
 }
@@ -160,7 +160,7 @@ myRobot->diffDrive->stop();
 ### Example
 
 ```c++
-// Drive the robot forward until the USER SWITCH is pressed.
+// Drive the robot forward until the USER SWITCH is pressed, then stop.
 
 #include <cetalib.h>
 
@@ -177,7 +177,7 @@ void setup() {
 
 void loop() {
   myRobot->board->tasks();
-  if (myRobot->board->is_button_released()) {
+  if (myRobot->board->is_button_pressed()) {
     myRobot->diffDrive->stop();
   }
 }
@@ -194,7 +194,7 @@ void loop() {
 
 ## `void straight(float straightEffort)`
 
-Applies effort to both motors, and applies compensation for straight motion.
+Applies same effort to both motors, applying motor effort compensation for straight motion.
 
 ### Syntax
 
@@ -219,7 +219,7 @@ Run the [diffDrive_set_straight](../examples/diffDrive_set_straight/diffDrive_se
 ### Example
 
 ```c++
-// Drive the robot straight forward until the USER SWITCH is pressed.
+// Drive the robot straight forward until the USER SWITCH is pressed, then stop.
 
 #include <cetalib.h>
 
@@ -235,7 +235,7 @@ void setup() {
 
 void loop() {
   myRobot->board->tasks();
-  if (myRobot->board->is_button_released()) {
+  if (myRobot->board->is_button_pressed()) {
     myRobot->diffDrive->stop();
   }
 }
@@ -281,8 +281,8 @@ Run the [imu_get_temperature_heading](../examples/imu_get_temperature_heading/im
 
 ```c++
 // Run a square path when the USER SWITCH is pressed.
-// Assumes IMU is already calibrated
-// Motor effort settings are preset to produce "straight" motion by experimentation
+// Assumes IMU is already calibrated.
+// Motor effort settings are set to produce "straight" motion by experimentation.
 
 #include <cetalib.h>
 
@@ -309,7 +309,7 @@ void setup() {
 void loop() {
   myRobot->board->tasks();
   myRobot->imu->tasks();
-  if (myRobot->board->is_button_released()) {
+  if (myRobot->board->is_button_pressed()) {
     myRobot->diffDrive->set_efforts(left_motor_effort, right_motor_effort);
     delay(2000);
     myRobot->diffDrive->turn(turn_degrees, turn_effort);
