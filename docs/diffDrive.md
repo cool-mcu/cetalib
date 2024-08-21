@@ -15,7 +15,7 @@ Pico WH GPIO Pin Connections:
 * GP18: I2C SDA SIGNAL for ADAFRUIT LSM6DSOX IMU
 * GP19: I2C SCL SIGNAL for ADAFRUIT LSM6DSOX IMU
 
-For detailed lessons covering differential drive components, schematics, and functionality, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
+For detailed lessons covering differential drive components, assembly, and functionality, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
@@ -23,6 +23,8 @@ For detailed lessons covering differential drive components, schematics, and fun
 * [stop()](<#void-stopvoid>)
 * [straight()](<#void-straightfloat-straighteffort>)
 * [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [save_straight_compensation()](<#void-save_straight_compensationfloat-leftrightcomp>)
 
 ## `void initialize(bool left_flip_dir, bool right_flip_dir)`
 
@@ -69,8 +71,12 @@ void loop() {
 
 ### See also
 
-* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
-* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+* [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
+* [stop()](<#void-stopvoid>)
+* [straight()](<#void-straightfloat-straighteffort>)
+* [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [save_straight_compensation()](<#void-save_straight_compensationfloat-leftrightcomp>)
 
 ## `void set_efforts(float leftEffort, float rightEffort)`
 
@@ -124,7 +130,11 @@ void loop() {
 ### See also
 
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
-* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+* [stop()](<#void-stopvoid>)
+* [straight()](<#void-straightfloat-straighteffort>)
+* [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [save_straight_compensation()](<#void-save_straight_compensationfloat-leftrightcomp>)
 
 ## `void stop(void)`
 
@@ -176,11 +186,15 @@ void loop() {
 ### See also
 
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
-* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+* [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
+* [straight()](<#void-straightfloat-straighteffort>)
+* [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [save_straight_compensation()](<#void-save_straight_compensationfloat-leftrightcomp>)
 
 ## `void straight(float straightEffort)`
 
-Applys effort to both motors, and applies compensation for straight motion.
+Applies effort to both motors, and applies compensation for straight motion.
 
 ### Syntax
 
@@ -230,7 +244,11 @@ void loop() {
 ### See also
 
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
-* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+* [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
+* [stop()](<#void-stopvoid>)
+* [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [save_straight_compensation()](<#void-save_straight_compensationfloat-leftrightcomp>)
 
 ## `void turn(float turnDegrees, float turnEffort)`
 
@@ -257,7 +275,7 @@ myRobot->diffDrive->turn(90, 0.2f); // execute clockwise point-turn with effort 
 * IMU must be connected and calibrated.
 * Function blocks while point-turn is executed.
 
-Run the [imu_get_temperature_heading](../examples/imu_get_temperature_heading/imu_get_temperature_heading.ino) sketch to calibrate straight motion of the robot. 
+Run the [imu_get_temperature_heading](../examples/imu_get_temperature_heading/imu_get_temperature_heading.ino) sketch to calibrate the IMU. 
 
 ### Example
 
@@ -311,5 +329,125 @@ void loop() {
 ### See also
 
 * [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
-* [set_efforts()](<#void-set_effortsfloat-leftEffort-float-rightEffort>)
+* [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
+* [stop()](<#void-stopvoid>)
+* [straight()](<#void-straightfloat-straighteffort>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [save_straight_compensation()](<#void-save_straight_compensationfloat-leftrightcomp>)
+
+## `void clear_calibration(void)`
+
+Deletes all EEPROM calibration data for the diffDrive module.
+
+### Syntax
+
+```c++
+myRobot->diffDrive->clear_calibration();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* Current EEPROM-stored values
+  * "Straight" motion compensation value
+
+### Example
+
+```c++
+// Delete/Clear the diffDrive EEPROM memory if the USER SWITCH is pressed on reset.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->diffDrive->initialize();
+  if(0 == myRobot->board->get_button_level())
+  {
+    while(0 == myRobot->board->get_button_level());
+    myRobot->diffDrive->clear_calibration();
+  }
+}
+
+void loop() {
+  // run program re-calibrate and save "straight" motion compensation value to EEPROM
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
+* [stop()](<#void-stopvoid>)
+* [straight()](<#void-straightfloat-straighteffort>)
+* [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
+* [save_straight_compensation()](<#void-save_straight_compensationfloat-leftrightcomp>)
+
+## `void save_straight_compensation(float leftRightComp)`
+
+Saves a "straight" motion compensation value to EEPROM calibration memory.
+
+### Syntax
+
+```c++
+myRobot->diffDrive->save_straight_compensation(1.04f);
+```
+### Parameters
+
+* **leftRightComp**: float variable used to compensate for Left/Right motor speed mismatch with identical effort input. Used when calling the diffDrive_straight() function. 
+
+### Returns
+
+* None.
+
+### Notes
+
+Run the [diffDrive_set_straight](../examples/diffDrive_set_straight/diffDrive_set_straight.ino) sketch to see example use of these functions to calibrate the straight motion of the robot. 
+
+### Example
+
+```c++
+// Run/Save straight motion compensation value to EEPROM
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->diffDrive->initialize();
+  if(0 == myRobot->board->get_button_level())
+  {
+    while(0 == myRobot->board->get_button_level());
+    myRobot->diffDrive->clear_calibration();
+  }
+}
+
+void loop() {
+  
+  float left_right_compensation
+  // run program re-calibrate and save "straight" motion compensation value to EEPROM
+  // ...
+
+  // save compensation value
+  myRobot->diffDrive->save_straight_compensation(left_right_compensation);
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializebool-left_flip_dir-bool-right_flip_dir>)
+* [set_efforts()](<#void-set_effortsfloat-lefteffort-float-righteffort>)
+* [stop()](<#void-stopvoid>)
+* [straight()](<#void-straightfloat-straighteffort>)
+* [turn()](<#void-turnfloat-turndegrees-float-turneffort>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
 
