@@ -34,12 +34,13 @@ extern const struct REFLECTANCE_INTERFACE REFLECTANCE = {
 };
 
 // calibration objects with default values assigned
-struct REFLECTANCE_CAL reflectanceCal = {
+static struct REFLECTANCE_CAL reflectanceCal = {
     .left_opto_trip = LEFT_SENSOR_TRIP_DEFAULT,
     .middle_opto_trip = MIDDLE_SENSOR_TRIP_DEFAULT,
     .right_opto_trip = RIGHT_SENSOR_TRIP_DEFAULT
 };
-enum REFLECTANCE_CALIBRATION_STATE calState = IDLE;
+
+static enum REFLECTANCE_CALIBRATION_STATE calState = IDLE;
 
 /*** Private Function Prototypes **********************************************/
 
