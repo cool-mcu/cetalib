@@ -38,12 +38,12 @@
 
 /*** Global Variable Declarations *********************************************/
 LSM6DSOXClass CETA_IMU(Wire1, IMU_I2C_ADDRESS);
-float temperature, heading;
-unsigned long imuTaskCurrentTime, imuTaskPrevTime;
-const long imuTaskInterval = (long)IMU_SAMPLE_INTERVAL_MS;
+static float temperature, heading;
+static unsigned long imuTaskCurrentTime, imuTaskPrevTime;
+static const long imuTaskInterval = (long)IMU_SAMPLE_INTERVAL_MS;
 
 // define an output buffer for sprintf()/Serial.print()
-char imuOutBuffer[256];
+static char imuOutBuffer[256];
 
 // initiallize function pointers
 extern const struct CETA_IMU_INTERFACE CETA_IMU_IF = {
