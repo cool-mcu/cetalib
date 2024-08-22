@@ -23,7 +23,7 @@
 /*** Global Variable Declarations *********************************************/
 Servo lServo;             // LEFT motor servo object
 Servo rServo;             // RIGHT motor servo object
-int leftMotorDir, leftMotorDirFwd, rightMotorDir, rightMotorDirFwd;
+static int leftMotorDir, leftMotorDirFwd, rightMotorDir, rightMotorDirFwd;
 
 /*** Type Declarations ********************************************************/
 extern const struct MOTOR_INTERFACE MOTOR = {
