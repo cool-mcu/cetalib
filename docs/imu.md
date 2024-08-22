@@ -12,3 +12,42 @@ For detailed lessons covering imu components, schematics and step-by-step assemb
 
 ## Methods:
 * [initialize()](<#void-initializevoid>)
+
+## `void initialize(void)`
+
+Initialize pin settings and module state variables. Must be called once in setup() before use.
+
+### Syntax
+
+```c++
+myRobot->imu->initialize();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Example
+
+```c++
+// Initialize the board module, then do nothing.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+}
+
+void loop() {
+  // Use the board functions here
+}
+```
+
+### See also
+
+* [tasks()](<#void-tasksvoid>)

@@ -42,6 +42,10 @@ myRobot->board->initialize();
 
 * None.
 
+### Notes
+
+* None.
+
 ### Example
 
 ```c++
@@ -88,6 +92,10 @@ myRobot->board->tasks();
 * None.
 
 ### Returns
+
+* None.
+
+### Notes
 
 * None.
 
@@ -143,6 +151,10 @@ myRobot->board->led_on();
 
 * None.
 
+### Notes
+
+* None.
+
 ### Example
 
 ```c++
@@ -194,6 +206,10 @@ myRobot->board->led_off();
 
 * None.
 
+### Notes
+
+* None.
+
 ### Example
 
 ```c++
@@ -242,6 +258,10 @@ myRobot->board->led_toggle();
 * None.
 
 ### Returns
+
+* None.
+
+### Notes
 
 * None.
 
