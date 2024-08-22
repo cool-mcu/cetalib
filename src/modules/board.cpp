@@ -38,26 +38,26 @@ extern const struct BOARD_INTERFACE BOARD = {
 };
 
 // led-related variables
-LED_STATE ledState;
-LED_FUNCTION_STATE ledFunctionState;
-unsigned long ledBlinkCurrentTime, ledBlinkPrevTime, ledBlinkInterval;
-unsigned long ledPatternCurrentTime, ledPatternPrevTime;
-const long ledPatternInterval = LED_PATTERN_INTERVAL;
-int ledOutputValue[5][10] = {       // provide 5 unique flashing patterns
+static LED_STATE ledState;
+static LED_FUNCTION_STATE ledFunctionState;
+static unsigned long ledBlinkCurrentTime, ledBlinkPrevTime, ledBlinkInterval;
+static unsigned long ledPatternCurrentTime, ledPatternPrevTime;
+static const long ledPatternInterval = LED_PATTERN_INTERVAL;
+static int ledOutputValue[5][10] = {       // provide 5 unique flashing patterns
   {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},   // Pattern 1 - blink 1x/sec
   {1, 0, 1, 0, 0, 0, 0, 0, 0, 0},   // Pattern 2 - blink 2x/sec
   {1, 0, 1, 0, 1, 0, 0, 0, 0, 0},   // Pattern 3 - blink 3x/sec
   {1, 0, 1, 0, 1, 0, 1, 0, 0, 0},   // Pattern 4 - blink 4x/sec
   {1, 0, 1, 0, 1, 0, 1, 0, 1, 0}    // Pattern 5 - blink 5x/sec (constant)
 };
-int ledPatternIndex;       // row pointer: selects flashing pattern
-int ledValueIndex;         // column pointer: selects current LED value
+static int ledPatternIndex;       // row pointer: selects flashing pattern
+static int ledValueIndex;         // column pointer: selects current LED value
 
 // button-related variables
-int buttonLevelCurrent, buttonLevelPrevious;
+static int buttonLevelCurrent, buttonLevelPrevious;
 
 // potentiometer-related variables
-int potentiometerReading;
+static int potentiometerReading;
 
 /*** Private Function Prototypes **********************************************/
 
