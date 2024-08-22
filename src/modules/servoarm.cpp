@@ -33,7 +33,7 @@
 
 /*** Global Variable Declarations *********************************************/
 Servo Servo1;
-int setAngle;
+static int setAngle;
 
 extern const struct SERVOARM_INTERFACE SERVOARM = {
     .initialize             = &servoarm_init,
@@ -46,12 +46,13 @@ extern const struct SERVOARM_INTERFACE SERVOARM = {
 };
 
 // calibration objects with default values assigned
-struct SERVOARM_CAL servoarmCal = {
+static struct SERVOARM_CAL servoarmCal = {
     .home_angle = HOME_POSITION_DEFAULT_ANGLE,
     .lift_angle = LIFT_POSITION_DEFAULT_ANGLE,
     .drop_angle = DROP_POSITION_DEFAULT_ANGLE
 };
-enum SERVOARM_CALIBRATION_STATE servoarmCalState = SERVOARM_CAL_IDLE;
+
+static enum SERVOARM_CALIBRATION_STATE servoarmCalState = SERVOARM_CAL_IDLE;
 
 /*** Private Function Prototypes **********************************************/
 
