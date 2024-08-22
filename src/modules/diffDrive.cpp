@@ -25,7 +25,7 @@
 /*** Symbolic Constants used in this module ***********************************/
 
 /*** Global Variable Declarations *********************************************/
-float left_right_compensation = LEFT_RIGHT_COMPENSATION_DEFAULT;
+static float left_right_compensation = LEFT_RIGHT_COMPENSATION_DEFAULT;
 
 /*** Type Declarations ********************************************************/
 extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE = {
