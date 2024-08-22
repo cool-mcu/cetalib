@@ -36,37 +36,37 @@
 
 /*** Global Variable Declarations *********************************************/
 
-char mqttcOutBuffer[256];
+static char mqttcOutBuffer[256];
 
 // mqttc paramters
 
 // WiFi Parameters
-char ssid[64];                                  // WiFi SSID of AP - defined in application layer, passed via "connect()" API                      
-char passPhrase[64];                            // WiFi Passphrase of AP - defined in application layer, passed via "connect()" API 
-byte macAddr[6];                                // WiFi radio IEEE MAC address used to generate ClientID
+static char ssid[64];                                  // WiFi SSID of AP - defined in application layer, passed via "connect()" API                      
+static char passPhrase[64];                            // WiFi Passphrase of AP - defined in application layer, passed via "connect()" API 
+static byte macAddr[6];                                // WiFi radio IEEE MAC address used to generate ClientID
 
 // TCP Client Connection Parameters 
-char broker[128];                               // IP address or hostname - defined in application layer, passed via "connect()" API
-int port;                                       // Server port number - defined in application layer, passed via "connect()" API
-bool useTLS;                                    // Enable/Disable TLS connection - based on port selection (1883: disable, 8883: enable)
+static char broker[128];                               // IP address or hostname - defined in application layer, passed via "connect()" API
+static int port;                                       // Server port number - defined in application layer, passed via "connect()" API
+static bool useTLS;                                    // Enable/Disable TLS connection - based on port selection (1883: disable, 8883: enable)
                                                 // Note: Server root CA certs defined below
 
 // MQTT Client Session Parameters
-char clientID[64];                              // Dynamically generated during "connect()" function
-char userName[64];                              // MQTT User Name - defined in application layer, passed via "connect()" API
-char userPass[64];                              // MQTT User Password - defined in application layer, passed via "connect()" API
+static char clientID[64];                              // Dynamically generated during "connect()" function
+static char userName[64];                              // MQTT User Name - defined in application layer, passed via "connect()" API
+static char userPass[64];                              // MQTT User Password - defined in application layer, passed via "connect()" API
 
 // MQTT Client Publish Parameters
 // pub topics defined in application layer, passed via "send_message()" API
-int pubQoS = 0;                                 // Set Publish QoS to level 0 (fire-and-forget)
-bool retained = false;                          // Disable retained message
-bool dup = false;                               // Duplicates not issued with QoS level 0
+static int pubQoS = 0;                                 // Set Publish QoS to level 0 (fire-and-forget)
+static bool retained = false;                          // Disable retained message
+static bool dup = false;                               // Duplicates not issued with QoS level 0
 
 // MQTT Client Publish Parameters
 // sub topics defined in application layer, passed via "connect()" API
-char subTopic[MAX_SUBSCRIBE_TOPIC_IDS][256];    // Array of subscribe topics to be defined
-int subQoS = 0;                                 // Set Subscribe QoS to level 0 (fire-and-forget)
-int subTopicSize;                               // use to save the size of the supplied subscription topic array
+static char subTopic[MAX_SUBSCRIBE_TOPIC_IDS][256];    // Array of subscribe topics to be defined
+static int subQoS = 0;                                 // Set Subscribe QoS to level 0 (fire-and-forget)
+static int subTopicSize;                               // use to save the size of the supplied subscription topic array
 
 // define the function interface
 extern const struct MQTTC_INTERFACE MQTTC = {
@@ -79,7 +79,7 @@ extern const struct MQTTC_INTERFACE MQTTC = {
 };
 
 // create a structure for reception of messages (topic & payload)
-struct MQTTC_RECEIVE_MSG mqttcRxMessage;
+static struct MQTTC_RECEIVE_MSG mqttcRxMessage;
 
 // Initialize Socket classes - MQTT Client (for unsecure connections)
 WiFiClient wifiClient;                            // Used for TCP Socket connection
@@ -94,10 +94,10 @@ BearSSL::X509List mosquittocert(mosquitto_root_CA_cert);
 
 
 // WiFi & TCP Connection Monitoring Variables ("connectionTasks()" function)
-int linkStatus = WL_IDLE_STATUS;                  // WiFi link status
-bool tcpConnStatus = false;                       // TCP connection status
-unsigned long connStatusCurrentSampleTime, connStatusPrevSampleTime;
-const long connStatusSampleInterval = CONN_STATUS_SAMPLE_INTERVAL;    // Network Connection testing interval
+static int linkStatus = WL_IDLE_STATUS;                  // WiFi link status
+static bool tcpConnStatus = false;                       // TCP connection status
+static unsigned long connStatusCurrentSampleTime, connStatusPrevSampleTime;
+static const long connStatusSampleInterval = CONN_STATUS_SAMPLE_INTERVAL;    // Network Connection testing interval
 
 /*** Private Function Prototypes **********************************************/
 static void wifiConnect(void);                          // Connect to WiFi access network
