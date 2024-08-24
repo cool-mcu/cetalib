@@ -15,6 +15,7 @@ For detailed lessons covering imu components, schematics and step-by-step assemb
 * [tasks()](<#void-tasksvoid>)
 * [get_temperature()](<#float-get_temperaturevoid>)
 * [get_heading()](<#float-get_headingvoid>)
+* [reset_heading()](<#void-reset_headingvoid>)
 
 ## `bool initialize(void)`
 
@@ -148,7 +149,7 @@ float temperature = myRobot->imu->get_temperature();
 
 ### Notes
 
-* None.*
+* None.
 
 ### Example
 
@@ -211,7 +212,7 @@ float heading = myRobot->imu->get_heading();
 
 ### Notes
 
-* IMU Calibration is required for accurate readings
+* IMU Calibration is required for accurate readings. Run the [imu_get_teperature_heading](../examples/imu_get_teperature_heading/imu_get_teperature_heading.ino) sketch to calibrate the IMU.
 * No blocking functions in loop(). imu_tasks() must be called frequently.
 
 ### Example
@@ -242,6 +243,76 @@ void setup() {
 
 void loop() {
   myRobot->imu->tasks();
+  imuSensorCurrentTime = millis();
+  if ((imuSensorCurrentTime - imuSensorPrevTime) >= imuSensorInterval)
+  {
+    imuSensorPrevTime = imuSensorCurrentTime;
+    heading = myRobot->imu->get_heading();
+    Serial.print("Heading: ");
+    Serial.println(heading); 
+  }
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializevoid>)
+
+## `void reset_heading(void)`
+
+Reset the robot heading value.
+
+### Syntax
+
+```c++
+myRobot->imu->reset_heading();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Print the current robot heading every second.
+// Reset the heading when USER SWITCH is pressed
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// define sensor sample interval variables
+unsigned long imuSensorCurrentTime, imuSensorPrevTime;
+const long imuSensorInterval = 1000; // (sample interval in mS)
+
+float heading; // current robot heading in degrees
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  if (!myRobot->imu->initialize())
+  {
+    Serial.println("Failed to initialize IMU!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  myRobot->board->tasks();
+  myRobot->imu->tasks();
+  if(myRobot->board->is_button_pressed())
+  {
+    myRobot->imu->reset_heading();
+  }
   imuSensorCurrentTime = millis();
   if ((imuSensorCurrentTime - imuSensorPrevTime) >= imuSensorInterval)
   {
