@@ -13,6 +13,7 @@ For detailed lessons covering imu components, schematics and step-by-step assemb
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
 * [tasks()](<#void-tasksvoid>)
+* [get_temperature()](<#float-get_temperaturevoid>)
 
 ## `bool initialize(void)`
 
@@ -118,6 +119,69 @@ void loop() {
     imuSensorPrevTime = imuSensorCurrentTime;
     heading = myRobot->imu->get_heading();
     Serial.print("Heading: ");
+    Serial.println(heading); 
+  }
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializevoid>)
+
+## `float get_temperature(void)`
+
+Get the ambient temperature in degrees celcius.
+
+### Syntax
+
+```c++
+float temperature = myRobot->imu->get_temperature();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: current ambient temperature in degrees celcius
+
+### Notes
+
+* None.*
+
+### Example
+
+```c++
+// Print the current ambient temperature every second.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// define sensor sample interval variables
+unsigned long imuSensorCurrentTime, imuSensorPrevTime;
+const long imuSensorInterval = 1000; // (sample interval in mS)
+
+float temperature; // current ambient temperature
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  if (!myRobot->imu->initialize())
+  {
+    Serial.println("Failed to initialize IMU!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  myRobot->imu->tasks();
+  imuSensorCurrentTime = millis();
+  if ((imuSensorCurrentTime - imuSensorPrevTime) >= imuSensorInterval)
+  {
+    imuSensorPrevTime = imuSensorCurrentTime;
+    temperature = myRobot->imu->get_temperature();
+    Serial.print("Temperature: ");
     Serial.println(heading); 
   }
 }
