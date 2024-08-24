@@ -14,6 +14,7 @@ For detailed lessons covering imu components, schematics and step-by-step assemb
 * [initialize()](<#bool-initializevoid>)
 * [tasks()](<#void-tasksvoid>)
 * [get_temperature()](<#float-get_temperaturevoid>)
+* [get_heading()](<#float-get_headingvoid>)
 
 ## `bool initialize(void)`
 
@@ -183,6 +184,71 @@ void loop() {
     temperature = myRobot->imu->get_temperature();
     Serial.print("Temperature: ");
     Serial.println(temperature); 
+  }
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializevoid>)
+
+## `float get_heading(void)`
+
+Get the current robot heading ("yaw") (0-360 degrees)
+
+### Syntax
+
+```c++
+float heading = myRobot->imu->get_heading();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: current robot heading in degrees (0-360)
+
+### Notes
+
+* IMU Calibration is required for accurate readings
+* No blocking functions in loop(). imu_tasks() must be called frequently.
+
+### Example
+
+```c++
+// Print the current robot heading every second.
+// Assumes IMU is calibrated.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// define sensor sample interval variables
+unsigned long imuSensorCurrentTime, imuSensorPrevTime;
+const long imuSensorInterval = 1000; // (sample interval in mS)
+
+float heading; // current robot heading in degrees
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  if (!myRobot->imu->initialize())
+  {
+    Serial.println("Failed to initialize IMU!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  myRobot->imu->tasks();
+  imuSensorCurrentTime = millis();
+  if ((imuSensorCurrentTime - imuSensorPrevTime) >= imuSensorInterval)
+  {
+    imuSensorPrevTime = imuSensorCurrentTime;
+    heading = myRobot->imu->get_heading();
+    Serial.print("Heading: ");
+    Serial.println(heading); 
   }
 }
 ```
