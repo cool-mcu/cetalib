@@ -182,7 +182,7 @@ void loop() {
     imuSensorPrevTime = imuSensorCurrentTime;
     temperature = myRobot->imu->get_temperature();
     Serial.print("Temperature: ");
-    Serial.println(heading); 
+    Serial.println(temperature); 
   }
 }
 ```
