@@ -6,7 +6,7 @@
  * Date:            June 24, 2024
  * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
  * 
- * cetalib "board" driver (USER LED, PUSHBUTTON & POTETIOMETER interface functions)
+ * cetalib "board" driver (USER LED, PUSHBUTTON & POTENTIOMETER interface functions)
  *
  * Hardware Configuration:
  * CETA IoT Robot (schematic #14-00069A/B), based on RPI-Pico-WH 
