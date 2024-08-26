@@ -57,6 +57,6 @@ The autocomplete feature of the Arduino 2.x IDE automatically lists all availabl
 
 # Documentation
 
-See the [docs](https://github.com/cool-mcu/cetalib/tree/main/docs) folder for a detailed description of all modules and APIs.
+See the [docs](https://github.com/cool-mcu/cetalib/tree/main/docs) folder for a detailed description of all modules and APIs, along with simple example sketches you can try in Arduino.
 
-See the [examples](https://github.com/cool-mcu/cetalib/tree/main/examples) folder for complete example sketches using the library.
+The [examples](https://github.com/cool-mcu/cetalib/tree/main/examples) folder provides additional example sketches using the library.
