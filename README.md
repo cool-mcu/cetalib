@@ -29,7 +29,7 @@ The following libraries and cores need to be installed into your Arduino environ
 * [ArduinoMqttClient (v0.1.5)](https://github.com/arduino-libraries/ArduinoMqttClient/archive/refs/tags/0.1.5.zip)
 * [ArduinoJson (v6.17.2)](https://github.com/bblanchon/ArduinoJson/archive/refs/tags/v6.17.2.zip)
 * [Arduino_LSM6DSOX (v1.1.2)](https://github.com/arduino-libraries/Arduino_LSM6DSOX/archive/refs/tags/1.1.2.zip)
-* [Arduino-Pico Core (install v3.95 from boards manager)](https://github.com/earlephilhower/arduino-pico)
+* [Arduino-Pico Core (install v3.95 from the Arduino IDE Boards Manager)](https://github.com/earlephilhower/arduino-pico)
 
 # Installation
 
