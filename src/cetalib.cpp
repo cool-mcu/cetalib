@@ -28,6 +28,7 @@ extern const struct RANGEFINDER_INTERFACE RANGEFINDER;
 extern const struct CETA_IMU_INTERFACE CETA_IMU_IF;
 extern const struct MQTTC_INTERFACE MQTTC;
 extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE;
+extern const struct OLED_INTERFACE OLED;
 
 extern const struct CETALIB_INTERFACE CETALIB = {
   .board = &BOARD,
@@ -37,7 +38,8 @@ extern const struct CETALIB_INTERFACE CETALIB = {
   .rangefinder = &RANGEFINDER,
   .imu = &CETA_IMU_IF,
   .mqttc = &MQTTC,
-  .diffDrive = &DIFFDRIVE
+  .diffDrive = &DIFFDRIVE,
+  .oled = &OLED
 };
 
 /*** Type Declarations ********************************************************/

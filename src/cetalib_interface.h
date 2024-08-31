@@ -26,6 +26,7 @@
 #include "./modules/imu_interface.h"
 #include "./modules/mqttc_interface.h"
 #include "./modules/diffDrive_interface.h"
+#include "./modules/oled_interface.h"
 
 /*** Macros *******************************************************************/
 
@@ -40,6 +41,7 @@ struct CETALIB_INTERFACE
   const struct CETA_IMU_INTERFACE *imu;             // Pointer to a IMU_INTERFACE instance 
   const struct MQTTC_INTERFACE *mqttc;              // Pointer to a MQTTC_INTERFACE instance
   const struct DIFFDRIVE_INTERFACE *diffDrive;      // Pointer to a DIFFDRIVE_INTERFACE instance
+  const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
 };
 
 /*** Public Function Prototypes ***********************************************/
