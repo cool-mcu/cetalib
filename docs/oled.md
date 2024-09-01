@@ -14,7 +14,7 @@ For detailed lessons covering oled components, schematics and step-by-step assem
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
-* [print()](<#void-printchar*s>)
+* [print()](<#void-printchars>)
 
 ## `bool initialize(void)`
 
@@ -87,6 +87,7 @@ myRobot->oled->print(str);
 
 * Use the stdio function "sprintf()" to format the text string before printing to the OLED.
 * Character '\n' can be used to move the cursor to the next line in the display, which will auto-scroll the display.
+  * print("hello\n"); produces the same output as println("hello");
 
 ### Example
 
@@ -114,7 +115,7 @@ void setup() {
 
 void loop() {
   potValue = myRobot->board->get_potentiometer();
-  sprintf(oledOutBuffer, "Potentiometer: %d", potValue);
+  sprintf(oledOutBuffer, "Potentiometer: %4d", potValue);
   myRobot->oled->print(oledOutBuffer);
   myRobot->oled->home();
   delay(100);
