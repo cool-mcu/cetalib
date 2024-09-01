@@ -17,6 +17,7 @@ For detailed lessons covering oled components, schematics and step-by-step assem
 * [print()](<#void-printchar-str>)
 * [println()](<#void-printlnchar-str>)
 * [clear()](<#void-clearvoid>)
+* [home()](<#void-homevoid>)
 
 ## `bool initialize(void)`
 
@@ -65,7 +66,10 @@ void loop() {
 
 ### See also
 
-* [tasks()](<#void-tasksvoid>)
+* [print()](<#void-printchar-str>)
+* [println()](<#void-printlnchar-str>)
+* [clear()](<#void-clearvoid>)
+* [home()](<#void-homevoid>)
 
 ## `void print(char *str)`
 
@@ -126,7 +130,10 @@ void loop() {
 
 ### See also
 
-* [tasks()](<#void-tasksvoid>)
+* [initialize()](<#bool-initializevoid>)
+* [println()](<#void-printlnchar-str>)
+* [clear()](<#void-clearvoid>)
+* [home()](<#void-homevoid>)
 
 ## `void println(char *str)`
 
@@ -187,7 +194,10 @@ void loop() {
 
 ### See also
 
-* [tasks()](<#void-tasksvoid>)
+* [initialize()](<#bool-initializevoid>)
+* [print()](<#void-printchar-str>)
+* [clear()](<#void-clearvoid>)
+* [home()](<#void-homevoid>)
 
 ## `void clear(void)`
 
@@ -249,4 +259,72 @@ void loop() {
 
 ### See also
 
-* [tasks()](<#void-tasksvoid>)
+* [initialize()](<#bool-initializevoid>)
+* [print()](<#void-printchar-str>)
+* [println()](<#void-printlnchar-str>)
+* [home()](<#void-homevoid>)
+
+## `void home(void)`
+
+Place the cursor at position 0, 0.
+
+### Syntax
+
+```c++
+myRobot->oled->home();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Sample/Print the Potentiometer value on a new line, and move the cursor to the home position when the user switch is pressed.
+
+#include <cetalib.h>
+#include <stdio.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+char oledOutBuffer[64];
+int potValue;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  if (!myRobot->oled->initialize())
+  {
+    Serial.println("Failed to initialize OLED!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  myRobot->board->tasks();
+  potValue = myRobot->board->get_potentiometer();
+  sprintf(oledOutBuffer, "Potentiometer: %4d", potValue);
+  myRobot->oled->println(oledOutBuffer);
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->oled->home();
+  }
+  delay(250);
+}
+```
+
+### See also
+
+* [initialize()](<#bool-initializevoid>)
+* [print()](<#void-printchar-str>)
+* [println()](<#void-printlnchar-str>)
+* [clear()](<#void-clearvoid>)
