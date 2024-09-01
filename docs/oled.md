@@ -239,11 +239,11 @@ void loop() {
   potValue = myRobot->board->get_potentiometer();
   sprintf(oledOutBuffer, "Potentiometer: %4d", potValue);
   myRobot->oled->println(oledOutBuffer);
-  if (myRobot->board->is_button_pressed())
+  if (0 == myRobot->board->get_button_level())
   {
     myRobot->oled->clear();
   }
-  delay(100);
+  delay(250);
 }
 ```
 
