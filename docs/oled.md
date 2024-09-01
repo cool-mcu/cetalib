@@ -77,17 +77,17 @@ myRobot->oled->print(str);
 ```
 ### Parameters
 
-* None.
+* **str**: pointer to char array (C string) containing the desired message
 
 ### Returns
 
-* **boolean**: TRUE if OLED is connected, FALSE if OLED is not connected.
+* None.
 
 ### Notes
 
 * Use the stdio function "sprintf()" to format the text string before printing to the OLED.
 * Character '\n' can be used to move the cursor to the next line in the display, which will auto-scroll the display.
-  * print("hello\n"); produces the same output as println("hello");
+  * oled->print("hello\n"); produces the same output as oled->println("hello");
 
 ### Example
 
