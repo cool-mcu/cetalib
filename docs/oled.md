@@ -14,6 +14,7 @@ For detailed lessons covering oled components, schematics and step-by-step assem
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
+* [print()](<#void-printchar*s>)
 
 ## `bool initialize(void)`
 
@@ -46,6 +47,8 @@ myRobot->oled->initialize();
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
 void setup() {
+  Serial.begin(115200);
+  delay(2000);
   if (!myRobot->oled->initialize())
   {
     Serial.println("Failed to initialize OLED!. Stopping.");
@@ -54,7 +57,67 @@ void setup() {
 }
 
 void loop() {
-  // Use the imu functions here
+  // Use the oled functions here
+}
+```
+
+### See also
+
+* [tasks()](<#void-tasksvoid>)
+
+## `void print(char *str)`
+
+Prints up to 21 characters of the passed string on the current OLED line. The remaining characters are truncated.
+
+### Syntax
+
+```c++
+char *str = "Hello, World!";
+myRobot->oled->print(str);
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **boolean**: TRUE if OLED is connected, FALSE if OLED is not connected.
+
+### Notes
+
+* Use the stdio function "sprintf()" to format the text string before printing to the OLED.
+* Character '\n' can be used to move the cursor to the next line in the display, which will auto-scroll the display.
+
+### Example
+
+```c++
+// Initialize the oled module, then print the Potentiometer value in the home position
+
+#include <cetalib.h>
+#include <stdio.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+char oledOutBuffer[64];
+int potValue;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  if (!myRobot->oled->initialize())
+  {
+    Serial.println("Failed to initialize OLED!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  potValue = myRobot->board->get_potentiometer();
+  sprintf(oledOutBuffer, "Potentiometer: %d", potValue);
+  myRobot->oled->print(oledOutBuffer);
+  myRobot->oled->home();
+  delay(100);
 }
 ```
 
