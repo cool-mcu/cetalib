@@ -1,4 +1,4 @@
-# imu Module
+# oled Module
 
 This module provides text display functions for the [Adafruit 128x64 OLED](https://www.adafruit.com/product/938) on the [CETA IoT Robot (Kit #18-00019x)](https://www.cool-mcu.com/pages/robot-kit).
 
