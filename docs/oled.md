@@ -129,7 +129,7 @@ void loop() {
 
 ## `void println(char *str)`
 
-Prints up to 21 characters of the passed string on the current OLED line, including a CR/NL character, advancing the cursor to the next line. The remaining characters are truncated.
+Prints up to 21 characters of the passed string on the current OLED line, adding a New Line character ("\n") which advances the cursor to the next line. The remaining characters are truncated.
 
 Auto-scrolling is enabled on the display.
 
