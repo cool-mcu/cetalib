@@ -14,7 +14,7 @@ For detailed lessons covering oled components, schematics and step-by-step assem
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
-* [print()](<#void-printchars>)
+* [print()](<#void-printchar-str>)
 
 ## `bool initialize(void)`
 
