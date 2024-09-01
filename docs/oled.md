@@ -16,6 +16,7 @@ For detailed lessons covering oled components, schematics and step-by-step assem
 * [initialize()](<#bool-initializevoid>)
 * [print()](<#void-printchar-str>)
 * [println()](<#void-printlnchar-str>)
+* [clear()](<#void-clearvoid>)
 
 ## `bool initialize(void)`
 
@@ -181,6 +182,68 @@ void loop() {
   sprintf(oledOutBuffer, "Potentiometer: %4d", potValue);
   myRobot->oled->println(oledOutBuffer);
   delay(1000);
+}
+```
+
+### See also
+
+* [tasks()](<#void-tasksvoid>)
+
+## `void clear(void)`
+
+Clear the screen.
+
+### Syntax
+
+```c++
+myRobot->oled->clear();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Sample/Print the Potentiometer value on a new line, and clear the screen when the user switch is pressed.
+
+#include <cetalib.h>
+#include <stdio.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+char oledOutBuffer[64];
+int potValue;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  if (!myRobot->oled->initialize())
+  {
+    Serial.println("Failed to initialize OLED!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  myRobot->board->tasks();
+  potValue = myRobot->board->get_potentiometer();
+  sprintf(oledOutBuffer, "Potentiometer: %4d", potValue);
+  myRobot->oled->println(oledOutBuffer);
+  if (myRobot->board->is_button_pressed())
+  {
+    myRobot->oled->clear();
+  }
+  delay(100);
 }
 ```
 
