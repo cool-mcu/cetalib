@@ -15,6 +15,7 @@ For detailed lessons covering oled components, schematics and step-by-step assem
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
 * [print()](<#void-printchar-str>)
+* [println()](<#void-printchar-str>)
 
 ## `bool initialize(void)`
 
@@ -118,7 +119,68 @@ void loop() {
   sprintf(oledOutBuffer, "Potentiometer: %4d", potValue);
   myRobot->oled->print(oledOutBuffer);
   myRobot->oled->home();
-  delay(100);
+  delay(1000);
+}
+```
+
+### See also
+
+* [tasks()](<#void-tasksvoid>)
+
+## `void println(char *str)`
+
+Prints up to 21 characters of the passed string on the current OLED line, including a CR/NL character, advancing the cursor to the next line. The remaining characters are truncated.
+
+Auto-scrolling is enabled on the display.
+
+### Syntax
+
+```c++
+char *str = "Hello, World!";
+myRobot->oled->println(str);
+```
+### Parameters
+
+* **str**: pointer to char array (C string) containing the desired message
+
+### Returns
+
+* None.
+
+### Notes
+
+* Use the stdio function "sprintf()" to format the text string before printing to the OLED.
+* oled->println("hello"); produces the same output as oled->print("hello\n");
+
+### Example
+
+```c++
+// Initialize the oled module, then print the Potentiometer value on a new line, demonstrating the auto-scroll functionality of the display.
+
+#include <cetalib.h>
+#include <stdio.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+char oledOutBuffer[64];
+int potValue;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  if (!myRobot->oled->initialize())
+  {
+    Serial.println("Failed to initialize OLED!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  potValue = myRobot->board->get_potentiometer();
+  sprintf(oledOutBuffer, "Potentiometer: %4d", potValue);
+  myRobot->oled->println(oledOutBuffer);
+  delay(1000);
 }
 ```
 
