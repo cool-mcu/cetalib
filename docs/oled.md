@@ -14,3 +14,50 @@ For detailed lessons covering oled components, schematics and step-by-step assem
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
+
+## `bool initialize(void)`
+
+Initialize I2C bus, display splash screen for 5 seconds, clear screen and place cursor in home position. Must be called once in setup() before use.
+
+### Syntax
+
+```c++
+myRobot->oled->initialize();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **boolean**: TRUE if OLED is connected, FALSE if OLED is not connected.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Initialize the oled module, display the splash screen, then do nothing.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  if (!myRobot->oled->initialize())
+  {
+    Serial.println("Failed to initialize OLED!. Stopping.");
+    while (1);
+  }
+}
+
+void loop() {
+  // Use the imu functions here
+}
+```
+
+### See also
+
+* [tasks()](<#void-tasksvoid>)
