@@ -10,7 +10,7 @@ Pico WH GPIO Pin Connections:
 
 This component uses the same I2C bus instance as the IMU.
 
-For detailed lessons covering robot components, schematics and step-by-step assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
+For detailed lessons covering oled components, schematics and step-by-step assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
