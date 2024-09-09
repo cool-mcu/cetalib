@@ -14,3 +14,100 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 
 ## Methods:
 * [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+
+## `void initialize(void)`
+
+Initiallize pins, state variables, calibrate if needed.
+
+### Syntax
+
+```c++
+myRobot->reflectance->initialize();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Initialize the reflectance module, then do nothing.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  // Use the reflectance functions here
+}
+```
+
+### See also
+
+* [tasks()](<#void-tasksvoid>)
+
+## `float get_left_sensor(void)`
+
+Sample the LEFT OPTO reflectance sensor reading.
+
+### Syntax
+
+```c++
+float left_opto = myRobot->reflectance->get_left_sensor();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: current reflectance sensor reading (0 to 1)
+
+### Notes
+
+* Readings closer to 1 correspond to the sensor being over a black line
+
+### Example
+
+```c++
+// Print the LEFT OPTO reflectance sensor value every second.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float left_opto;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->reflectance->initiallize();
+}
+
+void loop() {
+  left_opto = myRobot->reflectance->get_left_opto();
+  Serial.print(Left Opto: );
+  Serial.print(left_opto);
+  Serial.println();
+  delay(1000);
+}
+```
+
+### See also
+
+* [initialize()](<#bool-initializevoid>)
