@@ -45,7 +45,13 @@ We recommend using [Arduino IDE v2.x](https://www.arduino.cc/en/software) with t
 
 1. Install dependent Core and Libraries into your Arduino environment
 2. Clone/download a .zip file of this repository
-3. [Import the .zip library into Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries/#importing-a-zip-library) 
+3. [Import the .zip libraries into Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries/#importing-a-zip-library) 
+
+The following video shows you how to install and configure this library in Arduino, and how to get started using the examples:
+
+[![IMAGE ALT TEXT HERE](./assets/tb6-installing-the-cetalib-arduino-library-part3.JPG)](https://youtu.be/OTbfWM7dy2E)
+ 
+
 
 # Using the Library
 To use this library:
