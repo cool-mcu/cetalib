@@ -111,3 +111,54 @@ void loop() {
 ### See also
 
 * [initialize()](<#bool-initializevoid>)
+
+## `float get_middle_sensor(void)`
+
+Sample the MIDDLE OPTO reflectance sensor reading.
+
+### Syntax
+
+```c++
+float middle_opto = myRobot->reflectance->get_middle_sensor();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: current reflectance sensor reading (0 to 1)
+
+### Notes
+
+* Readings closer to 1 correspond to the sensor being over a black line
+
+### Example
+
+```c++
+// Print the MIDDLE OPTO reflectance sensor value every second.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float middle_opto;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  middle_opto = myRobot->reflectance->get_middle_sensor();
+  Serial.print("Middle Opto: ");
+  Serial.print(middle_opto);
+  Serial.println();
+  delay(1000);
+}
+```
+
+### See also
+
+* [initialize()](<#bool-initializevoid>)
