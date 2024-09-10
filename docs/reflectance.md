@@ -17,6 +17,7 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 * [get_left_sensor()](<#float-get_left_sensorvoid>)
 * [get_middle_sensor()](<#float-get_middle_sensorvoid>)
 * [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
 
 ## `void initialize(void)`
 
@@ -206,6 +207,94 @@ void loop() {
   Serial.print("Right Opto: ");
   Serial.print(right_opto);
   Serial.println();
+  delay(1000);
+}
+```
+
+### See also
+
+* [initialize()](<#bool-initializevoid>)
+
+## `int get_line_status(void)`
+
+Sample/Return current line detection status.
+
+### Syntax
+
+```c++
+int line_detect = myRobot->reflectance->get_line_status();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **int**: current line detection alarm status (0 to 7)
+
+  * 0:  (Left: 0, Middle: 0, Right: 0)
+  * 1:  (Left: 0, Middle: 0, Right: 1)
+  * 2: (Left: 0, Middle: 1, Right: 0)  // Robot centered over line
+  * 3: (Left: 0, Middle: 1, Right: 1)
+  * 4: (Left: 1, Middle: 0, Right: 0)
+  * 5: (Left: 1, Middle: 0, Right: 1)
+  * 6: (Left: 1, Middle: 1, Right: 0)
+  * 7: (Left: 1, Middle: 1, Right: 1) 
+
+### Notes
+
+* Default line detection thresholds are used until the user performs a calibration
+procedure, which samples/saves updated trip thesholds into EEPROM memory.
+
+### Example
+
+```c++
+// Sample/display the line detection status value every second.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+int line_detect;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  Serial.println();
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  line_detect = myRobot->reflectance->get_line_status();
+  switch (line_detect)
+  {
+    case 0:
+      Serial.print("Left: 0, Middle: 0, Right: 0\r");
+      break;
+    case 1:
+      Serial.print("Left: 0, Middle: 0, Right: 1\r");
+      break;
+    case 2:
+      Serial.print("Left: 0, Middle: 1, Right: 0\r");
+      break;
+    case 3:
+      Serial.print("Left: 0, Middle: 1, Right: 1\r");
+      break;
+    case 4:
+      Serial.print("Left: 1, Middle: 0, Right: 0\r");
+      break;
+    case 5:
+      Serial.print("Left: 1, Middle: 0, Right: 1\r");
+      break;
+    case 6:
+      Serial.print("Left: 1, Middle: 1, Right: 0\r");
+      break;
+    case 7:
+      Serial.print("Left: 1, Middle: 1, Right: 1\r");
+      break;
+    default:
+      break;
+  }
   delay(1000);
 }
 ```
