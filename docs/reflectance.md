@@ -162,3 +162,54 @@ void loop() {
 ### See also
 
 * [initialize()](<#bool-initializevoid>)
+
+## `float get_right_sensor(void)`
+
+Sample the RIGHT OPTO reflectance sensor reading.
+
+### Syntax
+
+```c++
+float right_opto = myRobot->reflectance->get_right_sensor();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: current reflectance sensor reading (0 to 1)
+
+### Notes
+
+* Readings closer to 1 correspond to the sensor being over a black line
+
+### Example
+
+```c++
+// Print the RIGHT OPTO reflectance sensor value every second.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float right_opto;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  middle_opto = myRobot->reflectance->get_right_sensor();
+  Serial.print("Right Opto: ");
+  Serial.print(right_opto);
+  Serial.println();
+  delay(1000);
+}
+```
+
+### See also
+
+* [initialize()](<#bool-initializevoid>)
