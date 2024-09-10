@@ -51,11 +51,6 @@ The following video walks you through this procedure:
 
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/OTbfWM7dy2E/0.jpg)](http://www.youtube.com/watch?v=OTbfWM7dy2E)
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=OTbfWM7dy2E
-" target="_blank"><img src="http://img.youtube.com/vi/OTbfWM7dy2E/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="240" height="180" border="1" /></a>
- 
-
 
 # Using the Library
 To use this library:
