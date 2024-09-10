@@ -247,6 +247,7 @@ int line_detect = myRobot->reflectance->get_line_status();
 OPTO sensor trip thesholds into EEPROM memory.
 * The calibration procedure is triggered by calling the "reflectance->initialize()" function after clearing the calibration memory using the "reflectance->clear_calibration()" function as shown below.
     * See code example below
+    * Follow the instructions provided in the serial terminal window to complete the calibration procedure
 
 ### Example
 
@@ -266,7 +267,6 @@ void setup() {
   myRobot->board->initialize();
   if (0 == myRobot->board->get_button_level())
   {
-    while(0 == myRobot->board->get_button_level());
     myRobot->reflectance->clear_calibration();
   }
   myRobot->reflectance->initialize();

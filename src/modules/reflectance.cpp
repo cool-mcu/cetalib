@@ -72,15 +72,16 @@ void reflectance_init(void)
     if(EEPROM.get(REFLECTANCE_CAL_EEPROM_ADDRESS_START, testRead) == 0xFFFFFFFF)
     {
         Serial.println("Reflectance Sensor Calibration Routine Triggered");
+        Serial.println("Position all sensors behind the starting Tee, then Press the USER Switch to begin");
         // EEPROM is blank, perform calibration procedure
-        calState = WAIT_BEGIN;
+        calState = WAIT_BEGIN_WHITE;
         board_led_pattern(5);
         while (calState != IDLE)
         {
             board_tasks();
             switch(calState)
             {
-                case WAIT_BEGIN:
+                case WAIT_BEGIN_WHITE:
                     if(board_is_button_pressed())
                     {
                         board_led_pattern(1);   // indicate "CALIBRATE_WHITE" state
@@ -110,6 +111,13 @@ void reflectance_init(void)
                         middle_opto_accumulator = 0;
                         right_opto_accumulator = 0;
                         board_led_pattern(2);   // indicate "CALIBRATE_BLACK" state
+                        Serial.println("Position all sensors over the starting Tee, then Press the USER Switch to continue");
+                        calState = WAIT_BEGIN_BLACK;
+                    }
+                    break;
+                case WAIT_BEGIN_BLACK:
+                    if(board_is_button_pressed())
+                    {
                         calState = CALIBRATE_BLACK;
                     }
                     break;
