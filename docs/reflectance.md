@@ -269,28 +269,28 @@ void loop() {
   switch (line_detect)
   {
     case 0:
-      Serial.print("Left: 0, Middle: 0, Right: 0\r");
+      Serial.println("Left: 0, Middle: 0, Right: 0");
       break;
     case 1:
-      Serial.print("Left: 0, Middle: 0, Right: 1\r");
+      Serial.println("Left: 0, Middle: 0, Right: 1");
       break;
     case 2:
-      Serial.print("Left: 0, Middle: 1, Right: 0\r");
+      Serial.println("Left: 0, Middle: 1, Right: 0");
       break;
     case 3:
-      Serial.print("Left: 0, Middle: 1, Right: 1\r");
+      Serial.println("Left: 0, Middle: 1, Right: 1");
       break;
     case 4:
-      Serial.print("Left: 1, Middle: 0, Right: 0\r");
+      Serial.println("Left: 1, Middle: 0, Right: 0");
       break;
     case 5:
-      Serial.print("Left: 1, Middle: 0, Right: 1\r");
+      Serial.println("Left: 1, Middle: 0, Right: 1");
       break;
     case 6:
-      Serial.print("Left: 1, Middle: 1, Right: 0\r");
+      Serial.println("Left: 1, Middle: 1, Right: 0");
       break;
     case 7:
-      Serial.print("Left: 1, Middle: 1, Right: 1\r");
+      Serial.println("Left: 1, Middle: 1, Right: 1");
       break;
     default:
       break;
