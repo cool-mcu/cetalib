@@ -96,12 +96,12 @@ float left_opto;
 void setup() {
   Serial.begin(115200);
   delay(2000);
-  myRobot->reflectance->initiallize();
+  myRobot->reflectance->initialize();
 }
 
 void loop() {
-  left_opto = myRobot->reflectance->get_left_opto();
-  Serial.print(Left Opto: );
+  left_opto = myRobot->reflectance->get_left_sensor();
+  Serial.print("Left Opto: ");
   Serial.print(left_opto);
   Serial.println();
   delay(1000);
