@@ -202,7 +202,7 @@ void setup() {
 }
 
 void loop() {
-  middle_opto = myRobot->reflectance->get_right_sensor();
+  right_opto = myRobot->reflectance->get_right_sensor();
   Serial.print("Right Opto: ");
   Serial.print(right_opto);
   Serial.println();
