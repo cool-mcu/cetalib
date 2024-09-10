@@ -110,7 +110,7 @@ void reflectance_init(void)
                         left_opto_accumulator = 0;
                         middle_opto_accumulator = 0;
                         right_opto_accumulator = 0;
-                        board_led_pattern(2);   // indicate "CALIBRATE_BLACK" state
+                        board_led_pattern(5);   // signal next instruction
                         Serial.println("Position all sensors over the starting Tee, then Press the USER Switch to continue");
                         calState = WAIT_BEGIN_BLACK;
                     }
@@ -118,6 +118,7 @@ void reflectance_init(void)
                 case WAIT_BEGIN_BLACK:
                     if(board_is_button_pressed())
                     {
+                        board_led_pattern(2);   // indicate "CALIBRATE_BLACK" state
                         calState = CALIBRATE_BLACK;
                     }
                     break;
