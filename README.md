@@ -49,7 +49,7 @@ We recommend using [Arduino IDE v2.x](https://www.arduino.cc/en/software) with t
 
 The following video shows you how to install and configure this library in Arduino, and how to get started using the examples:
 
-[![IMAGE ALT TEXT HERE](./assets/tb6-installing-the-cetalib-arduino-library-part3.JPG)](http://www.youtube.com/watch?v=OTbfWM7dy2E)
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/OTbfWM7dy2E/0.jpg)](http://www.youtube.com/watch?v=OTbfWM7dy2E)
  
 
 
