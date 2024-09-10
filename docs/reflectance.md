@@ -232,8 +232,8 @@ int line_detect = myRobot->reflectance->get_line_status();
 
 * **int**: current line detection alarm status (0 to 7)
 
-  * 0:  (Left: 0, Middle: 0, Right: 0)
-  * 1:  (Left: 0, Middle: 0, Right: 1)
+  * 0: (Left: 0, Middle: 0, Right: 0)
+  * 1: (Left: 0, Middle: 0, Right: 1)
   * 2: (Left: 0, Middle: 1, Right: 0)  // Robot centered over line
   * 3: (Left: 0, Middle: 1, Right: 1)
   * 4: (Left: 1, Middle: 0, Right: 0)
@@ -243,13 +243,16 @@ int line_detect = myRobot->reflectance->get_line_status();
 
 ### Notes
 
-* Default line detection thresholds are used until the user performs a calibration
-procedure, which samples/saves updated trip thesholds into EEPROM memory.
+* The function requires a calibration procedure, which samples, then calculates/saves optimal
+OPTO sensor trip thesholds into EEPROM memory.
+* The calibration procedure is triggered by calling the "reflectance->initialize()" function after clearing the calibration memory using the "reflectance->clear_calibration()" function as shown below.
+    * See code example below
 
 ### Example
 
 ```c++
 // Sample/display the line detection status value every second.
+// If the USER SWITCH is pressed on reset, trigger a OPTO calibration sequence
 
 #include <cetalib.h>
 
@@ -260,7 +263,12 @@ int line_detect;
 void setup() {
   Serial.begin(115200);
   delay(2000);
-  Serial.println();
+  myRobot->board->initialize();
+  if (0 == myRobot->board->get_button_level())
+  {
+    while(0 == myRobot->board->get_button_level());
+    myRobot->reflectance->clear_calibration();
+  }
   myRobot->reflectance->initialize();
 }
 
