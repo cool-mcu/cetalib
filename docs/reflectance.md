@@ -253,7 +253,7 @@ OPTO sensor trip thesholds into EEPROM memory.
 
 ```c++
 // Sample/display the line detection status value every second.
-// If the USER SWITCH is pressed on reset, trigger a OPTO calibration sequence
+// Hold USER SWITCH pressed for 2 seconds after reset to trigger a OPTO calibration sequence
 
 #include <cetalib.h>
 
@@ -263,7 +263,7 @@ int line_detect;
 
 void setup() {
   Serial.begin(115200);
-  delay(2000);
+  delay(1000);
   myRobot->board->initialize();
   if (0 == myRobot->board->get_button_level())
   {
