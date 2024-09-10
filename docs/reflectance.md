@@ -18,6 +18,7 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 * [get_middle_sensor()](<#float-get_middle_sensorvoid>)
 * [get_right_sensor()](<#float-get_right_sensorvoid>)
 * [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
 
 ## `void initialize(void)`
 
@@ -60,7 +61,11 @@ void loop() {
 
 ### See also
 
-* [tasks()](<#void-tasksvoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
 
 ## `float get_left_sensor(void)`
 
@@ -111,7 +116,11 @@ void loop() {
 
 ### See also
 
-* [initialize()](<#bool-initializevoid>)
+* [initialize()](<#void-initializevoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
 
 ## `float get_middle_sensor(void)`
 
@@ -162,7 +171,11 @@ void loop() {
 
 ### See also
 
-* [initialize()](<#bool-initializevoid>)
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
 
 ## `float get_right_sensor(void)`
 
@@ -213,7 +226,11 @@ void loop() {
 
 ### See also
 
-* [initialize()](<#bool-initializevoid>)
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>))
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
 
 ## `int get_line_status(void)`
 
@@ -306,7 +323,97 @@ void loop() {
   delay(1000);
 }
 ```
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `void clear_calibration(void)`
+
+Delete calibration data in EEPROM memory.
+
+### Syntax
+
+```c++
+myRobot->reflectance->clear_calibration();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* To initiate the procedure to update OPTO sensor trip thresholds, call this function before calling the "reflectance->initialize()" function, as shown below.
+
+### Example
+
+```c++
+// Sample/display the line detection status value every second.
+// Hold USER SWITCH pressed for 2 seconds after reset to clear calibration memory and trigger a OPTO calibration sequence
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+int line_detect;
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+  myRobot->board->initialize();
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->reflectance->clear_calibration();
+  }
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  line_detect = myRobot->reflectance->get_line_status();
+  switch (line_detect)
+  {
+    case 0:
+      Serial.println("Left: 0, Middle: 0, Right: 0");
+      break;
+    case 1:
+      Serial.println("Left: 0, Middle: 0, Right: 1");
+      break;
+    case 2:
+      Serial.println("Left: 0, Middle: 1, Right: 0");
+      break;
+    case 3:
+      Serial.println("Left: 0, Middle: 1, Right: 1");
+      break;
+    case 4:
+      Serial.println("Left: 1, Middle: 0, Right: 0");
+      break;
+    case 5:
+      Serial.println("Left: 1, Middle: 0, Right: 1");
+      break;
+    case 6:
+      Serial.println("Left: 1, Middle: 1, Right: 0");
+      break;
+    case 7:
+      Serial.println("Left: 1, Middle: 1, Right: 1");
+      break;
+    default:
+      break;
+  }
+  delay(1000);
+}
+```
 
 ### See also
 
-* [initialize()](<#bool-initializevoid>)
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
