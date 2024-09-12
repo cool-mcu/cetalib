@@ -3,7 +3,6 @@
 This module provides functions to interact with an [HC-SR04P Ultrasonic Proximity Sensor](https://abra-electronics.com/sensors/sensors-proximity-en/hc-sr04p.html)  on the [CETA IoT Robot (Kit #18-00019x)](https://www.cool-mcu.com/pages/robot-kit).
 
 <img src="../assets/pico-iot-robot-rangefinder-addon.jpg?raw=true">
-<br/><br/>
 
 Pico WH GPIO Pin Connections:
 * GP16: ECHO Signal (WHITE wire)
