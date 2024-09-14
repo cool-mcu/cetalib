@@ -38,7 +38,7 @@ myRobot->mqttc->connect(...);
 
 * The Pico W built-in LED will be lit solid when connected to access-point and broker. Will flash while connecting or re-connecting.
 * The mqttc->tasks() routine must be called regularly in loop() to maintain the connection.
-* Use the [HiveMQ browser-based MQTT Client](https://www.hivemq.com/demos/websocket-client/) to interact with the examples below.
+* Download the [MQTTX MQTT Client](https://mqttx.app/) to interact with the examples below.
 
 ### Example
 
