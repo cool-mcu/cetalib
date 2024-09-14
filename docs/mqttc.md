@@ -45,6 +45,8 @@ myRobot->mqttc->connect(...);
 ```c++
 // Connect to the Public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection.
 // Publish and subscribe topics are defined but not used.
+// Look for messages on the Serial port to confirm connection success.
+// The Pico W GREEN LED will be lit on connection success.
 
 // THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
 
