@@ -263,3 +263,97 @@ void loop() {
 ### See also
 
 * [get_left_sensor()](<#float-get_left_sensorvoid>)
+
+## `void send_message(const char *pubTopic, char *jsonPubPayload)`
+
+Publish a serialized JSON payload to a topic.
+
+### Syntax
+
+```c++
+myRobot->mqttc->send_message(pubTopic, pubPayload);
+```
+### Parameters
+
+* **const char \*pubTopic**: MQTT Publish Topic Identifier
+* **char \*jsonPubPayload**: MQTT Message Payload
+
+### Returns
+
+* None.
+
+### Notes
+
+* Payload does **not** need to be JSON formatted. JSON is typically used in IoT applictions though.
+* Use stdio function "sprintf()" to create formatted JSON messages.
+* Download the [MQTTX MQTT Client](https://mqttx.app/) to interact with the examples below.
+
+### Example
+
+```c++
+// Connect to the Public Mosquitto Broker (test.mosquitto.org)
+// Define a publication topic and payload buffer
+// Publish the potentiometer value to the topic every second
+
+// THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
+
+#include <stdio.h>    // needed for sprintf() function
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// WiFi Parameters
+const char ssid[] = "MY_SSID";        // EDIT              
+const char pass[] = "MY_PASSPHRASE";  // EDIT            
+
+// MQTT Broker URL, Username, Password
+const char MQTTbroker[] = "test.mosquitto.org";
+int MQTTport = 1883;    // EDIT: 1883 for insecure connection, or 8883 for secure connection
+const char MQTTusername[] = "";
+const char MQTTpassword[] = "";
+
+// MQTT publish topics and payload buffer
+const char potentiometerTopic[] = "CETAIoTRobot/potentiometer";
+char pubPayload[256];
+
+// Array of MQTT subscribe topics (maximum of 10 or define "" for none)
+const char *subscribeTopicIDs[] = {""};
+
+// Calculate the number of subscribe topics
+int num_subscribeTopicIDs = sizeof(subscribeTopicIDs)/sizeof(subscribeTopicIDs[0]);
+
+// define potentiometer sample interval variables
+unsigned long potSensorCurrentTime, potSensorPrevTime;
+const long potSensorInterval = 1000; // (sample interval in mS)
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  // Attempt to connect to AP and Broker
+  if (!myRobot->mqttc->connect(ssid, pass, MQTTbroker, MQTTport, MQTTusername, MQTTpassword, subscribeTopicIDs, num_subscribeTopicIDs))
+  {
+    Serial.println("Failed to initialize MQTT Client!. Stopping.");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      myRobot->board->tasks();
+    }
+  }
+}
+
+void loop() {
+  myRobot->mqttc->tasks();
+  potSensorCurrentTime = millis();
+  if ((potSensorCurrentTime - potSensorPrevTime) >= potSensorInterval)
+  {
+    potSensorPrevTime = potSensorCurrentTime;
+    sprintf(pubPayload, "%d", myRobot->board->get_potentiometer);
+    myRobot->mqttc->send_message(potentiometerTopic, pubPayload);
+  }
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
