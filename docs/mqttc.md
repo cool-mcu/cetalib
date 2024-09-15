@@ -349,7 +349,7 @@ void loop() {
   if ((potSensorCurrentTime - potSensorPrevTime) >= potSensorInterval)
   {
     potSensorPrevTime = potSensorCurrentTime;
-    sprintf(pubPayload, "%d", myRobot->board->get_potentiometer);
+    sprintf(pubPayload, "%d", myRobot->board->get_potentiometer());
     myRobot->mqttc->send_message(potentiometerTopic, pubPayload);
   }
 }
