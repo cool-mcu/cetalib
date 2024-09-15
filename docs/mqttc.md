@@ -10,6 +10,7 @@ For detailed lessons covering networking concepts, the MQTT protocol, schematics
 * [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
 * [disconnect()](<#void-disconnectvoid>)
 * [tasks()](<#void-tasksvoid>)
+* [send_message()](#void-send_messageconst-char-pubtopic-char-jsonpubpayload)
 
 ## `bool connect(const char *MySSID, const char *MyPass, const char *MQbroker, int MQport, const char *MQusername, const char *MQpassword, const char *subTopicIDs[], int size_subTopicIDs)`
 
