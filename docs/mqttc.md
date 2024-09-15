@@ -18,7 +18,7 @@ Connect to a WiFi Access Point, and then open an MQTT Client network connection 
 
 ### Syntax
 
-```c++
+```cpp
 myRobot->mqttc->connect(...);
 ```
 ### Parameters
@@ -44,7 +44,7 @@ myRobot->mqttc->connect(...);
 
 ### Example
 
-```c++
+```cpp
 // Connect to the Public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection.
 // Publish and subscribe topic variables are defined but not used.
 // Look for messages on the Serial port to confirm connection success.
