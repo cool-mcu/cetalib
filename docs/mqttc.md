@@ -351,6 +351,7 @@ void loop() {
     potSensorPrevTime = potSensorCurrentTime;
     sprintf(pubPayload, "%d", myRobot->board->get_potentiometer());
     myRobot->mqttc->send_message(potentiometerTopic, pubPayload);
+    Serial.println(pubPayload);
   }
 }
 ```
