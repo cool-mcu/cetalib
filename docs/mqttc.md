@@ -7,7 +7,7 @@ This module provides functions to interact with the WiFi/Bluetooth radio on the 
 For detailed lessons covering networking concepts, the MQTT protocol, schematics and step-by-step robot assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
-* [connect()](<#void-initializevoid>)
+* [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
 * [get_distance()](<#float-get_distancevoid>)
 
 ## `bool connect(const char *MySSID, const char *MyPass, const char *MQbroker, int MQport, const char *MQusername, const char *MQpassword, const char *subTopicIDs[], int size_subTopicIDs)`
@@ -67,8 +67,10 @@ const char MQTTpassword[] = "";
 // MQTT publish topics
 const char potentiometerTopic[] = "";
 
-// MQTT subscribe topics (maximum of 10 or define "" for none)
+// Array of MQTT subscribe topics (maximum of 10 or define "" for none)
 const char *subscribeTopicIDs[] = {""};
+
+// Calculate the number of subscribe topics
 int num_subscribeTopicIDs = sizeof(subscribeTopicIDs)/sizeof(subscribeTopicIDs[0]);
 
 void setup() {
