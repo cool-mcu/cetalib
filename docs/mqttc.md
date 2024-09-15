@@ -9,6 +9,7 @@ For detailed lessons covering networking concepts, the MQTT protocol, schematics
 ## Methods:
 * [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
 * [disconnect()](<#void-disconnectvoid>)
+* [tasks()](<#void-tasksvoid>)
 
 ## `bool connect(const char *MySSID, const char *MyPass, const char *MQbroker, int MQport, const char *MQusername, const char *MQpassword, const char *subTopicIDs[], int size_subTopicIDs)`
 
@@ -180,6 +181,82 @@ void loop() {
       myRobot->board->tasks();
     }
   }
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+
+## `void tasks(void)`
+
+Run mqttc background tasks to maintain connections and check for messages.
+
+### Syntax
+
+```c++
+myRobot->mqttc->tasks();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Connect to the Public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection by calling the "tasks()" function
+
+// THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// WiFi Parameters
+const char ssid[] = "MY_SSID";        // EDIT              
+const char pass[] = "MY_PASSPHRASE";  // EDIT            
+
+// MQTT Broker URL, Username, Password
+const char MQTTbroker[] = "test.mosquitto.org";
+int MQTTport = 1883;    // EDIT: 1883 for insecure connection, or 8883 for secure connection
+const char MQTTusername[] = "";
+const char MQTTpassword[] = "";
+
+// MQTT publish topics
+const char potentiometerTopic[] = "";
+
+// Array of MQTT subscribe topics (maximum of 10 or define "" for none)
+const char *subscribeTopicIDs[] = {""};
+
+// Calculate the number of subscribe topics
+int num_subscribeTopicIDs = sizeof(subscribeTopicIDs)/sizeof(subscribeTopicIDs[0]);
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  // Attempt to connect to AP and Broker
+  if (!myRobot->mqttc->connect(ssid, pass, MQTTbroker, MQTTport, MQTTusername, MQTTpassword, subscribeTopicIDs, num_subscribeTopicIDs))
+  {
+    Serial.println("Failed to initialize MQTT Client!. Stopping.");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      myRobot->board->tasks();
+    }
+  }
+}
+
+void loop() {
+  myRobot->mqttc->tasks();
 }
 ```
 
