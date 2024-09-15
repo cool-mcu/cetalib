@@ -36,15 +36,15 @@ myRobot->mqttc->connect(...);
 
 ### Notes
 
-* The Pico W built-in LED will be lit solid when connected to access-point and broker. Will flash while connecting or re-connecting.
-* The mqttc->tasks() routine must be called regularly in loop() to maintain the connection.
+* The Pico W built-in LED will flash during connection attempts, and will be lit solid when connected to the access-point and broker.
+* The mqttc->tasks() routine must be called regularly in loop() to maintain the network connection.
 * Download the [MQTTX MQTT Client](https://mqttx.app/) to interact with the examples below.
 
 ### Example
 
 ```c++
 // Connect to the Public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection.
-// Publish and subscribe topics are defined but not used.
+// Publish and subscribe topic variables are defined but not used.
 // Look for messages on the Serial port to confirm connection success.
 // The Pico W GREEN LED will be lit on connection success.
 
@@ -55,8 +55,8 @@ myRobot->mqttc->connect(...);
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
 // WiFi Parameters
-const char ssid[] = "MY_SSID";               
-const char pass[] = "MY_PASSPHRASE";              
+const char ssid[] = "MY_SSID";        // EDIT              
+const char pass[] = "MY_PASSPHRASE";  // EDIT            
 
 // MQTT Broker URL, Username, Password
 const char MQTTbroker[] = "test.mosquitto.org";
@@ -65,12 +65,10 @@ const char MQTTusername[] = "";
 const char MQTTpassword[] = "";
 
 // MQTT publish topics
-const char potentiometerTopic[] = "CETAIoTRobot/out/potentiometer";
+const char potentiometerTopic[] = "";
 
 // MQTT subscribe topics (maximum of 10 or define "" for none)
-const char ledControlTopic[] = "CETAIoTRobot/in/ledControl";
-const char *subscribeTopicIDs[] = {ledControlTopic};
-//const char *subscribeTopicIDs[] = {""};
+const char *subscribeTopicIDs[] = {""};
 int num_subscribeTopicIDs = sizeof(subscribeTopicIDs)/sizeof(subscribeTopicIDs[0]);
 
 void setup() {
