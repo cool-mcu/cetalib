@@ -368,9 +368,10 @@ Check if a message has been received for a specific subscription topic.
 ### Syntax
 
 ```c++
+char subPayload[];
 if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 {
-  subPayload = myRobot->mqttc->receive_message();
+  strcpy(subPayload, myRobot->mqttc->receive_message());
 }
 ```
 ### Parameters
@@ -387,6 +388,8 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 
 * Messages are not buffered. Poll for messages in the main loop as fast as possible so no messages are missed.
 * If a message is detected, you must read the message using the mqttc->receive_message() function as shown below
+* You must add #include <string.h> to access the strcpy function needed to transfer the message contents into your own buffer.
+* mqttc will receive a maximum message size of 128 bytes 
 
 ### Example
 
@@ -397,7 +400,8 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 
 // THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
 
-#include <stdio.h>    // needed for sprintf() function
+#include <stdio.h>    // needed for "sprintf()" function
+#include <string.h>   // needed for "strcpy()" function
 #include <cetalib.h>
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
@@ -416,7 +420,7 @@ const char MQTTpassword[] = "";
 const char potentiometerTopic[] = "";
 
 // Array of MQTT subscribe topics (maximum of 10 or define "" for none)
-const char ledControlTopic[] = "CETAIoTRobot/in/ledControl"
+const char ledControlTopic[] = "CETAIoTRobot/in/ledControl";
 const char *subscribeTopicIDs[] = {ledControlTopic};
 
 // A payload buffer to store the received message
@@ -445,7 +449,7 @@ void loop() {
   myRobot->mqttc->tasks();
   if (myRobot->mqttc->is_message_available(ledControlTopic))
   {
-    subPayload = myRobot->mqttc->receive_message();
+    strcpy(subPayload, myRobot->mqttc->receive_message());
     Serial.print("Received message: ");
     Serial.println(subPayload);
   }
