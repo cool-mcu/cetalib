@@ -11,6 +11,7 @@ For detailed lessons covering networking concepts, the MQTT protocol, schematics
 * [disconnect()](<#void-disconnectvoid>)
 * [tasks()](<#void-tasksvoid>)
 * [send_message()](#void-send_messageconst-char-pubtopic-char-jsonpubpayload)
+* [is_message_available()](#int-is_message_availableconst-char-subtopic)
 
 ## `bool connect(const char *MySSID, const char *MyPass, const char *MQbroker, int MQport, const char *MQusername, const char *MQpassword, const char *subTopicIDs[], int size_subTopicIDs)`
 
