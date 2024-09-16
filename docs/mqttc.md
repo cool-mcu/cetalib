@@ -389,7 +389,8 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 * Messages are not buffered. Poll for messages in the main loop as fast as possible so no messages are missed.
 * If a message is detected, you must read the message using the mqttc->receive_message() function as shown below
 * You must add #include <string.h> to access the strcpy function needed to transfer the message contents into your own buffer.
-* mqttc will receive a maximum message size of 128 bytes 
+* mqttc will receive a maximum message size of 128 bytes
+* Download the [MQTTX MQTT Client](https://mqttx.app/) to interact with the examples below.
 
 ### Example
 
