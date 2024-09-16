@@ -359,3 +359,98 @@ void loop() {
 ### See also
 
 * [get_left_sensor()](<#float-get_left_sensorvoid>)
+
+## `int is_message_available(const char *subTopic)`
+
+Check if a message has been received for a specific subscription topic.        
+
+### Syntax
+
+```c++
+if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
+{
+  subPayload = myRobot->mqttc->receive_message();
+}
+```
+### Parameters
+
+* **const char \*subTopic**: MQTT Subscribe Topic Identifier to evaluate
+
+### Returns
+
+* **int**: Result of the inquiry.
+  * 1: Message was received on the topic
+  * 0: Message was not received on the topic 
+
+### Notes
+
+* Messages are not buffered. Poll for messages in the main loop as fast as possible so no messages are missed.
+* If a message is detected, you must read the message using the mqttc->receive_message() function as shown below
+
+### Example
+
+```c++
+// Connect to the Public Mosquitto Broker (test.mosquitto.org)
+// Define an "led Control" subscription topic and payload buffer
+// Print received messages to the Serial port
+
+// THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
+
+#include <stdio.h>    // needed for sprintf() function
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// WiFi Parameters
+const char ssid[] = "MY_SSID";        // EDIT              
+const char pass[] = "MY_PASSPHRASE";  // EDIT            
+
+// MQTT Broker URL, Username, Password
+const char MQTTbroker[] = "test.mosquitto.org";
+int MQTTport = 1883;    // EDIT: 1883 for insecure connection, or 8883 for secure connection
+const char MQTTusername[] = "";
+const char MQTTpassword[] = "";
+
+// MQTT publish topics and payload buffer
+const char potentiometerTopic[] = "";
+
+// Array of MQTT subscribe topics (maximum of 10 or define "" for none)
+const char ledControlTopic[] = "CETAIoTRobot/in/ledControl"
+const char *subscribeTopicIDs[] = {ledControlTopic};
+
+// A payload buffer to store the received message
+char subPayload[256];
+
+// Calculate the number of subscribe topics
+int num_subscribeTopicIDs = sizeof(subscribeTopicIDs)/sizeof(subscribeTopicIDs[0]);
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  // Attempt to connect to AP and Broker
+  if (!myRobot->mqttc->connect(ssid, pass, MQTTbroker, MQTTport, MQTTusername, MQTTpassword, subscribeTopicIDs, num_subscribeTopicIDs))
+  {
+    Serial.println("Failed to initialize MQTT Client!. Stopping.");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      myRobot->board->tasks();
+    }
+  }
+}
+
+void loop() {
+  myRobot->mqttc->tasks();
+  if (myRobot->mqttc->is_message_available(ledControlTopic))
+  {
+    subPayload = myRobot->mqttc->receive_message();
+    Serial.print("Received message: ");
+    Serial.println(subPayload);
+  }
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
