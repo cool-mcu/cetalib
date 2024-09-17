@@ -386,7 +386,7 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 
 ### Notes
 
-* Messages are not buffered. Poll for messages in the main loop as fast as possible so no messages are missed.
+* Messages are not buffered. Call the "myRobot->mqttc->tasks()" function in the main loop as fast as possible so no messages are missed.
 * If a message is detected, you must read the message using the mqttc->receive_message() function as shown below
 * You must add #include <string.h> to access the strcpy function needed to transfer the message contents into your own buffer.
 * mqttc will receive a maximum message size of 128 bytes
@@ -397,7 +397,7 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 ```c
 // Connect to the Public Mosquitto Broker (test.mosquitto.org)
 // Define an "led Control" subscription topic and payload buffer
-// Print received messages to the Serial port
+// Display received messages to the Serial port
 
 // THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
 
@@ -424,7 +424,7 @@ const char potentiometerTopic[] = "";
 const char ledControlTopic[] = "CETAIoTRobot/in/ledControl";
 const char *subscribeTopicIDs[] = {ledControlTopic};
 
-// A payload buffer to store the received message
+// A payload buffer to store the received subscription messages
 char subPayload[256];
 
 // Calculate the number of subscribe topics
@@ -453,6 +453,117 @@ void loop() {
     strcpy(subPayload, myRobot->mqttc->receive_message());
     Serial.print("Received message: ");
     Serial.println(subPayload);
+  }
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+
+## `char* receive_message(void)`
+
+Obtain a pointer to the latest received subscription message.        
+
+### Syntax
+
+```c
+char subPayload[];
+if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
+{
+  strcpy(subPayload, myRobot->mqttc->receive_message());
+}
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **char***: A pointer to the latest received message.
+  * use strcpy() to save the contents to a local buffer
+
+### Notes
+
+* Messages are not buffered. Call the "myRobot->mqttc->tasks()" function in the main loop as fast as possible so no messages are missed.
+* You must add #include <string.h> to access the strcpy function needed to transfer the message contents into your own buffer.
+* mqttc will receive a maximum message size of 128 bytes
+* Download the [MQTTX MQTT Client](https://mqttx.app/) to interact with the examples below.
+
+### Example
+
+```c
+// Connect to the Public Mosquitto Broker (test.mosquitto.org)
+// Define a "potentiometer" publication topic and payload buffer
+// Define an "led Control" subscription topic and payload buffer
+// Publish current potentiometer value when the USER SWITCH is pressed
+// Display received led Control messages to the Serial port
+
+// THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
+
+#include <stdio.h>    // needed for "sprintf()" function
+#include <string.h>   // needed for "strcpy()" function
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// WiFi Parameters
+const char ssid[] = "MY_SSID";        // EDIT              
+const char pass[] = "MY_PASSPHRASE";  // EDIT            
+
+// MQTT Broker URL, Username, Password
+const char MQTTbroker[] = "test.mosquitto.org";
+int MQTTport = 1883;    // EDIT: 1883 for insecure connection, or 8883 for secure connection
+const char MQTTusername[] = "";
+const char MQTTpassword[] = "";
+
+// MQTT publish topics and payload buffer
+const char potentiometerTopic[] = "CETAIoTRobot/out/potValue";
+
+// A payload buffer to store the publish payload messages
+char pubPayload[256];
+
+// Array of MQTT subscribe topics (maximum of 10 or define "" for none)
+const char ledControlTopic[] = "CETAIoTRobot/in/ledControl";
+const char *subscribeTopicIDs[] = {ledControlTopic};
+
+// A payload buffer to store the received subscription messages
+char subPayload[256];
+
+// Calculate the number of subscribe topics
+int num_subscribeTopicIDs = sizeof(subscribeTopicIDs)/sizeof(subscribeTopicIDs[0]);
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  // Attempt to connect to AP and Broker
+  if (!myRobot->mqttc->connect(ssid, pass, MQTTbroker, MQTTport, MQTTusername, MQTTpassword, subscribeTopicIDs, num_subscribeTopicIDs))
+  {
+    Serial.println("Failed to initialize MQTT Client!. Stopping.");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      myRobot->board->tasks();
+    }
+  }
+}
+
+void loop() {
+  myRobot->mqttc->tasks();
+  myRobot->board->tasks();
+  if (myRobot->mqttc->is_message_available(ledControlTopic))
+  {
+    strcpy(subPayload, myRobot->mqttc->receive_message());
+    Serial.print("Received message: ");
+    Serial.println(subPayload);
+  }
+
+  if (myRobot->board->is_button_pressed())
+  {
+    sprintf(pubPayload, "%d", myRobot->board->get_potentiometer());
+    myRobot->mqttc->send_message(potentiometerTopic, pubPayload);
+    Serial.println(pubPayload);
   }
 }
 ```
