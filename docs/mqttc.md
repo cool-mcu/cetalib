@@ -100,7 +100,11 @@ void loop() {
 
 ### See also
 
-* [initialize()](<#void-initializevoid>)
+* [disconnect()](<#void-disconnectvoid>)
+* [tasks()](<#void-tasksvoid>)
+* [send_message()](#void-send_messageconst-char-pubtopic-char-jsonpubpayload)
+* [is_message_available()](#int-is_message_availableconst-char-subtopic)
+* [receive_message()](#char-receive_messagevoid)
 
 ## `void disconnect(void)`
 
@@ -189,7 +193,11 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
+* [tasks()](<#void-tasksvoid>)
+* [send_message()](#void-send_messageconst-char-pubtopic-char-jsonpubpayload)
+* [is_message_available()](#int-is_message_availableconst-char-subtopic)
+* [receive_message()](#char-receive_messagevoid)
 
 ## `void tasks(void)`
 
@@ -265,7 +273,11 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
+* [disconnect()](<#void-disconnectvoid>)
+* [send_message()](#void-send_messageconst-char-pubtopic-char-jsonpubpayload)
+* [is_message_available()](#int-is_message_availableconst-char-subtopic)
+* [receive_message()](#char-receive_messagevoid)
 
 ## `void send_message(const char *pubTopic, char *jsonPubPayload)`
 
@@ -360,7 +372,11 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
+* [disconnect()](<#void-disconnectvoid>)
+* [tasks()](<#void-tasksvoid>)
+* [is_message_available()](#int-is_message_availableconst-char-subtopic)
+* [receive_message()](#char-receive_messagevoid)
 
 ## `int is_message_available(const char *subTopic)`
 
@@ -460,7 +476,11 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
+* [disconnect()](<#void-disconnectvoid>)
+* [tasks()](<#void-tasksvoid>)
+* [send_message()](#void-send_messageconst-char-pubtopic-char-jsonpubpayload)
+* [receive_message()](#char-receive_messagevoid)
 
 ## `char* receive_message(void)`
 
@@ -571,4 +591,8 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [connect()](#bool-connectconst-char-myssid-const-char-mypass-const-char-mqbroker-int-mqport-const-char-mqusername-const-char-mqpassword-const-char-subtopicids-int-size_subtopicids)
+* [disconnect()](<#void-disconnectvoid>)
+* [tasks()](<#void-tasksvoid>)
+* [send_message()](#void-send_messageconst-char-pubtopic-char-jsonpubpayload)
+* [is_message_available()](#int-is_message_availableconst-char-subtopic)
