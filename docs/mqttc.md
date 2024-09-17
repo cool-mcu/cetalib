@@ -19,7 +19,7 @@ Connect to a WiFi Access Point, and then open an MQTT Client network connection 
 
 ### Syntax
 
-```c++
+```c
 myRobot->mqttc->connect(...);
 ```
 ### Parameters
@@ -45,7 +45,7 @@ myRobot->mqttc->connect(...);
 
 ### Example
 
-```c++
+```c
 // Connect to the Public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection.
 // Publish and subscribe topic variables are defined but not used.
 // Look for messages on the Serial port to confirm connection success.
@@ -107,7 +107,7 @@ Disconnect from the Broker & Access Point.
 
 ### Syntax
 
-```c++
+```c
 myRobot->mqttc->disconnect();
 ```
 ### Parameters
@@ -124,7 +124,7 @@ myRobot->mqttc->disconnect();
 
 ### Example
 
-```c++
+```c
 // Connect to the Public Mosquitto Broker (test.mosquitto.org)
 // Disconnect from the Broker (and Access Point) when the USER SWITCH is pressed
 
@@ -196,7 +196,7 @@ Run mqttc background tasks to maintain connections and check for messages.
 
 ### Syntax
 
-```c++
+```c
 myRobot->mqttc->tasks();
 ```
 ### Parameters
@@ -213,7 +213,7 @@ myRobot->mqttc->tasks();
 
 ### Example
 
-```c++
+```c
 // Connect to the Public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection by calling the "tasks()" function
 
 // THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
@@ -272,7 +272,7 @@ Publish a serialized JSON payload to a topic.
 
 ### Syntax
 
-```c++
+```c
 myRobot->mqttc->send_message(pubTopic, pubPayload);
 ```
 ### Parameters
@@ -292,7 +292,7 @@ myRobot->mqttc->send_message(pubTopic, pubPayload);
 
 ### Example
 
-```c++
+```c
 // Connect to the Public Mosquitto Broker (test.mosquitto.org)
 // Define a publication topic and payload buffer
 // Publish the potentiometer value to the topic every second
@@ -367,7 +367,7 @@ Check if a message has been received for a specific subscription topic.
 
 ### Syntax
 
-```c++
+```c
 char subPayload[];
 if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 {
@@ -394,7 +394,7 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 
 ### Example
 
-```c++
+```c
 // Connect to the Public Mosquitto Broker (test.mosquitto.org)
 // Define an "led Control" subscription topic and payload buffer
 // Print received messages to the Serial port
