@@ -16,6 +16,9 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 * [set_angle()](<#void-set_angleint-angle>)
 * [get_angle()](<#int-get_anglevoid>)
 * [clear_calibration()](<#void-clear_calibrationvoid>)
+* [home()](<#void-homevoid>)
+* [lift()](<#void-liftvoid>)
+* [drop()](<#void-dropvoid>)
 
 ## `void initialize(void)`
 
