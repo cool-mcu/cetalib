@@ -18,3 +18,101 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 * [get_right_sensor()](<#float-get_right_sensorvoid>)
 * [get_line_status()](<#int-get_line_statusvoid>)
 * [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `void initialize(void)`
+
+Initiallize pins, state variables, calibrate LIFT/DROP angles if desired.
+
+### Syntax
+
+```c++
+myRobot->servoarm->initialize();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Initialize the servoarm module, then do nothing.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->servoarm->initialize();
+}
+
+void loop() {
+  // Use the servoarm functions here
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `void set_angle(int angle)`
+
+Set servoarm angle (0 to 180 degrees).
+
+### Syntax
+
+```c++
+myRobot->servoarm->set_angle(45);
+```
+### Parameters
+
+* **angle**: integer containing the current desired servoarm angle (0 to 180 deg)
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Set the servoarm angle based on the potentiometer reading.
+// The potentiometer reeading (0-4095) is linearly mapped to angle (0 to 180 deg)
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->board->initialize();
+  myRobot->servoarm->initialize();
+}
+
+void loop() {
+  angle = (int)map(myRobot->board->get_potentiometer(), 0, 4096, 0, 180);
+  myRobot->servoarm->set_angle(angle);
+  delay(100);
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
