@@ -177,7 +177,7 @@ void loop() {
 
 ## `void clear_calibration(void)`
 
-Delete saved calibration data, triggering a calibration sequence when initialize() is executed.
+Erase servoarm calibration data, triggering a calibration sequence when servoarm->initialize() is called.
 
 ### Syntax
 
