@@ -14,6 +14,7 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 ## Methods:
 * [initialize()](<#void-initializevoid>)
 * [set_angle()](<#void-set_angleint-angle>)
+* [get_angle()](<#int-get_anglevoid>)
 
 ## `void initialize(void)`
 
@@ -64,7 +65,7 @@ void loop() {
 
 ## `void set_angle(int angle)`
 
-Set servoarm angle (0 to 180 degrees).
+Set the servoarm angle (0 to 180 degrees).
 
 ### Syntax
 
@@ -99,6 +100,66 @@ void setup() {
 }
 
 void loop() {
+  int angle = (int)map(myRobot->board->get_potentiometer(), 0, 4095, 0, 180);
+  myRobot->servoarm->set_angle(angle);
+  delay(100);
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `int get_angle(void)`
+
+Retrieve the most recent angle setting.
+
+### Syntax
+
+```c++
+int angle = myRobot->servoarm->get_angle();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **int**: The most recent servoangle setting (0 to 180 degrees)
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Set the servoarm angle based on the potentiometer reading.
+// The potentiometer reeading (0-4095) is linearly mapped to angle (0 to 180 deg)
+// Read/display the most recent angle setting when the USER SWITCH is pressed
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  myRobot->servoarm->initialize();
+}
+
+void loop() {
+  myRobot->board->tasks();
+  if(myRobot->board->is_button_pressed())
+  {
+    Serial.print("Current angle: ");
+    Serial.println(myRobot->servoarm->get_angle());
+  }
   int angle = (int)map(myRobot->board->get_potentiometer(), 0, 4095, 0, 180);
   myRobot->servoarm->set_angle(angle);
   delay(100);
