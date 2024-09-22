@@ -89,7 +89,7 @@ myRobot->servoarm->set_angle(45);
 
 ```c++
 // Set the servoarm angle based on the potentiometer reading.
-// The potentiometer reeading (0-4095) is linearly mapped to angle (0 to 180 deg)
+// The potentiometer reading (0-4095) is linearly mapped to angle (0 to 180 deg)
 
 #include <cetalib.h>
 
@@ -140,7 +140,7 @@ int angle = myRobot->servoarm->get_angle();
 
 ```c++
 // Set the servoarm angle based on the potentiometer reading.
-// The potentiometer reeading (0-4095) is linearly mapped to angle (0 to 180 deg)
+// The potentiometer reading (0-4095) is linearly mapped to angle (0 to 180 deg)
 // Read/display the most recent angle setting when the USER SWITCH is pressed
 
 #include <cetalib.h>
