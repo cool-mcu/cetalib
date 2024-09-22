@@ -128,6 +128,7 @@ void servoarm_init(void)
                         servoarmCal.drop_angle = calAngle;      // save current setting as "DROP"
                         board_led_off();                        // turn off the led
                         servoarmCalState = SERVOARM_CAL_IDLE;   // terminate calibration
+                        Serial.println("ServoArm Calibration Routine Completed.");
                     }
                     else
                     {
