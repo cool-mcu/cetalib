@@ -15,6 +15,7 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 * [initialize()](<#void-initializevoid>)
 * [set_angle()](<#void-set_angleint-angle>)
 * [get_angle()](<#int-get_anglevoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
 
 ## `void initialize(void)`
 
@@ -163,6 +164,67 @@ void loop() {
   int angle = (int)map(myRobot->board->get_potentiometer(), 0, 4095, 0, 180);
   myRobot->servoarm->set_angle(angle);
   delay(100);
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `void clear_calibration(void)`
+
+Delete saved calibration data, triggering a calibration sequence when initialize() is executed.
+
+### Syntax
+
+```c++
+myRobot->servoarm->clear_calibration();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* This function clears 3 saved position settings for the arm:
+  * HOME position
+  * LIFT position
+  * DROP position
+* The next time servoarm->initialize() is called, a calibration sequence will be triggered to set new values for these settings
+* Open a serial terminal and follow the provided instructions to complete the calibration sequence
+
+### Example
+
+```c++
+// Press/hold USER SWITCH on reset to clear servoarm calibration memory.
+// This will trigger a calibration sequence when servoarm->initialize() is called
+// Follow the instructions on the serial terminal to set new servoarm positions for HOME, LIFT, DROP
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  if(0 == myRobot->board->get_button_level())
+  {
+    myRobot->servoarm->clear_calibration();
+  }
+  myRobot->servoarm->initialize();
+}
+
+void loop() {
+  // Use the servoarm functions here
 }
 ```
 
