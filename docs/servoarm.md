@@ -204,7 +204,7 @@ myRobot->servoarm->clear_calibration();
 ### Example
 
 ```c++
-// Press/hold USER SWITCH on reset to clear servoarm calibration memory.
+// Press/hold USER SWITCH for 3 seconds on reset to clear servoarm calibration memory.
 // This will trigger a calibration sequence when servoarm->initialize() is called
 // Follow the instructions on the serial terminal to set new servoarm positions for HOME, LIFT, DROP
 
