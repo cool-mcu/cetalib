@@ -260,7 +260,7 @@ int line_detect = myRobot->reflectance->get_line_status();
 
 ### Notes
 
-* The function requires a calibration procedure, which samples, then calculates/saves optimal
+* The function requires a calibration procedure to be completed, which samples, then calculates/saves optimal
 OPTO sensor trip thesholds into EEPROM memory.
 * The calibration procedure is triggered by calling the "reflectance->initialize()" function after clearing the calibration memory using the "reflectance->clear_calibration()" function as shown below.
     * See code example below
