@@ -77,7 +77,7 @@ void servoarm_init(void)
     uint32_t testRead = 0;
     if(EEPROM.get(SERVOARM_CAL_EEPROM_ADDRESS_START, testRead) == 0xFFFFFFFF)
     {
-        Serial.println("ServoArm Calibration Routine Triggered");
+        Serial.println("ServoArm Calibration Routine Triggered. Press button to begin.");
         // EEPROM is blank, perform calibration procedure
         servoarmCalState = SERVOARM_CAL_WAIT_BEGIN;
         board_led_pattern(5);
@@ -91,6 +91,7 @@ void servoarm_init(void)
                     {
                         board_led_pattern(1);                   // indicate "SERVOARM_CAL_HOME" state
                         servoarmCalState = SERVOARM_CAL_HOME;   // set the "home" angle
+                        Serial.println("Rotate POT to set HOME position. Press button when done.");
                     }
                     break;
                 case SERVOARM_CAL_HOME:
@@ -99,6 +100,7 @@ void servoarm_init(void)
                         servoarmCal.home_angle = calAngle;      // save current setting as "HOME"
                         board_led_pattern(2);                   // indicate "SERVOARM_CAL_LIFT" state
                         servoarmCalState = SERVOARM_CAL_LIFT;   // set the "lift" angle
+                        Serial.println("Rotate POT to set LIFT position. Press button when done.");
                     }
                     else
                     {
@@ -112,6 +114,7 @@ void servoarm_init(void)
                         servoarmCal.lift_angle = calAngle;      // save current setting as "LIFT"
                         board_led_pattern(3);                   // indicate "SERVOARM_CAL_DROP" state
                         servoarmCalState = SERVOARM_CAL_DROP;   // set the "drop" angle
+                        Serial.println("Rotate POT to set DROP position. Press button when done.");
                     }
                     else
                     {
