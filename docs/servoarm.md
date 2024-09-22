@@ -61,11 +61,12 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
-* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
-* [get_right_sensor()](<#float-get_right_sensorvoid>)
-* [get_line_status()](<#int-get_line_statusvoid>)
+* [set_angle()](<#void-set_angleint-angle>)
+* [get_angle()](<#int-get_anglevoid>)
 * [clear_calibration()](<#void-clear_calibrationvoid>)
+* [home()](<#void-homevoid>)
+* [lift()](<#void-liftvoid>)
+* [drop()](<#void-dropvoid>)
 
 ## `void set_angle(int angle)`
 
@@ -112,11 +113,12 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
-* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
-* [get_right_sensor()](<#float-get_right_sensorvoid>)
-* [get_line_status()](<#int-get_line_statusvoid>)
+* [initialize()](<#void-initializevoid>)
+* [get_angle()](<#int-get_anglevoid>)
 * [clear_calibration()](<#void-clear_calibrationvoid>)
+* [home()](<#void-homevoid>)
+* [lift()](<#void-liftvoid>)
+* [drop()](<#void-dropvoid>)
 
 ## `int get_angle(void)`
 
@@ -172,11 +174,12 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
-* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
-* [get_right_sensor()](<#float-get_right_sensorvoid>)
-* [get_line_status()](<#int-get_line_statusvoid>)
+* [initialize()](<#void-initializevoid>)
+* [set_angle()](<#void-set_angleint-angle>)
 * [clear_calibration()](<#void-clear_calibrationvoid>)
+* [home()](<#void-homevoid>)
+* [lift()](<#void-liftvoid>)
+* [drop()](<#void-dropvoid>)
 
 ## `void clear_calibration(void)`
 
@@ -233,11 +236,12 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
-* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
-* [get_right_sensor()](<#float-get_right_sensorvoid>)
-* [get_line_status()](<#int-get_line_statusvoid>)
-* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [initialize()](<#void-initializevoid>)
+* [set_angle()](<#void-set_angleint-angle>)
+* [get_angle()](<#int-get_anglevoid>)
+* [home()](<#void-homevoid>)
+* [lift()](<#void-liftvoid>)
+* [drop()](<#void-dropvoid>)
 
 ## `void home(void)`
 
@@ -322,8 +326,7 @@ void loop() {
 
 ### See also
 
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
-* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
-* [get_right_sensor()](<#float-get_right_sensorvoid>)
-* [get_line_status()](<#int-get_line_statusvoid>)
+* [initialize()](<#void-initializevoid>)
+* [set_angle()](<#void-set_angleint-angle>)
+* [get_angle()](<#int-get_anglevoid>)
 * [clear_calibration()](<#void-clear_calibrationvoid>)
