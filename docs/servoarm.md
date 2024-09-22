@@ -235,3 +235,92 @@ void loop() {
 * [get_right_sensor()](<#float-get_right_sensorvoid>)
 * [get_line_status()](<#int-get_line_statusvoid>)
 * [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `void home(void)`
+
+Set servo to "HOME" position (requires calibration)
+
+## `void lift(void)`
+
+Set servo to "LIFT" position (requires calibration)
+
+## `void drop(void)`
+
+Set servo to "DROP" position (requires calibration)
+
+### Syntax
+
+```c++
+myRobot->servoarm->home();
+myRobot->servoarm->lift();
+myRobot->servoarm->drop();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* The HOME, LIFT ad DROP position require executing a calibration sequence. See the [servoarm->clear_calibration()](<#void-clear_calibrationvoid>) example
+
+### Example
+
+```c++
+// Press the USER SWITCH to cycle through the HOME, LIFT and DROP servoarm positions
+// Requires a previously completed calibration sequence.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// define some servoarm states
+enum SERVOARM_POSITION {HOME=0, LIFT, DROP} servoPosition = HOME;
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+  myRobot->board->initialize();
+  myRobot->servoarm->initialize();
+  myRobot->servoarm->home();
+  Serial.println("ServoArm Position: HOME");
+}
+
+void loop() {
+  myRobot->board->tasks();
+  if(myRobot->board->is_button_pressed())
+  {
+    switch(servoPosition)
+    {
+      case HOME:
+        servoPosition = LIFT;
+        myRobot->servoarm->lift();
+        Serial.println("ServoArm Position: LIFT");
+        break;
+      case LIFT:
+        servoPosition = DROP;
+        myRobot->servoarm->drop();
+        Serial.println("ServoArm Position: DROP");
+        break;
+      case DROP:
+        servoPosition = HOME;
+        myRobot->servoarm->home();
+        Serial.println("ServoArm Position: HOME");
+        break;
+      default:
+        break;    
+    }
+  }
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
