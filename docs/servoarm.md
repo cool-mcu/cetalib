@@ -194,7 +194,7 @@ myRobot->servoarm->clear_calibration();
 
 ### Notes
 
-* This function clears 3 saved position settings for the arm:
+* This function erases 3 saved position settings for the arm:
   * HOME position
   * LIFT position
   * DROP position
