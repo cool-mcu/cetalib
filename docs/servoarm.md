@@ -13,11 +13,7 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 
 ## Methods:
 * [initialize()](<#void-initializevoid>)
-* [get_left_sensor()](<#float-get_left_sensorvoid>)
-* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
-* [get_right_sensor()](<#float-get_right_sensorvoid>)
-* [get_line_status()](<#int-get_line_statusvoid>)
-* [clear_calibration()](<#void-clear_calibrationvoid>)
+* [set_angle()](<#void-set_angleint-angle>)
 
 ## `void initialize(void)`
 
