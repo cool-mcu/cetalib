@@ -24,7 +24,7 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 // define an output print buffer
 char outBuffer[128];
 
-// define some aervoarm states
+// define some servoarm states
 enum SERVOARM_POSITION {HOME=0, LIFT, DROP} servoPosition = HOME;
 
 // the setup function runs once when you press reset or power the board
