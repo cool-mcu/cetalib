@@ -99,7 +99,7 @@ void setup() {
 }
 
 void loop() {
-  angle = (int)map(myRobot->board->get_potentiometer(), 0, 4096, 0, 180);
+  int angle = (int)map(myRobot->board->get_potentiometer(), 0, 4095, 0, 180);
   myRobot->servoarm->set_angle(angle);
   delay(100);
 }
