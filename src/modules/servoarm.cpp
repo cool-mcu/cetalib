@@ -67,7 +67,8 @@ void servoarm_init(void)
     Servo1.attach(SERVOARM_PIN, SERVOARM_MIN_PULSE_WIDTH, SERVOARM_MAX_PULSE_WIDTH);
 
     // Initiallize a default (safe) home position for the servo
-    servoarm_set_angle(servoarmCal.home_angle);
+    setAngle = servoarmCal.home_angle;
+    servoarm_set_angle(setAngle);
 
     // set ADC resolution to 12-bit
     analogReadResolution(12);
@@ -105,7 +106,7 @@ void servoarm_init(void)
                     else
                     {
                         calAngle = (int)map(analogRead(POT_PIN), 0, 4096, 0, 180);
-                        servoarm_set_angle(calAngle);
+                        Servo1.write(calAngle);
                     }
                     break;
                 case SERVOARM_CAL_LIFT:
@@ -119,7 +120,7 @@ void servoarm_init(void)
                     else
                     {
                         calAngle = (int)map(analogRead(POT_PIN), 0, 4096, 0, 180);
-                        servoarm_set_angle(calAngle);
+                        Servo1.write(calAngle);
                     }
                     break;
                 case SERVOARM_CAL_DROP:
@@ -133,7 +134,7 @@ void servoarm_init(void)
                     else
                     {
                         calAngle = (int)map(analogRead(POT_PIN), 0, 4096, 0, 180);
-                        servoarm_set_angle(calAngle);
+                        Servo1.write(calAngle);
                     }
                     break;    
                 default:
@@ -166,15 +167,17 @@ void servoarm_init(void)
     EEPROM.end();
 }
 
-void servoarm_set_angle(int angle)
+void servoarm_set_angle(int desiredAngle)
 {
-    if(angle < 0)
+    int delta, i;
+
+    if(desiredAngle < 0)
     {
         Servo1.write(0);    // clamp at min angle
         setAngle = 0;
     }
 
-    else if(angle > 180)
+    else if(desiredAngle > 180)
     {
         Servo1.write(180);  // clamp at max angle
         setAngle = 180;
@@ -182,8 +185,29 @@ void servoarm_set_angle(int angle)
 
     else
     {
-        Servo1.write(angle);
-        setAngle = angle;
+        if(desiredAngle > setAngle)
+        {
+            for(i=setAngle; i< desiredAngle; i++)
+            {
+                Servo1.write(i);
+                delay(20);
+            }
+            setAngle = i;
+        }
+        else if(desiredAngle < setAngle)
+        {
+            for(i=setAngle; i> desiredAngle; i--)
+            {
+                Servo1.write(i);
+                delay(20);
+            }
+            setAngle = i;
+        }
+        else
+        {
+            Servo1.write(desiredAngle);
+            setAngle = desiredAngle;      
+        }
     } 
 }
 

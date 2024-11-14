@@ -53,7 +53,7 @@ struct SERVOARM_CAL
 
 /*** Public Function Prototypes ***********************************************/
 void servoarm_init(void);
-void servoarm_set_angle(int angle);
+void servoarm_set_angle(int desiredAngle);
 int servoarm_get_angle(void);
 void servoarm_home(void);
 void servoarm_lift(void);
