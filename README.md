@@ -1,12 +1,12 @@
 # cetalib Library for Arduino
 
-**cetalib** is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit)
+**cetalib** is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit) and the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html).
 
-[<img src="./assets/pico-iot-robot-complete-hi-res.JPG?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
+[<img src="./assets/ceta-and-xrp-robot.png?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
 
-This robot and library support the learning objectives of our [RPi Pico Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
+This robot and library support the learning objectives of our [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
 
-## Primary Modules in the Library
+## Primary Modules in the Library (CETA IoT Robot (Pico WH))
 * [board](https://github.com/cool-mcu/cetalib/blob/main/docs/board.md)
   * Provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER
 * [diffDrive](https://github.com/cool-mcu/cetalib/blob/main/docs/diffDrive.md)
@@ -37,7 +37,7 @@ The following libraries need to be installed into your Arduino environment:
 * [SSD1306Ascii Library (v1.3.5)](https://github.com/greiman/SSD1306Ascii/archive/refs/tags/1.3.5.zip)
 
 The following core needs to be installed into your Arduino environment using the Boards Manager:
-* [Raspberry Pi Pico/RP2040 Core by Earl Philhower v3.95](https://github.com/earlephilhower/arduino-pico)
+* [Raspberry Pi Pico/RP2040 Core by Earl Philhower](https://github.com/earlephilhower/arduino-pico)
 
 # Installation
 
@@ -52,7 +52,22 @@ The following video walks you through this procedure:
 
 
 # Using the Library
-To use this library:
+After creating a new sketch, the very first thing you need to do is select the appropriate board for the robot you are using.
+
+The SparkFun XRP Robot uses the **SparkFun XRP Controller** board type:
+
+<img src="./assets/xrp_board_type.jpg?raw=true">
+
+While the CETA IoT Robot (Pico WH) uses the **Raspberry Pi Pico W** board type:
+
+<img src="./assets/ceta_board_type.jpg?raw=true">
+
+Next, to access the library modules in a sketch:
+* #include the cetalib.h header file at the top of the sketch
+* Define and initialize a pointer to the CETALIB INTERFACE functions
+* Access a function in a specific module using the arrow operator ("->")
+
+For example:
 ```c++
 // Include the library
 #include <cetalib.h>
