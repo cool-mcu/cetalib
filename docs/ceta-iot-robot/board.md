@@ -2,7 +2,7 @@
 
 This module provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER on the [CETA IoT Robot (Kit #18-00019x)](https://www.cool-mcu.com/pages/robot-kit).
 
-<img src="../assets/board-assembly.JPG?raw=true">
+<img src="../../assets/board-assembly.JPG?raw=true">
 
 Pico WH GPIO Pin Connections:
 * GP14: USER LED

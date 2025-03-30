@@ -3,7 +3,7 @@
 This module provides functions to interact with the LEFT OPTO, MIDDLE OPTO and
 RIGHT OPTO reflectance sensors on the [CETA IoT Robot (Kit #18-00019x)](https://www.cool-mcu.com/pages/robot-kit).
 
-<img src="../assets/reflectance-sensors.jpg?raw=true">
+<img src="../../assets/reflectance-sensors.jpg?raw=true">
 
 Pico WH GPIO Pin Connections:
 * GP26/ADC0: LEFT OPTO sensor

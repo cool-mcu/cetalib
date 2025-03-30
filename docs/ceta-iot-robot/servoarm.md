@@ -2,7 +2,7 @@
 
 This module provides functions to interact with an [SG92R](https://abra-electronics.com/electromechanical/motors/servo-motors/sg92r-micro-servo-9g-2-5kg-torque-90-degrees.html) servo motor to implement basic LIFT/DROP functions for the [CETA IoT Robot (Kit #18-00019x)](https://www.cool-mcu.com/pages/robot-kit).
 
-<img src="../assets/pico-iot-robot-servoarm-addon.jpg?raw=true">
+<img src="../../assets/pico-iot-robot-servoarm-addon.jpg?raw=true">
 
 Pico WH GPIO Pin Connections:
 * ORANGE wire:  PWM Signal - Connect to GP22
