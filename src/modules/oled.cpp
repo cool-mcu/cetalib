@@ -1,20 +1,22 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            oled.cpp
  * Project:         
- * Date:            Aug 31, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            Mar 29, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "oled" text display driver interface functions
  *
- * This library depends on the following Libraries:
+ * Tested using Adafruit SSD1306-based 128x64 OLED display (#938)
+ * 
+ * Dependencies:
  * 
  * Adafruit_BusIO Library:   https://github.com/adafruit/Adafruit_BusIO 
  * Adafruit_SSD1306 Library: https://github.com/adafruit/Adafruit_SSD1306 
  * Adafruit-GFX Library:     https://github.com/adafruit/Adafruit-GFX-Library
- * SSD1306Ascii Library:     https://github.com/greiman/SSD1306Ascii 
- * 
+ * SSD1306Ascii Library:     https://github.com/greiman/SSD1306Ascii
  * "Cool-MCU.com" Bitmap generated using this website: https://javl.github.io/image2cpp
  * 
  * OLED initialized with the following settings:
@@ -23,12 +25,15 @@
  *  - 7 row x 21 col (147 characters)
  *  - Auto-scrolling enabled
  * 
- * Hardware Configuration:
+ * Hardware Configurations Supported:
  * 
- * CETA IoT Robot (schematic #14-00069B), based on RPI-Pico-WH,
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select "Board = Raspberry Pi Pico W")
+ * (Uses "Wire1" instance (I2C1 on pins SDA/GP18 & SCL/GP19))
  * 
- * Uses Adafruit SSD1306-based 128x64 OLED display (#938),
- * connected to "Wire1" instance (I2C1 on pins SDA/GP18 & SCL/GP19) 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select "Board = SparkFun XRP Controller")
+ * (Uses "Wire" instance (I2C0 on pins SDA/GP04 & SCL/GP05)) 
  *
  */
 
@@ -43,10 +48,20 @@
 /*** Symbolic Constants used in this module ***********************************/
 
 /*** Global Variable Declarations *********************************************/
+
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 // Declare an Adafruit SSD1306 object
 Adafruit_SSD1306 ADA_OLED(OLED_SCREEN_WIDTH, OLED_SCREEN_HEIGHT, &Wire1, -1);
 // Declare an SSD1306Ascii object
 SSD1306AsciiWire SSD1306_OLED(Wire1);
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+// Declare an Adafruit SSD1306 object
+Adafruit_SSD1306 ADA_OLED(OLED_SCREEN_WIDTH, OLED_SCREEN_HEIGHT, &Wire, -1);
+// Declare an SSD1306Ascii object
+SSD1306AsciiWire SSD1306_OLED(Wire);
+#else
+  #error Unsupported board selection
+#endif
 
 // Cool-MCU.com logo, 128x64
 static const unsigned char epd_bitmap_logo_White [] PROGMEM = {
@@ -131,11 +146,21 @@ extern const struct OLED_INTERFACE OLED = {
 
 bool oled_init(void)
 {
-  // Setup Wire1 (I2C1) 
-  Wire1.setSDA(18);
-  Wire1.setSCL(19);
-  Wire1.setClock(400000);
+	#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+	// Setup Wire1 as interface (I2C1) 
+  Wire1.setSDA(OLED_SDA_PIN);
+  Wire1.setSCL(OLED_SCL_PIN);
+  Wire1.setClock(OLED_I2C_BAUD);
   Wire1.begin();
+	#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+	// Setup Wire as interface (I2C0) 
+  Wire.setSDA(OLED_SDA_PIN);
+  Wire.setSCL(OLED_SCL_PIN);
+  Wire.setClock(OLED_I2C_BAUD);
+  Wire.begin();
+	#else
+  #error Unsupported board selection
+	#endif
 
   // Display the Cool-MCU.com logo bitmap
   if (!ADA_OLED.begin(SSD1306_SWITCHCAPVCC, OLED_I2C_ADDRESS))

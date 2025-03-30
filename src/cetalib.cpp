@@ -1,15 +1,21 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            cetalib.cpp
  * Project:         
- * Date:            June 24, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            Mar 29, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib global driver interface
  *
- * Hardware Configuration:
- * CETA IoT Robot (schematic #14-00069A/B), based on RPI-Pico-WH 
+ * Hardware Configurations Supported:
+ * 
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select "Board = Raspberry Pi Pico W")
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select "Board = SparkFun XRP Controller")
  *
  */
 
@@ -20,6 +26,8 @@
 /*** Symbolic Constants used in this module ***********************************/
 
 /*** Global Variable Declarations *********************************************/
+
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 extern const struct BOARD_INTERFACE BOARD;
 //extern const struct MOTOR_INTERFACE MOTOR;
 extern const struct REFLECTANCE_INTERFACE REFLECTANCE;
@@ -41,6 +49,17 @@ extern const struct CETALIB_INTERFACE CETALIB = {
   .diffDrive = &DIFFDRIVE,
   .oled = &OLED
 };
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+extern const struct BOARD_INTERFACE BOARD;
+extern const struct OLED_INTERFACE OLED;
+
+extern const struct CETALIB_INTERFACE CETALIB = {
+  .board = &BOARD,
+  .oled = &OLED
+};
+#else
+  #error Unsupported board selection
+#endif
 
 /*** Type Declarations ********************************************************/
 
