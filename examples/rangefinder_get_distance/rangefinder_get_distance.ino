@@ -1,14 +1,13 @@
 /*
-  CETALIB "board" Library Example: "rangefinder_get_distance.ino"
+  CETALIB "rangefinder" Library Example: "rangefinder_get_distance.ino"
 
   This example demonstrates the usage of the "rangefinder->get_distance()" method.
 
-  Hardware Configuration:
+  Hardware Configurations:
 
-  CETA IoT Robot (schematic #14-00069A/B) based on RPI-Pico-WH, with HC-SR04
-  Ultrasonic sensor connected to GP17 (TRIG) and GP16 (ECHO).
+  CETA IoT Robot (Pico WH) or SparkFun XRP Robot with HC-SR04 Ultrasonic Sensor
 
-  created 25 June 2024
+  created 31 March 2025
   by dBm Signal Dynamics Inc.
 
 */
@@ -33,7 +32,7 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
-  sprintf(outBuffer, "distance to target: %3.1f\r\n", myRobot->rangefinder->get_distance());
+  sprintf(outBuffer, "distance to target (cm): %3.1f\r\n", myRobot->rangefinder->get_distance());
   Serial.print(outBuffer);
   delay(100);   
 }

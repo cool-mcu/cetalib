@@ -1,17 +1,22 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            rangefinder_interface.h
  * Project:         
- * Date:            July 05, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            Mar 29, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * "rangefinder" driver interface file - defines "RANGEFINDER_INTERFACE" structure
  *
- * Hardware Configuration:
+ * Hardware Configurations Supported:
  * 
- * CETA IoT Robot (schematic #14-00069B), based on RPI-Pico-WH with HC-SR04P sensor from ABRA
- * (https://abra-electronics.com/sensors/sensors-proximity-en/hc-sr04p.html)
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select "Board = Raspberry Pi Pico W")
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select "Board = SparkFun XRP Controller")
+ * 
  */
 
 #ifndef RANGEFINDER_INTERFACE_H_
