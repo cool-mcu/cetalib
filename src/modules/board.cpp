@@ -3,8 +3,8 @@
  *
  * File:            board.cpp
  * Project:         
- * Date:            Mar 29, 2024
- *Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ * Date:            Mar 29, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "board" driver (USER LED, PUSHBUTTON & POTENTIOMETER interface functions)
@@ -13,14 +13,17 @@
  * 
  * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
  * (Select "Board = Raspberry Pi Pico W")
+ * USER LED is a regular RED LED
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
- * (Select "Board = SparkFun XRP Controller") 
+ * (Select "Board = SparkFun XRP Controller")
+ * USER LED is a WS2812B NeoPixel driven with fixed color (RED)
  *
  */
 
 /** Include Files *************************************************************/
 #include <Arduino.h>            // Required for Arduino functions
+#include <Adafruit_NeoPixel.h>  // Required for NeoPixel Functions
 #include "board.h"              // "board" API declarations
 
 /*** Symbolic Constants used in this module ***********************************/
@@ -84,6 +87,11 @@ static int buttonLevelCurrent, buttonLevelPrevious;
 // potentiometer-related variables
 static int potentiometerReading;
 
+// define neopixel object
+#if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+Adafruit_NeoPixel pixel(1, LED_PIN, NEO_GRB + NEO_KHZ800);
+#endif
+
 /*** Private Function Prototypes **********************************************/
 
 /*** Public Function Definitions **********************************************/
@@ -91,22 +99,31 @@ static int potentiometerReading;
 void board_init(void)
 {
     // initiallize user LED
-    pinMode(LED_PIN, OUTPUT);   // set digital pin as output
-    digitalWrite(LED_PIN, 0);   // set initial level
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        pinMode(LED_PIN, OUTPUT);   // set digital pin as output
+        digitalWrite(LED_PIN, 0);   // set initial level
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        pixel.begin();              // INITIALIZE NeoPixel strip object (REQUIRED)
+        pixel.setBrightness(10);    // Set a bearable brightness
+        pixel.clear();              // Set all pixel colors to 'off'
+        pixel.show();               // Update the pixel color
+    #else
+        #error Unsupported board selection
+    #endif
     ledState = OFF;
     ledFunctionState = DEFAULT;
 
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
     // initiallize pushbutton
-    pinMode(BUTTON_PIN, INPUT); // set digital pin as input
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        pinMode(BUTTON_PIN, INPUT); // set digital pin as input
     #else
-    pinMode(BUTTON_PIN, INPUT_PULLUP); // set digital pin as input
+        pinMode(BUTTON_PIN, INPUT_PULLUP); // set digital pin as input
     #endif
     buttonLevelCurrent = digitalRead(BUTTON_PIN);   // save button level
 
     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
     // initialize ADC resolution to 12-bit
-    analogReadResolution(12);
+        analogReadResolution(12);
     #endif
 }
 
@@ -124,11 +141,25 @@ void board_tasks(void)
                 switch(ledState)
                 {
                     case OFF:
-                        digitalWrite(LED_PIN, 1);
+                        #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                            digitalWrite(LED_PIN, 1);
+                        #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+                            pixel.setPixelColor(0, pixel.Color(0, 150, 0));
+                            pixel.show();
+                        #else
+                            #error Unsupported board selection
+                        #endif
                         ledState = ON;
                         break;
                     case ON:
-                        digitalWrite(LED_PIN, 0);
+                        #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                            digitalWrite(LED_PIN, 0);
+                        #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+                            pixel.clear();
+                            pixel.show();
+                        #else
+                            #error Unsupported board selection
+                        #endif
                         ledState = OFF;
                         break;
                     default:
@@ -148,32 +179,28 @@ void board_tasks(void)
                     ledValueIndex = 0;
                 }
 
-                switch(ledPatternIndex)
+                if(0 == ledOutputValue[ledPatternIndex][ledValueIndex++])
                 {
-                    case 0:
-                        digitalWrite(LED_PIN, ledOutputValue[0][ledValueIndex++]);
-                        break;
-
-                    case 1:
-                        digitalWrite(LED_PIN, ledOutputValue[1][ledValueIndex++]);
-                        break;
-
-                    case 2:
-                        digitalWrite(LED_PIN, ledOutputValue[2][ledValueIndex++]);
-                        break;
-
-                    case 3:
-                        digitalWrite(LED_PIN, ledOutputValue[3][ledValueIndex++]);
-                        break;
-
-                    case 4:
-                        digitalWrite(LED_PIN, ledOutputValue[4][ledValueIndex++]);
-                        break;
-
-                    default:
-                        break;
+                    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                        digitalWrite(LED_PIN, 0);
+                    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+                        pixel.clear();
+                        pixel.show();
+                    #else
+                        #error Unsupported board selection
+                    #endif
                 }
-
+                else
+                {
+                    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                        digitalWrite(LED_PIN, 1);
+                    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+                        pixel.setPixelColor(0, pixel.Color(0, 150, 0));
+                        pixel.show();
+                    #else
+                        #error Unsupported board selection
+                    #endif
+                }
             }
             break;
         
@@ -188,14 +215,28 @@ void board_tasks(void)
 
 void board_led_on(void)
 {
-    digitalWrite(LED_PIN, 1);
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        digitalWrite(LED_PIN, 1);
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        pixel.setPixelColor(0, pixel.Color(0, 150, 0));
+        pixel.show();
+    #else
+        #error Unsupported board selection
+    #endif
     ledState = ON;
     ledFunctionState = DEFAULT;
 }
 
 void board_led_off(void)
 {
-    digitalWrite(LED_PIN, 0);
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        digitalWrite(LED_PIN, 0);
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        pixel.clear();
+        pixel.show();
+    #else
+        #error Unsupported board selection
+    #endif
     ledState = OFF;
     ledFunctionState = DEFAULT;
 }
