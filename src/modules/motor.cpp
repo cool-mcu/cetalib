@@ -1,15 +1,21 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            motor.cpp
  * Project:         
- * Date:            June 25, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            Mar 29, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
- * cetalib "motor" driver interface functions
+ * "motor" driver interface file - defines "MOTOR_INTERFACE" structure
  *
- * Hardware Configuration:
- * CETA IoT Robot (schematic #14-00069A/B), based on RPI-Pico-WH 
+ * Hardware Configurations Supported:
+ * 
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select "Board = Raspberry Pi Pico W")
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select "Board = SparkFun XRP Controller")
  *
  */
 
@@ -72,19 +78,19 @@ void motor_init(bool left_flip_dir, bool right_flip_dir)
     rightMotorDirFwd = rightMotorDir;
 }
 
-void motor_set_left_effort(float effort)
+void motor_set_left_effort(float leftMotorEffort)
 {
     int reverse = 0;
 
-    if(effort < 0)
+    if(leftMotorEffort < 0)
     {
-        effort = -effort;   // make effort a positive quantity
+        leftMotorEffort = -leftMotorEffort;   // make effort a positive quantity
         reverse = 1;        // preserve the direction
     }
 
-    if(effort > 1)
+    if(leftMotorEffort > 1)
     {
-        effort = 1;         // clamp at maximum effort
+        leftMotorEffort = 1;         // clamp at maximum effort
     }
     
     // Update motor direction
@@ -100,29 +106,29 @@ void motor_set_left_effort(float effort)
     switch (leftMotorDir)
     {
       case 0:
-        lServo.write(90-(effort*SERVO_RESOLUTION));
+        lServo.write(90-(leftMotorEffort*SERVO_RESOLUTION));
         break;
       case 1:
-        lServo.write(90+(effort*SERVO_RESOLUTION));
+        lServo.write(90+(leftMotorEffort*SERVO_RESOLUTION));
         break;
       default:
         break;
     }
 }
 
-void motor_set_right_effort(float effort)
+void motor_set_right_effort(float rightMotorEffort)
 {
     int reverse = 0;
 
-    if(effort < 0)
+    if(rightMotorEffort < 0)
     {
-        effort = -effort;   // make effort a positive quantity
+        rightMotorEffort = -rightMotorEffort;   // make effort a positive quantity
         reverse = 1;        // preserve the direction
     }
 
-    if(effort > 1)
+    if(rightMotorEffort > 1)
     {
-        effort = 1;         // clamp at maximum effort
+        rightMotorEffort = 1;         // clamp at maximum effort
     }
     
     // Update motor direction
@@ -138,10 +144,10 @@ void motor_set_right_effort(float effort)
     switch (rightMotorDir)
     {
       case 0:
-        rServo.write(90-(effort*SERVO_RESOLUTION));
+        rServo.write(90-(rightMotorEffort*SERVO_RESOLUTION));
         break;
       case 1:
-        rServo.write(90+(effort*SERVO_RESOLUTION));
+        rServo.write(90+(rightMotorEffort*SERVO_RESOLUTION));
         break;
       default:
         break;
@@ -149,10 +155,10 @@ void motor_set_right_effort(float effort)
 
 }
 
-void motor_set_efforts(float leftEffort, float rightEffort)
+void motor_set_efforts(float leftMotorEffort, float rightMotorEffort)
 {
-    motor_set_left_effort(leftEffort);
-    motor_set_right_effort(rightEffort);
+    motor_set_left_effort(leftMotorEffort);
+    motor_set_right_effort(rightMotorEffort);
 }
 
 

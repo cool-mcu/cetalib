@@ -42,7 +42,7 @@
  struct CETALIB_INTERFACE
  {
    const struct BOARD_INTERFACE *board;              // Pointer to a BOARD_INTERFACE instance
-   //const struct MOTOR_INTERFACE *motor;              // Pointer to a MOTOR_INTERFACE instance
+   const struct MOTOR_INTERFACE *motor;              // Pointer to a MOTOR_INTERFACE instance
    const struct REFLECTANCE_INTERFACE *reflectance;  // Pointer to a REFLECTANCE_INTERFACE instance
    const struct SERVOARM_INTERFACE *servoarm;        // Pointer to a SERVOARM_INTERFACE instance
    const struct RANGEFINDER_INTERFACE *rangefinder;  // Pointer to a RANGEFINDER_INTERFACE instance
