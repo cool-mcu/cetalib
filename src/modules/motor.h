@@ -27,9 +27,21 @@
 #include "motor_interface.h"
 
 /*** Macros *******************************************************************/
-#define LEFT_MOTOR_PWM_PIN 4    // OUTPUT - connected to motor controller "S2" input ("Left" Motor)
-#define RIGHT_MOTOR_PWM_PIN 5   // OUTPUT - connected to motor controller "S1" input ("Right" Motor)
-#define SERVO_RESOLUTION  90    // 90 possible adjustment steps in servo control signal
+
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+  #define LEFT_MOTOR_PWM_PIN 4          // OUTPUT - connected to motor controller "S2" input ("Left" Motor)
+  #define RIGHT_MOTOR_PWM_PIN 5         // OUTPUT - connected to motor controller "S1" input ("Right" Motor)
+  #define SERVO_RESOLUTION  90          // 90 possible adjustment steps in servo control signal
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+  #define LEFT_MOTOR_IN1_PIN        20      // Left Motor IN1 Pin:    Motor_3_BIN1
+  #define LEFT_MOTOR_IN2_PIN        21      // Left Motor IN2 Pin:    Motor_3_BIN2
+  #define RIGHT_MOTOR_IN1_PIN       11      // Right Motor IN1 Pin:   Motor_4_AIN1
+  #define RIGHT_MOTOR_IN2_PIN       10      // Right Motor IN2 Pin:   Motor_4_AIN2    
+  #define PWM_FREQ        500           // 500 Hz
+  #define PWM_RESOLUTION  1000          // 1000 steps
+#else
+  #error Unsupported board selection
+#endif
 
 /*** Custom Data Types ********************************************************/
 

@@ -45,6 +45,7 @@ extern const struct MOTOR_INTERFACE MOTOR = {
 
 void motor_init(bool left_flip_dir, bool right_flip_dir)
 {
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
     // Initialize servo output signals
     // Servo Angle parameter vs Motor Torque/Direction:
     //
@@ -76,6 +77,46 @@ void motor_init(bool left_flip_dir, bool right_flip_dir)
         rightMotorDir = 1;
     }
     rightMotorDirFwd = rightMotorDir;
+    
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+    
+    // Initiallize Left Motor PWM Pins and "forward" direction
+    digitalWrite(LEFT_MOTOR_IN1_PIN, LOW);
+    digitalWrite(LEFT_MOTOR_IN2_PIN, LOW);
+    pinMode(LEFT_MOTOR_IN1_PIN, OUTPUT);
+    pinMode(LEFT_MOTOR_IN2_PIN, OUTPUT);
+    if(left_flip_dir == false)
+    {
+        leftMotorDir = 0;   // default motor direction setting
+    }
+    else
+    {
+        leftMotorDir = 1;
+    }
+    leftMotorDirFwd = leftMotorDir;
+
+    // Initiallize Right Motor PWM Pins and "forward" direction
+    digitalWrite(RIGHT_MOTOR_IN1_PIN, LOW);
+    digitalWrite(RIGHT_MOTOR_IN2_PIN, LOW);
+    pinMode(RIGHT_MOTOR_IN1_PIN, OUTPUT);
+    pinMode(RIGHT_MOTOR_IN2_PIN, OUTPUT);
+    if(right_flip_dir == false)
+    {
+        rightMotorDir = 0;   // default motor direction setting
+    }
+    else
+    {
+        rightMotorDir = 1;
+    }
+    rightMotorDirFwd = rightMotorDir;
+    
+    // Initiallize PWM functionalty
+    analogWriteFreq(PWM_FREQ);
+    analogWriteRange(PWM_RESOLUTION);
+    
+    #else
+        #error Unsupported board selection
+    #endif
 }
 
 void motor_set_left_effort(float leftMotorEffort)
@@ -103,6 +144,7 @@ void motor_set_left_effort(float leftMotorEffort)
         leftMotorDir  = (leftMotorDirFwd ^ 1);
     }
     
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
     switch (leftMotorDir)
     {
       case 0:
@@ -114,6 +156,25 @@ void motor_set_left_effort(float leftMotorEffort)
       default:
         break;
     }
+    
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+    switch (leftMotorDir)
+    {
+      case 0:
+        digitalWrite(LEFT_MOTOR_IN1_PIN, HIGH);
+        analogWrite(LEFT_MOTOR_IN2_PIN, int((1-leftMotorEffort)*PWM_RESOLUTION));
+        break;
+      case 1:
+        analogWrite(LEFT_MOTOR_IN1_PIN, int((1-leftMotorEffort)*PWM_RESOLUTION));
+        digitalWrite(LEFT_MOTOR_IN2_PIN, HIGH);
+        break;
+      default:
+        break;
+    }
+    
+    #else
+        #error Unsupported board selection
+    #endif
 }
 
 void motor_set_right_effort(float rightMotorEffort)
@@ -141,6 +202,7 @@ void motor_set_right_effort(float rightMotorEffort)
         rightMotorDir  = (rightMotorDirFwd ^ 1);
     }
     
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
     switch (rightMotorDir)
     {
       case 0:
@@ -152,6 +214,25 @@ void motor_set_right_effort(float rightMotorEffort)
       default:
         break;
     }
+    
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+    switch (rightMotorDir)
+    {
+      case 0:
+        digitalWrite(RIGHT_MOTOR_IN1_PIN, HIGH);
+        analogWrite(RIGHT_MOTOR_IN2_PIN, int((1-rightMotorEffort)*PWM_RESOLUTION));
+        break;
+      case 1:
+        analogWrite(RIGHT_MOTOR_IN1_PIN, int((1-rightMotorEffort)*PWM_RESOLUTION));
+        digitalWrite(RIGHT_MOTOR_IN2_PIN, HIGH);
+        break;
+      default:
+        break;
+    }
+    
+    #else
+        #error Unsupported board selection
+    #endif
 
 }
 

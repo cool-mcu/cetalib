@@ -84,9 +84,6 @@ static int ledValueIndex;         // column pointer: selects current LED value
 // button-related variables
 static int buttonLevelCurrent, buttonLevelPrevious;
 
-// potentiometer-related variables
-static int potentiometerReading;
-
 // define neopixel object
 #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
 Adafruit_NeoPixel pixel(1, LED_PIN, NEO_GRB + NEO_KHZ800);
