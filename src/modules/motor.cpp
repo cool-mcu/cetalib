@@ -158,6 +158,7 @@ void motor_set_left_effort(float leftMotorEffort)
     }
     
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+    // Perform DRV8411 "slow decay" PWM control  
     switch (leftMotorDir)
     {
       case 0:
@@ -216,6 +217,7 @@ void motor_set_right_effort(float rightMotorEffort)
     }
     
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+    // Perform DRV8411 "slow decay" PWM direction control
     switch (rightMotorDir)
     {
       case 0:
