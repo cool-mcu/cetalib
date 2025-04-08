@@ -36,6 +36,7 @@ The following libraries need to be installed into your Arduino environment:
 * [Adafruit-GFX-Library (v1.11.10)](https://github.com/adafruit/Adafruit-GFX-Library/archive/refs/tags/1.11.10.zip)
 * [SSD1306Ascii Library (v1.3.5)](https://github.com/greiman/SSD1306Ascii/archive/refs/tags/1.3.5.zip)
 * [Adafruit NeoPixel Library (v1.12.5)](https://github.com/adafruit/Adafruit_NeoPixel/archive/refs/tags/1.12.5.zip)
+* [rp2040-encoder-library (v0.2.0)](https://github.com/gbr1/rp2040-encoder-library/archive/refs/tags/0.2.0.zip)
 
 The following core needs to be installed into your Arduino environment using the Boards Manager:
 * [Raspberry Pi Pico/RP2040 Core by Earl Philhower](https://github.com/earlephilhower/arduino-pico)

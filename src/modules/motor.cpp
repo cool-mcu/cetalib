@@ -7,7 +7,7 @@
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
- * "motor" driver interface file - defines "MOTOR_INTERFACE" structure
+ * cetalib "motor" driver interface functions
  *
  * Hardware Configurations Supported:
  * 
