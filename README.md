@@ -49,8 +49,8 @@ We recommend using [Arduino IDE v2.x](https://www.arduino.cc/en/software) with t
 2. Clone/download a .zip file of this repository
 3. [Import the .zip libraries into Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries/#importing-a-zip-library) 
 
-The following video walks you through this procedure:
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/OTbfWM7dy2E/0.jpg)](http://www.youtube.com/watch?v=OTbfWM7dy2E)
+The following YouTube playlist provides installation instructions and module usage guides :
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/OTbfWM7dy2E/0.jpg)](https://youtu.be/SSFTYtvs7AA?list=PLoHXwNc42dpcWivhTyOY2jIawscry8m5y)
 
 
 # Using the Library
