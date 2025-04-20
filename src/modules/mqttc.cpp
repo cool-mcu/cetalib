@@ -94,8 +94,6 @@ BearSSL::X509List mosquittocert(mosquitto_root_CA_cert);
 
 
 // WiFi & TCP Connection Monitoring Variables ("connectionTasks()" function)
-static int linkStatus = WL_IDLE_STATUS;                  // WiFi link status
-static bool tcpConnStatus = false;                       // TCP connection status
 static unsigned long connStatusCurrentSampleTime, connStatusPrevSampleTime;
 static const long connStatusSampleInterval = CONN_STATUS_SAMPLE_INTERVAL;    // Network Connection testing interval
 

@@ -169,7 +169,7 @@ void servoarm_init(void)
 
 void servoarm_set_angle(int desiredAngle)
 {
-    int delta, i;
+    int i;
 
     if(desiredAngle < 0)
     {
