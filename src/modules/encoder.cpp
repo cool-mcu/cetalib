@@ -33,8 +33,10 @@
 /*** Symbolic Constants used in this module ***********************************/
 
 /*** Global Variable Declarations *********************************************/
+#if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
 PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio2, -1, 0);
 PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio2, -1, 0);
+#endif
 
 /*** Type Declarations ********************************************************/
 extern const struct ENCODER_INTERFACE ENCODER = {
@@ -53,39 +55,61 @@ extern const struct ENCODER_INTERFACE ENCODER = {
 
 void encoder_init(void)
 {
+    #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
     leftEncoder.begin();
     rightEncoder.begin();
+    #endif
 }
 
 int encoder_get_left_position_counts(void)
 {
-    // left motor encoder output is negative for forward motion
-    // need to correct with multiplication by -1.
-    return (-1)*leftEncoder.getCount();
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        return 0;
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        // left motor encoder output is negative for forward motion
+        // need to correct with multiplication by -1.
+        return (-1)*leftEncoder.getCount();
+    #endif
 }
 
 int encoder_get_right_position_counts(void)
 {
-    return rightEncoder.getCount();
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        return 0;
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        return rightEncoder.getCount();
+    #endif
 }
 
 void encoder_reset_left_position(void)
 {
+    #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
     leftEncoder.reset();
+    #endif
 }
 
 void encoder_reset_right_position(void)
 {
+    #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
     rightEncoder.reset();
+    #endif
 }
 
 float encoder_get_left_position(void)
 {
-    return encoder_get_left_position_counts() / RESOLUTION;
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        return 0.0;
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        return encoder_get_left_position_counts() / RESOLUTION;
+    #endif
 }
 
 float encoder_get_right_position(void)
 {
-    return encoder_get_right_position_counts() / RESOLUTION;
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        return 0.0;
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        return encoder_get_right_position_counts() / RESOLUTION;
+    #endif
 }
 

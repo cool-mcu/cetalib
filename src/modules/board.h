@@ -36,8 +36,8 @@
    #define POTENTIOMETER_PIN A2
    #define LED_PATTERN_INTERVAL 100
  #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-   #define LED_PIN 19
-   #define BUTTON_PIN 16
+   #define LED_PIN 19 //37
+   #define BUTTON_PIN 16 //36
    #define LED_PATTERN_INTERVAL 100
  #else
    #error Unsupported board selection
