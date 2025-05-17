@@ -12,19 +12,20 @@
  * Hardware Configurations Supported:
  * 
  * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
- * (Select "Board = Raspberry Pi Pico W")
+ * (Select Board: "Raspberry Pi Pico W")
  * USER LED is a regular RED LED
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
- * (Select "Board = SparkFun XRP Controller")
+ * (Select Board: "SparkFun XRP Controller")
  * USER LED is a WS2812B NeoPixel driven with fixed color (RED)
  *
  */
 
 /** Include Files *************************************************************/
 #include <Arduino.h>            // Required for Arduino functions
-#include <Adafruit_NeoPixel.h>  // Required for NeoPixel Functions
+//#include <Adafruit_NeoPixel.h>  // Required for NeoPixel Functions
 #include "board.h"              // "board" API declarations
+#include "board.pio.h"          // "board" PIO program declarations
 
 /*** Symbolic Constants used in this module ***********************************/
 
@@ -84,9 +85,21 @@ static int ledValueIndex;         // column pointer: selects current LED value
 // button-related variables
 static int buttonLevelCurrent, buttonLevelPrevious;
 
-// define neopixel object
+// define neopixel-related variables/functions
 #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-Adafruit_NeoPixel pixel(1, LED_PIN, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel pixel(1, LED_PIN, NEO_GRB + NEO_KHZ800);
+PIO pio;
+uint sm;
+uint offset;
+static inline void put_pixel(PIO pio, uint sm, uint32_t pixel_grb) {
+    pio_sm_put_blocking(pio, sm, pixel_grb << 8u);
+}
+static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
+    return
+            ((uint32_t) (r) << 8) |
+            ((uint32_t) (g) << 16) |
+            (uint32_t) (b);
+}
 #endif
 
 /*** Private Function Prototypes **********************************************/
@@ -100,10 +113,13 @@ void board_init(void)
         pinMode(LED_PIN, OUTPUT);   // set digital pin as output
         digitalWrite(LED_PIN, 0);   // set initial level
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        pixel.begin();              // INITIALIZE NeoPixel strip object (REQUIRED)
-        pixel.setBrightness(10);    // Set a bearable brightness
-        pixel.clear();              // Set all pixel colors to 'off'
-        pixel.show();               // Update the pixel color
+        //pixel.begin();              // INITIALIZE NeoPixel strip object (REQUIRED)
+        //pixel.setBrightness(10);    // Set a bearable brightness
+        //pixel.clear();              // Set all pixel colors to 'off'
+        //pixel.show();               // Update the pixel color
+        bool success = pio_claim_free_sm_and_add_program_for_gpio_range(&ws2812_program, &pio, &sm, &offset, LED_PIN, 1, true);
+        hard_assert(success);
+        ws2812_program_init(pio, sm, offset, LED_PIN, 800000, IS_RGBW);
     #else
         #error Unsupported board selection
     #endif
@@ -111,11 +127,7 @@ void board_init(void)
     ledFunctionState = DEFAULT;
 
     // initiallize pushbutton
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
-        pinMode(BUTTON_PIN, INPUT); // set digital pin as input
-    #else
-        pinMode(BUTTON_PIN, INPUT_PULLUP); // set digital pin as input
-    #endif
+    pinMode(BUTTON_PIN, INPUT); // set digital pin as input
     buttonLevelCurrent = digitalRead(BUTTON_PIN);   // save button level
 
     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
@@ -141,8 +153,9 @@ void board_tasks(void)
                         #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
                             digitalWrite(LED_PIN, 1);
                         #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-                            pixel.setPixelColor(0, pixel.Color(0, 150, 0));
-                            pixel.show();
+                            //pixel.setPixelColor(0, pixel.Color(0, 150, 0));
+                            //pixel.show();
+                            put_pixel(pio, sm, urgb_u32(0xff, 0, 0));
                         #else
                             #error Unsupported board selection
                         #endif
@@ -152,8 +165,9 @@ void board_tasks(void)
                         #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
                             digitalWrite(LED_PIN, 0);
                         #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-                            pixel.clear();
-                            pixel.show();
+                            //pixel.clear();
+                            //pixel.show();
+                            put_pixel(pio, sm, urgb_u32(0, 0, 0));
                         #else
                             #error Unsupported board selection
                         #endif
@@ -181,8 +195,9 @@ void board_tasks(void)
                     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
                         digitalWrite(LED_PIN, 0);
                     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-                        pixel.clear();
-                        pixel.show();
+                        //pixel.clear();
+                        //pixel.show();
+                        put_pixel(pio, sm, urgb_u32(0, 0, 0));
                     #else
                         #error Unsupported board selection
                     #endif
@@ -192,8 +207,9 @@ void board_tasks(void)
                     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
                         digitalWrite(LED_PIN, 1);
                     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-                        pixel.setPixelColor(0, pixel.Color(0, 150, 0));
-                        pixel.show();
+                        //pixel.setPixelColor(0, pixel.Color(0, 150, 0));
+                        //pixel.show();
+                        put_pixel(pio, sm, urgb_u32(0xff, 0, 0));
                     #else
                         #error Unsupported board selection
                     #endif
@@ -215,8 +231,9 @@ void board_led_on(void)
     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
         digitalWrite(LED_PIN, 1);
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        pixel.setPixelColor(0, pixel.Color(0, 150, 0));
-        pixel.show();
+        //pixel.setPixelColor(0, pixel.Color(0, 150, 0));
+        //pixel.show();
+        put_pixel(pio, sm, urgb_u32(0xff, 0, 0));
     #else
         #error Unsupported board selection
     #endif
@@ -229,8 +246,9 @@ void board_led_off(void)
     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
         digitalWrite(LED_PIN, 0);
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        pixel.clear();
-        pixel.show();
+        //pixel.clear();
+        //pixel.show();
+        put_pixel(pio, sm, urgb_u32(0, 0, 0));
     #else
         #error Unsupported board selection
     #endif

@@ -5,10 +5,15 @@
 
   Hardware Configuration:
 
-  CETA IoT Robot (schematic #14-00069A/B) based on RPI-Pico-WH, with USER LED
-  connected to pin GP14.
+  CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+  (Select Board: "Raspberry Pi Pico W")
+  USER LED is a regular RED LED
+  
+  Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+  (Select Board: "SparkFun XRP Controller")
+  USER LED is a WS2812B NeoPixel driven with fixed color (RED)
 
-  created 24 June 2024
+  created 17 May 2025
   by dBm Signal Dynamics Inc.
 
 */

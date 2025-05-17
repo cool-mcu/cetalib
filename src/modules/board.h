@@ -12,11 +12,11 @@
  * Hardware Configurations Supported:
  * 
  * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
- * (Select "Board = Raspberry Pi Pico W")
+ * (Select Board: "Raspberry Pi Pico W")
  * USER LED is a regular RED LED
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
- * (Select "Board = SparkFun XRP Controller")
+ * (Select Board: "SparkFun XRP Controller")
  * USER LED is a WS2812B NeoPixel driven with fixed color (RED)
  *
  */
@@ -36,9 +36,11 @@
    #define POTENTIOMETER_PIN A2
    #define LED_PATTERN_INTERVAL 100
  #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-   #define LED_PIN 19 //37
-   #define BUTTON_PIN 16 //36
+   #define LED_PIN 37
+   #define BUTTON_PIN 36
    #define LED_PATTERN_INTERVAL 100
+   #define IS_RGBW false
+   #define NUM_PIXELS 1
  #else
    #error Unsupported board selection
  #endif
