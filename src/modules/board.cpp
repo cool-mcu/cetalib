@@ -155,7 +155,7 @@ void board_tasks(void)
                         #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
                             //pixel.setPixelColor(0, pixel.Color(0, 150, 0));
                             //pixel.show();
-                            put_pixel(pio, sm, urgb_u32(0xff, 0, 0));
+                            put_pixel(pio, sm, urgb_u32(10, 0, 0));
                         #else
                             #error Unsupported board selection
                         #endif
@@ -209,7 +209,7 @@ void board_tasks(void)
                     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
                         //pixel.setPixelColor(0, pixel.Color(0, 150, 0));
                         //pixel.show();
-                        put_pixel(pio, sm, urgb_u32(0xff, 0, 0));
+                        put_pixel(pio, sm, urgb_u32(10, 0, 0));
                     #else
                         #error Unsupported board selection
                     #endif
@@ -233,7 +233,7 @@ void board_led_on(void)
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         //pixel.setPixelColor(0, pixel.Color(0, 150, 0));
         //pixel.show();
-        put_pixel(pio, sm, urgb_u32(0xff, 0, 0));
+        put_pixel(pio, sm, urgb_u32(10, 0, 0));
     #else
         #error Unsupported board selection
     #endif
