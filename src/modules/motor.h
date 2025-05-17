@@ -12,10 +12,10 @@
  * Hardware Configurations Supported:
  * 
  * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
- * (Select "Board = Raspberry Pi Pico W")
+ * (Select Board: "Raspberry Pi Pico W")
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
- * (Select "Board = SparkFun XRP Controller")
+ * (Select Board: "SparkFun XRP Controller")
  *
  */
 
