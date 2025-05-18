@@ -7,10 +7,10 @@
   Hardware Configurations Supported:
  
   CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
-  (Select "Board = Raspberry Pi Pico W")
+  (Select Board: "Raspberry Pi Pico W")
  
   Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
-  (Select "Board = SparkFun XRP Controller")
+  (Select Board: "SparkFun XRP Controller")
 
   created 29 Mar 2025
   by dBm Signal Dynamics Inc.
@@ -63,7 +63,7 @@ void loop() {
         break;
 
       case FWD:
-        myRobot->motor->stop();
+        myRobot->motor->set_efforts(0.0f,0.0f);
         sprintf(outBuffer, "robotState: STOP2\r\n");
         Serial.print(outBuffer);
         robotState = STOP2;
@@ -77,7 +77,7 @@ void loop() {
         break;
 
       case REV:
-        myRobot->motor->stop();
+        myRobot->motor->set_efforts(0.0f,0.0f);
         sprintf(outBuffer, "robotState: STOP3\r\n");
         Serial.print(outBuffer);
         robotState = STOP3;
@@ -91,7 +91,7 @@ void loop() {
         break;
 
       case ROTATE_LEFT:
-        myRobot->motor->stop();
+        myRobot->motor->set_efforts(0.0f,0.0f);
         sprintf(outBuffer, "robotState: STOP4\r\n");
         Serial.print(outBuffer);
         robotState = STOP4;
@@ -105,7 +105,7 @@ void loop() {
         break;
 
       case ROTATE_RIGHT:
-        myRobot->motor->stop();
+        myRobot->motor->set_efforts(0.0f,0.0f);
         sprintf(outBuffer, "robotState: STOP1\r\n");
         Serial.print(outBuffer);
         robotState = STOP1;

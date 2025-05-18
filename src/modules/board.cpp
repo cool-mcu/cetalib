@@ -114,6 +114,7 @@ void board_init(void)
         bool success = pio_claim_free_sm_and_add_program_for_gpio_range(&ws2812_program, &pio, &sm, &offset, LED_PIN, 1, true);
         hard_assert(success);
         ws2812_program_init(pio, sm, offset, LED_PIN, 800000, IS_RGBW);
+        put_pixel(pio, sm, urgb_u32(0, 0, 0));
     #else
         #error Unsupported board selection
     #endif
