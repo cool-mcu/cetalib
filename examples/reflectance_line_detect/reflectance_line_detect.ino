@@ -8,10 +8,15 @@
 
   Hardware Configuration:
 
-  CETA IoT Robot (schematic #14-00069A/B) based on RPI-Pico-WH, with reflectance
-  sensors connected to GP26/ADC0, GP27/ADC1 and GP28/ADC2.
+  CETA IoT Robot (schematic #14-00069A/B) based on RPI-Pico-WH
+  (Select Board: "Raspberry Pi Pico W")
+  Reflectance sensors connected to GP26/ADC0, GP27/ADC1 and GP28/ADC2.
 
-  created 29 June 2024
+  Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+  (Select Board: "SparkFun XRP Controller")
+  Reflectance sensors connected to GP44/ADC4 and GP45/ADC5.
+
+  created 19 May 2025
   by dBm Signal Dynamics Inc.
 
 */
