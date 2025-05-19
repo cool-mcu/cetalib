@@ -1,15 +1,21 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            reflectance.cpp
  * Project:         
- * Date:            June 26, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            May 18, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "reflectance" opto-sensor driver interface functions
  *
- * Hardware Configuration:
- * CETA IoT Robot (schematic #14-00069A/B), based on RPI-Pico-WH 
+ * Hardware Configurations Supported:
+ * 
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select "Board = Raspberry Pi Pico W")
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select "Board = SparkFun XRP Controller") 
  *
  */
 
@@ -75,6 +81,7 @@ void reflectance_init(void)
         Serial.println("Position all sensors behind the starting Tee, then Press the USER Switch to begin");
         // EEPROM is blank, perform calibration procedure
         calState = WAIT_BEGIN_WHITE;
+        //board_init();
         board_led_pattern(5);
         while (calState != IDLE)
         {
@@ -96,7 +103,9 @@ void reflectance_init(void)
                         {
 		                    previousOptoSampleTime = currentOptoSampleTime;
                             left_opto_accumulator += analogRead(LEFT_SENSOR_PIN);
-                            middle_opto_accumulator += analogRead(MIDDLE_SENSOR_PIN);
+                            #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                                middle_opto_accumulator += analogRead(MIDDLE_SENSOR_PIN);
+                            #endif
                             right_opto_accumulator += analogRead(RIGHT_SENSOR_PIN);
                             sample_counter++;     
                         }
@@ -130,7 +139,9 @@ void reflectance_init(void)
                         {
 		                    previousOptoSampleTime = currentOptoSampleTime;
                             left_opto_accumulator += analogRead(LEFT_SENSOR_PIN);
-                            middle_opto_accumulator += analogRead(MIDDLE_SENSOR_PIN);
+                            #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                                middle_opto_accumulator += analogRead(MIDDLE_SENSOR_PIN);
+                            #endif
                             right_opto_accumulator += analogRead(RIGHT_SENSOR_PIN);
                             sample_counter++;     
                         }
@@ -184,7 +195,13 @@ float reflectance_get_left_sensor(void)
 
 float reflectance_get_middle_sensor(void)
 {
-    return (float)(analogRead(MIDDLE_SENSOR_PIN)/MAX_ADC_VALUE);
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        return (float)(analogRead(MIDDLE_SENSOR_PIN)/MAX_ADC_VALUE);
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        return 0.0f;
+    #else
+        #error Unsupported board selection
+    #endif
 }
 
 float reflectance_get_right_sensor(void)

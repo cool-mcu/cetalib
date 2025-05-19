@@ -52,6 +52,7 @@ extern const struct CETALIB_INTERFACE CETALIB = {
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
 extern const struct BOARD_INTERFACE BOARD;
 extern const struct MOTOR_INTERFACE MOTOR;
+extern const struct REFLECTANCE_INTERFACE REFLECTANCE;
 extern const struct ENCODER_INTERFACE ENCODER;
 extern const struct RANGEFINDER_INTERFACE RANGEFINDER;
 extern const struct OLED_INTERFACE OLED;
@@ -60,6 +61,7 @@ extern const struct OLED_INTERFACE OLED;
 extern const struct CETALIB_INTERFACE CETALIB = {
   .board = &BOARD,
   .motor = &MOTOR,
+  .reflectance = &REFLECTANCE,
   .encoder = &ENCODER,
   .rangefinder = &RANGEFINDER,
   .oled = &OLED

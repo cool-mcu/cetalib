@@ -1,15 +1,21 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            reflectance.h
  * Project:         
- * Date:            June 26, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            May 18, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "reflectance" opto-sensor driver interface functions
  *
- * Hardware Configuration:
- * CETA IoT Robot (schematic #14-00069A/B), based on RPI-Pico-WH 
+ * Hardware Configurations Supported:
+ * 
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select "Board = Raspberry Pi Pico W")
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select "Board = SparkFun XRP Controller")
  *
  */
 
@@ -21,9 +27,18 @@
 #include "reflectance_interface.h"
 
 /*** Macros *******************************************************************/
-#define LEFT_SENSOR_PIN             A2        // Left sensor connected to analog pin AIN2
-#define MIDDLE_SENSOR_PIN           A1        // Middle sensor connected to analog pin AIN1
-#define RIGHT_SENSOR_PIN            A0        // Right sensor connected to analog pin AIN0
+
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+  #define LEFT_SENSOR_PIN             A2        // Left sensor connected to analog pin AIN2
+  #define MIDDLE_SENSOR_PIN           A1        // Middle sensor connected to analog pin AIN1
+  #define RIGHT_SENSOR_PIN            A0        // Right sensor connected to analog pin AIN0
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+  #define LEFT_SENSOR_PIN             A4        // Left sensor connected to analog pin ADC4
+  #define RIGHT_SENSOR_PIN            A5        // Right sensor connected to analog pin ADC5
+#else
+  #error Unsupported board selection
+#endif
+
 #define MAX_ADC_VALUE               4096.0f   // 12-bit ADC max value
 #define LEFT_SENSOR_TRIP_DEFAULT    0.733f    // Default trip threshold
 #define MIDDLE_SENSOR_TRIP_DEFAULT  0.733f    // Default trip threshold

@@ -57,6 +57,7 @@
  {
    const struct BOARD_INTERFACE *board;              // Pointer to a BOARD_INTERFACE instance
    const struct MOTOR_INTERFACE *motor;              // Pointer to a MOTOR_INTERFACE instance
+   const struct REFLECTANCE_INTERFACE *reflectance;  // Pointer to a REFLECTANCE_INTERFACE instance
    const struct ENCODER_INTERFACE *encoder;          // Pointer to a ENCODER_INTERFACE instance
    const struct RANGEFINDER_INTERFACE *rangefinder;  // Pointer to a RANGEFINDER_INTERFACE instance
    const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
