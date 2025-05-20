@@ -16,6 +16,8 @@
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select "Board = SparkFun XRP Controller")
+ * Left Motor connected to "Motor3" connector
+ * Right Motor connected to "Motor4" connector 
  *
  */
 
