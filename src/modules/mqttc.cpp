@@ -33,7 +33,11 @@
 #include "mqttc.h"                  // "mqttc" API declarations
 
 /*** Symbolic Constants used in this module ***********************************/
-
+#define SERIAL_PORT Serial  // Default to Serial
+#if defined(NO_USB)
+    #undef SERIAL_PORT
+    #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
+#endif
 /*** Global Variable Declarations *********************************************/
 
 static char mqttcOutBuffer[256];
@@ -150,7 +154,7 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
   // Create a unique ClientID/Topic Prefix
   sprintf(clientID, "cetaiotrobot-%02x%02x%02x%02x%02x%02x", macAddr[5], macAddr[4], macAddr[3], macAddr[2], macAddr[1], macAddr[0]);
   sprintf(mqttcOutBuffer, "clientID: %s\r\n", clientID);
-  Serial.print(mqttcOutBuffer);
+  SERIAL_PORT.print(mqttcOutBuffer);
   
   // Create/Save the subscription topic list if supplied
   if(!strcmp(subTopicIDs[0], ""))
@@ -162,7 +166,7 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
   {
     if(size_subTopicIDs > MAX_SUBSCRIBE_TOPIC_IDS)
     {
-      Serial.println("Subscription topic list exceeds the limit");
+      SERIAL_PORT.println("Subscription topic list exceeds the limit");
       return false;
     }
     subTopicSize = size_subTopicIDs;
@@ -220,8 +224,8 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
   {
     for(int i=0; i < subTopicSize; i++)
     {
-      Serial.print("Subscribing to topic: ");
-      Serial.println(subTopic[i]);
+      SERIAL_PORT.print("Subscribing to topic: ");
+      SERIAL_PORT.println(subTopic[i]);
       if(useTLS)
       {
         mqttsClient.subscribe(subTopic[i], subQoS);
@@ -230,9 +234,9 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
       {
         mqttClient.subscribe(subTopic[i], subQoS);
       }
-      Serial.print("Waiting for messages on topic: ");
-      Serial.println(subTopic[i]);
-      Serial.println();
+      SERIAL_PORT.print("Waiting for messages on topic: ");
+      SERIAL_PORT.println(subTopic[i]);
+      SERIAL_PORT.println();
     }
   }
 
@@ -290,7 +294,7 @@ void mqttc_send_message(const char *pubTopic, char *jsonPubPayload)
     mqttsClient.print(jsonPubPayload);
     mqttsClient.endMessage();
     //sprintf(mqttcOutBuffer, "pub topic: %s\tpayload: %s\r\n", outTopic, jsonPubPayload);
-    //Serial.print(mqttcOutBuffer);
+    //SERIAL_PORT.print(mqttcOutBuffer);
   }
   else
   {
@@ -298,7 +302,7 @@ void mqttc_send_message(const char *pubTopic, char *jsonPubPayload)
     mqttClient.print(jsonPubPayload);
     mqttClient.endMessage();
     //sprintf(mqttcOutBuffer, "pub topic: %s\tpayload: %s\r\n", outTopic, jsonPubPayload);
-    //Serial.print(mqttcOutBuffer);
+    //SERIAL_PORT.print(mqttcOutBuffer);
   }
 }
 
@@ -328,11 +332,11 @@ char* mqttc_receive_message(void)
 void wifiConnect(void){
     // attempt to connect to Wifi network:
     digitalWrite(MQTTC_STAT_LED_PIN, 0);
-    Serial.print("\nAttempting to connect to WPA SSID: ");
-    Serial.println(ssid);
+    SERIAL_PORT.print("\nAttempting to connect to WPA SSID: ");
+    SERIAL_PORT.println(ssid);
     while (WiFi.begin(ssid, passPhrase) != WL_CONNECTED) {
         // failed, retry
-        Serial.print(".");
+        SERIAL_PORT.print(".");
         delay(1000);
         digitalWrite(MQTTC_STAT_LED_PIN, 1);
         delay(100);
@@ -342,17 +346,17 @@ void wifiConnect(void){
 
     // once you are connected :
     WiFi.macAddress(macAddr);     // read/save the mac address of the radio
-    Serial.println("You're connected to the network");
+    SERIAL_PORT.println("You're connected to the network");
 }
 
 void mqttClientConnect(void){
     // attempt insecure connection to MQTT Broker
     digitalWrite(MQTTC_STAT_LED_PIN, 0);
-    Serial.print("\nAttempting to connect to the MQTT broker: ");
-    Serial.println(broker);
+    SERIAL_PORT.print("\nAttempting to connect to the MQTT broker: ");
+    SERIAL_PORT.println(broker);
     while(!mqttClient.connect(broker, port)){
         // failed, retry
-        Serial.print(".");
+        SERIAL_PORT.print(".");
         digitalWrite(MQTTC_STAT_LED_PIN, 1);
         delay(100);
         digitalWrite(MQTTC_STAT_LED_PIN, 0);
@@ -364,8 +368,8 @@ void mqttClientConnect(void){
     }
 
     // once you are connected :
-    Serial.println("You're connected to the MQTT broker!");
-    Serial.println();
+    SERIAL_PORT.println("You're connected to the MQTT broker!");
+    SERIAL_PORT.println();
 
 }
 
@@ -383,8 +387,8 @@ void mqttClientDisconnect(void)
 void mqttsClientConnect(void){
     // attempt secure connection to MQTT Broker
     digitalWrite(MQTTC_STAT_LED_PIN, 0);
-    Serial.print("\nAttempting to connect to the MQTT broker: ");
-    Serial.println(broker);
+    SERIAL_PORT.print("\nAttempting to connect to the MQTT broker: ");
+    SERIAL_PORT.println(broker);
     // Select the correct server root CA certificate to use for the TLS connection
     if(strstr(broker, "adafruit"))
     {
@@ -403,7 +407,7 @@ void mqttsClientConnect(void){
     setClock();
     while(!mqttsClient.connect(broker, port)){
         // failed, retry
-        Serial.print(".");
+        SERIAL_PORT.print(".");
         digitalWrite(MQTTC_STAT_LED_PIN, 1);
         delay(100);
         digitalWrite(MQTTC_STAT_LED_PIN, 0);
@@ -415,8 +419,8 @@ void mqttsClientConnect(void){
     }
 
     // once you are connected :
-    Serial.println("You're connected to the MQTT broker!");
-    Serial.println();
+    SERIAL_PORT.println("You're connected to the MQTT broker!");
+    SERIAL_PORT.println();
 
 }
 
@@ -434,16 +438,16 @@ void mqttsClientDisconnect(void)
 // Set time via NTP, as required for x.509 validation
 void setClock() {
   NTP.begin("pool.ntp.org", "time.nist.gov");
-  Serial.print("Waiting for NTP time sync: ");
+  SERIAL_PORT.print("Waiting for NTP time sync: ");
   NTP.waitSet([]() {
-    Serial.print(".");
+    SERIAL_PORT.print(".");
   });
-  Serial.println("");
+  SERIAL_PORT.println("");
   time_t now = time(nullptr);
   struct tm timeinfo;
   gmtime_r(&now, &timeinfo);
-  Serial.print("Current time: ");
-  Serial.print(asctime(&timeinfo));
+  SERIAL_PORT.print("Current time: ");
+  SERIAL_PORT.print(asctime(&timeinfo));
 }
 
 void mqttClientOnMessage(int messageSize) {
@@ -462,7 +466,7 @@ void mqttClientOnMessage(int messageSize) {
     mqttcRxMessage.inPayload[i] = '\0';
 
     //sprintf(mqttcOutBuffer, "sub topic: %s\tpayload: %s\r\n", mqttcRxMessage.inTopic, mqttcRxMessage.inPayload);
-    //Serial.print(mqttcOutBuffer);
+    //SERIAL_PORT.print(mqttcOutBuffer);
 }
 
 void mqttsClientOnMessage(int messageSize) {
@@ -481,7 +485,7 @@ void mqttsClientOnMessage(int messageSize) {
     mqttcRxMessage.inPayload[i] = '\0';
 
     //sprintf(mqttcOutBuffer, "sub topic: %s\tpayload: %s\r\n", mqttcRxMessage.inTopic, mqttcRxMessage.inPayload);
-    //Serial.print(mqttcOutBuffer);
+    //SERIAL_PORT.print(mqttcOutBuffer);
 }
 
 void connectionTasks(void)
@@ -493,13 +497,13 @@ void connectionTasks(void)
     connStatusPrevSampleTime = connStatusCurrentSampleTime;
     if(WiFi.status() == WL_CONNECTED)
     {
-      Serial.println("WiFi Status: connected");
+      SERIAL_PORT.println("WiFi Status: connected");
       if(!mqttClient.connected())
       {
         digitalWrite(MQTTC_STAT_LED_PIN, 0);       // turn off CONNECT status LED
         mqttClient.flush();
         mqttClient.stop();
-        Serial.println("TCP Status: disconnected..attempting to reconnect");
+        SERIAL_PORT.println("TCP Status: disconnected..attempting to reconnect");
         // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
         mqttClient.setId(clientID);
         mqttClientConnect();
@@ -509,12 +513,12 @@ void connectionTasks(void)
         {
           for(int i=0; i < subTopicSize; i++)
           {
-            Serial.print("Subscribing to topic: ");
-            Serial.println(subTopic[i]);
+            SERIAL_PORT.print("Subscribing to topic: ");
+            SERIAL_PORT.println(subTopic[i]);
             mqttClient.subscribe(subTopic[i], subQoS);
-            Serial.print("Waiting for messages on topic: ");
-            Serial.println(subTopic[i]);
-            Serial.println();
+            SERIAL_PORT.print("Waiting for messages on topic: ");
+            SERIAL_PORT.println(subTopic[i]);
+            SERIAL_PORT.println();
           }
         }
         
@@ -523,12 +527,12 @@ void connectionTasks(void)
       }
       else
       {
-        Serial.println("TCP Status: connected");
+        SERIAL_PORT.println("TCP Status: connected");
       }
     }
     else
     {
-      Serial.println("WiFi Status: disconnected..attempting to reconnect WiFi annd TCP");
+      SERIAL_PORT.println("WiFi Status: disconnected..attempting to reconnect WiFi annd TCP");
       mqttClient.flush();
       mqttClient.stop();
       wifiConnect();
@@ -539,12 +543,12 @@ void connectionTasks(void)
       {
         for(int i=0; i < subTopicSize; i++)
         {
-          Serial.print("Subscribing to topic: ");
-          Serial.println(subTopic[i]);
+          SERIAL_PORT.print("Subscribing to topic: ");
+          SERIAL_PORT.println(subTopic[i]);
           mqttClient.subscribe(subTopic[i], subQoS);
-          Serial.print("Waiting for messages on topic: ");
-          Serial.println(subTopic[i]);
-          Serial.println();
+          SERIAL_PORT.print("Waiting for messages on topic: ");
+          SERIAL_PORT.println(subTopic[i]);
+          SERIAL_PORT.println();
         }
       }
       
@@ -563,13 +567,13 @@ void connectionTasksSecure(void)
     connStatusPrevSampleTime = connStatusCurrentSampleTime;
     if(WiFi.status() == WL_CONNECTED)
     {
-      Serial.println("WiFi Status: connected");
+      SERIAL_PORT.println("WiFi Status: connected");
       if(!mqttsClient.connected())
       {
         digitalWrite(MQTTC_STAT_LED_PIN, 0);       // turn off CONNECT status LED
         mqttsClient.flush();
         mqttsClient.stop();
-        Serial.println("TCP Status: disconnected..attempting to reconnect");
+        SERIAL_PORT.println("TCP Status: disconnected..attempting to reconnect");
         // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
         mqttsClient.setId(clientID);
         mqttsClientConnect();
@@ -579,12 +583,12 @@ void connectionTasksSecure(void)
         {
           for(int i=0; i < subTopicSize; i++)
           {
-            Serial.print("Subscribing to topic: ");
-            Serial.println(subTopic[i]);
+            SERIAL_PORT.print("Subscribing to topic: ");
+            SERIAL_PORT.println(subTopic[i]);
             mqttsClient.subscribe(subTopic[i], subQoS);
-            Serial.print("Waiting for messages on topic: ");
-            Serial.println(subTopic[i]);
-            Serial.println();
+            SERIAL_PORT.print("Waiting for messages on topic: ");
+            SERIAL_PORT.println(subTopic[i]);
+            SERIAL_PORT.println();
           }
         }
         
@@ -593,12 +597,12 @@ void connectionTasksSecure(void)
       }
       else
       {
-        Serial.println("TCP Status: connected");
+        SERIAL_PORT.println("TCP Status: connected");
       }
     }
     else
     {
-      Serial.println("WiFi Status: disconnected..attempting to reconnect WiFi annd TCP");
+      SERIAL_PORT.println("WiFi Status: disconnected..attempting to reconnect WiFi annd TCP");
       mqttsClient.flush();
       mqttsClient.stop();
       wifiConnect();
@@ -609,12 +613,12 @@ void connectionTasksSecure(void)
       {
         for(int i=0; i < subTopicSize; i++)
         {
-          Serial.print("Subscribing to topic: ");
-          Serial.println(subTopic[i]);
+          SERIAL_PORT.print("Subscribing to topic: ");
+          SERIAL_PORT.println(subTopic[i]);
           mqttsClient.subscribe(subTopic[i], subQoS);
-          Serial.print("Waiting for messages on topic: ");
-          Serial.println(subTopic[i]);
-          Serial.println();
+          SERIAL_PORT.print("Waiting for messages on topic: ");
+          SERIAL_PORT.println(subTopic[i]);
+          SERIAL_PORT.println();
         }
       }
       

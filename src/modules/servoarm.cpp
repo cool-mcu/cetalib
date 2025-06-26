@@ -30,7 +30,11 @@
 #include "board.h"                  // "board" functions
 
 /*** Symbolic Constants used in this module ***********************************/
-
+#define SERIAL_PORT Serial  // Default to Serial
+#if defined(NO_USB)
+    #undef SERIAL_PORT
+    #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
+#endif
 /*** Global Variable Declarations *********************************************/
 Servo Servo1;
 static int setAngle;
@@ -78,7 +82,7 @@ void servoarm_init(void)
     uint32_t testRead = 0;
     if(EEPROM.get(SERVOARM_CAL_EEPROM_ADDRESS_START, testRead) == 0xFFFFFFFF)
     {
-        Serial.println("ServoArm Calibration Routine Triggered. Press button to begin.");
+        SERIAL_PORT.println("ServoArm Calibration Routine Triggered. Press button to begin.");
         // EEPROM is blank, perform calibration procedure
         servoarmCalState = SERVOARM_CAL_WAIT_BEGIN;
         board_led_pattern(5);
@@ -92,7 +96,7 @@ void servoarm_init(void)
                     {
                         board_led_pattern(1);                   // indicate "SERVOARM_CAL_HOME" state
                         servoarmCalState = SERVOARM_CAL_HOME;   // set the "home" angle
-                        Serial.println("Rotate POT to set HOME position. Press button when done.");
+                        SERIAL_PORT.println("Rotate POT to set HOME position. Press button when done.");
                     }
                     break;
                 case SERVOARM_CAL_HOME:
@@ -101,7 +105,7 @@ void servoarm_init(void)
                         servoarmCal.home_angle = calAngle;      // save current setting as "HOME"
                         board_led_pattern(2);                   // indicate "SERVOARM_CAL_LIFT" state
                         servoarmCalState = SERVOARM_CAL_LIFT;   // set the "lift" angle
-                        Serial.println("Rotate POT to set LIFT position. Press button when done.");
+                        SERIAL_PORT.println("Rotate POT to set LIFT position. Press button when done.");
                     }
                     else
                     {
@@ -115,7 +119,7 @@ void servoarm_init(void)
                         servoarmCal.lift_angle = calAngle;      // save current setting as "LIFT"
                         board_led_pattern(3);                   // indicate "SERVOARM_CAL_DROP" state
                         servoarmCalState = SERVOARM_CAL_DROP;   // set the "drop" angle
-                        Serial.println("Rotate POT to set DROP position. Press button when done.");
+                        SERIAL_PORT.println("Rotate POT to set DROP position. Press button when done.");
                     }
                     else
                     {
@@ -129,7 +133,7 @@ void servoarm_init(void)
                         servoarmCal.drop_angle = calAngle;      // save current setting as "DROP"
                         board_led_off();                        // turn off the led
                         servoarmCalState = SERVOARM_CAL_IDLE;   // terminate calibration
-                        Serial.println("ServoArm Calibration Routine Completed.");
+                        SERIAL_PORT.println("ServoArm Calibration Routine Completed.");
                     }
                     else
                     {
@@ -145,23 +149,23 @@ void servoarm_init(void)
         }
         // Save calibration values to EEPROM memory
         EEPROM.put(SERVOARM_CAL_EEPROM_ADDRESS_START, servoarmCal);
-        Serial.print("ServoArm Home Position (angle): ");
-        Serial.print(servoarmCal.home_angle);
-        Serial.print(" ServoArm Lift Position (angle): ");
-        Serial.print(servoarmCal.lift_angle);
-        Serial.print(" ServoArm Drop Position (angle): ");
-        Serial.println(servoarmCal.drop_angle);
+        SERIAL_PORT.print("ServoArm Home Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.home_angle);
+        SERIAL_PORT.print(" ServoArm Lift Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.lift_angle);
+        SERIAL_PORT.print(" ServoArm Drop Position (angle): ");
+        SERIAL_PORT.println(servoarmCal.drop_angle);
     }
     else
     {
         // EEPROM is programmed with calibration values, so use them
         EEPROM.get(SERVOARM_CAL_EEPROM_ADDRESS_START, servoarmCal);
-        Serial.print("ServoArm Home Position (angle): ");
-        Serial.print(servoarmCal.home_angle);
-        Serial.print(" ServoArm Lift Position (angle): ");
-        Serial.print(servoarmCal.lift_angle);
-        Serial.print(" ServoArm Drop Position (angle): ");
-        Serial.println(servoarmCal.drop_angle);
+        SERIAL_PORT.print("ServoArm Home Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.home_angle);
+        SERIAL_PORT.print(" ServoArm Lift Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.lift_angle);
+        SERIAL_PORT.print(" ServoArm Drop Position (angle): ");
+        SERIAL_PORT.println(servoarmCal.drop_angle);
     }
     // Write any changes to EEPROM and close interface.
     EEPROM.end();

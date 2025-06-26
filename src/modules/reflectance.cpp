@@ -26,7 +26,11 @@
 #include "board.h"                  // "board" functions
 
 /*** Symbolic Constants used in this module ***********************************/
-
+#define SERIAL_PORT Serial  // Default to Serial
+#if defined(NO_USB)
+    #undef SERIAL_PORT
+    #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
+#endif
 /*** Global Variable Declarations *********************************************/
 
 // initialize reflectance function pointers
@@ -77,8 +81,8 @@ void reflectance_init(void)
     uint32_t testRead = 0;
     if(EEPROM.get(REFLECTANCE_CAL_EEPROM_ADDRESS_START, testRead) == 0xFFFFFFFF)
     {
-        Serial.println("Reflectance Sensor Calibration Routine Triggered");
-        Serial.println("Position all sensors behind the starting Tee, then Press the USER Switch to begin");
+        SERIAL_PORT.println("Reflectance Sensor Calibration Routine Triggered");
+        SERIAL_PORT.println("Position all sensors behind the starting Tee, then Press the USER Switch to begin");
         // EEPROM is blank, perform calibration procedure
         calState = WAIT_BEGIN_WHITE;
         //board_init();
@@ -120,7 +124,7 @@ void reflectance_init(void)
                         middle_opto_accumulator = 0;
                         right_opto_accumulator = 0;
                         board_led_pattern(5);   // signal next instruction
-                        Serial.println("Position all sensors over the starting Tee, then Press the USER Switch to continue");
+                        SERIAL_PORT.println("Position all sensors over the starting Tee, then Press the USER Switch to continue");
                         calState = WAIT_BEGIN_BLACK;
                     }
                     break;
@@ -154,12 +158,12 @@ void reflectance_init(void)
                         reflectanceCal.left_opto_trip = (float)((left_opto_white + left_opto_black)/2)/MAX_ADC_VALUE;
                         reflectanceCal.middle_opto_trip = (float)((middle_opto_white + middle_opto_black)/2)/MAX_ADC_VALUE;
                         reflectanceCal.right_opto_trip = (float)((right_opto_white + right_opto_black)/2)/MAX_ADC_VALUE;
-                        Serial.print("Left Opto Trip: ");
-                        Serial.print(reflectanceCal.left_opto_trip, 3);
-                        Serial.print(" Middle Opto Trip: ");
-                        Serial.print(reflectanceCal.middle_opto_trip, 3);
-                        Serial.print(" Right Opto Trip: ");
-                        Serial.println(reflectanceCal.right_opto_trip, 3);
+                        SERIAL_PORT.print("Left Opto Trip: ");
+                        SERIAL_PORT.print(reflectanceCal.left_opto_trip, 3);
+                        SERIAL_PORT.print(" Middle Opto Trip: ");
+                        SERIAL_PORT.print(reflectanceCal.middle_opto_trip, 3);
+                        SERIAL_PORT.print(" Right Opto Trip: ");
+                        SERIAL_PORT.println(reflectanceCal.right_opto_trip, 3);
                         calState = IDLE;
                         board_led_off();
                     }
@@ -177,12 +181,12 @@ void reflectance_init(void)
     {
         // EEPROM is programmed with calibration values, so use them
         EEPROM.get(REFLECTANCE_CAL_EEPROM_ADDRESS_START, reflectanceCal);
-        Serial.print("Left Opto Trip: ");
-        Serial.print(reflectanceCal.left_opto_trip, 3);
-        Serial.print(" Middle Opto Trip: ");
-        Serial.print(reflectanceCal.middle_opto_trip, 3);
-        Serial.print(" Right Opto Trip: ");
-        Serial.println(reflectanceCal.right_opto_trip, 3);
+        SERIAL_PORT.print("Left Opto Trip: ");
+        SERIAL_PORT.print(reflectanceCal.left_opto_trip, 3);
+        SERIAL_PORT.print(" Middle Opto Trip: ");
+        SERIAL_PORT.print(reflectanceCal.middle_opto_trip, 3);
+        SERIAL_PORT.print(" Right Opto Trip: ");
+        SERIAL_PORT.println(reflectanceCal.right_opto_trip, 3);
     }
     // Write any changes to EEPROM and close interface.
     EEPROM.end();

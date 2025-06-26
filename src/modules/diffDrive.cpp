@@ -23,7 +23,11 @@
 #include "diffDrive.h"          // "diffDrive" functions
 
 /*** Symbolic Constants used in this module ***********************************/
-
+#define SERIAL_PORT Serial  // Default to Serial
+#if defined(NO_USB)
+    #undef SERIAL_PORT
+    #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
+#endif
 /*** Global Variable Declarations *********************************************/
 static float left_right_compensation = LEFT_RIGHT_COMPENSATION_DEFAULT;
 
@@ -59,9 +63,9 @@ void diffDrive_init(bool left_flip_dir, bool right_flip_dir)
         EEPROM.get(DIFFDRIVE_CAL_EEPROM_ADDRESS_START, left_right_compensation);
     }
     EEPROM.end();
-    Serial.print("\"diffDrive_straight()\" Left Right Compensation: ");
-    Serial.println(left_right_compensation);
-    Serial.println();
+    SERIAL_PORT.print("\"diffDrive_straight()\" Left Right Compensation: ");
+    SERIAL_PORT.println(left_right_compensation);
+    SERIAL_PORT.println();
 }
 
 void diffDrive_set_efforts(float leftEffort, float rightEffort)

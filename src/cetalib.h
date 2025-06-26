@@ -27,8 +27,11 @@
  #include "cetalib_interface.h"
  
  /*** Macros *******************************************************************/
- 
- 
+ #define SERIAL_PORT Serial  // Default to Serial
+ #if defined(NO_USB)
+    #undef SERIAL_PORT
+    #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
+ #endif
  /*** Custom Data Types ********************************************************/
  
  

@@ -27,7 +27,11 @@
 #include "board.pio.h"          // "board" PIO program declarations
 
 /*** Symbolic Constants used in this module ***********************************/
-
+#define SERIAL_PORT Serial  // Default to Serial
+#if defined(NO_USB)
+    #undef SERIAL_PORT
+    #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
+#endif
 /*** Global Variable Declarations *********************************************/
 
 /*** Type Declarations ********************************************************/
@@ -261,14 +265,14 @@ void board_led_blink(int frequency)
     float blinkInterval;
     if(frequency <= 0)
     {
-        Serial.println("Led Blink Frequency out of range (<= 0 Hz). Led Off");
+        SERIAL_PORT.println("Led Blink Frequency out of range (<= 0 Hz). Led Off");
         board_led_off();
         return;
     }
     else if(frequency > 20)
     {
         ledBlinkInterval = 25;
-        Serial.println("Led Blink Frequency out of range (> 20 Hz). Freq = 20 Hz");
+        SERIAL_PORT.println("Led Blink Frequency out of range (> 20 Hz). Freq = 20 Hz");
         ledBlinkPrevTime = millis();
         ledFunctionState = BLINK;
     }
@@ -276,8 +280,8 @@ void board_led_blink(int frequency)
     {
         blinkInterval = (1.0/frequency)*0.5;
         ledBlinkInterval = (unsigned long)(blinkInterval*1000);
-        //Serial.print("Led Blink Frequency (Hz): ");
-        //Serial.println(frequency);
+        //SERIAL_PORT.print("Led Blink Frequency (Hz): ");
+        //SERIAL_PORT.println(frequency);
         ledBlinkPrevTime = millis();
         ledFunctionState = BLINK;
     }
@@ -287,7 +291,7 @@ void board_led_pattern(int pattern)
 {
     if((pattern < 1)||(pattern > 5))
     {
-        Serial.println("Led Pattern selection is out of range (1 - 5). Disabled.");
+        SERIAL_PORT.println("Led Pattern selection is out of range (1 - 5). Disabled.");
         board_led_off();
         return;
     }

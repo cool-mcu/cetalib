@@ -35,7 +35,11 @@
 #include "board.h"                  // "board" functions
 
 /*** Symbolic Constants used in this module ***********************************/
-
+#define SERIAL_PORT Serial  // Default to Serial
+#if defined(NO_USB)
+    #undef SERIAL_PORT
+    #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
+#endif
 /*** Global Variable Declarations *********************************************/
 LSM6DSOXClass CETA_IMU(Wire1, IMU_I2C_ADDRESS);
 static float temperature, heading;
@@ -90,7 +94,7 @@ bool imu_init(void)
     uint32_t testRead = 0;
     if(EEPROM.get(IMU_CAL_EEPROM_ADDRESS_START, testRead) == 0xFFFFFFFF)
     {
-        Serial.println("IMU Calibration Routine Triggered");
+        SERIAL_PORT.println("IMU Calibration Routine Triggered");
         // EEPROM is blank, perform calibration procedure
         imuCalState = IMU_CAL_WAIT_BEGIN;
         board_led_pattern(5);
@@ -164,14 +168,14 @@ bool imu_init(void)
         // Save calibration values to EEPROM memory
         EEPROM.put(IMU_CAL_EEPROM_ADDRESS_START, imuCal);
         sprintf(imuOutBuffer, "\r\nIMU Heading Offset Error: %f\tIMU Heading Gain Error: %f\r\n\r\n", imuCal.yaw_offset_error, imuCal.yaw_gain_coefficient);
-        Serial.print(imuOutBuffer);
+        SERIAL_PORT.print(imuOutBuffer);
     }
     else
     {
       // EEPROM is programmed with calibration values, so use them
         EEPROM.get(IMU_CAL_EEPROM_ADDRESS_START, imuCal);
         sprintf(imuOutBuffer, "\r\nIMU Heading Offset Error: %f\tIMU Heading Gain Error: %f\r\n\r\n", imuCal.yaw_offset_error, imuCal.yaw_gain_coefficient);
-        Serial.print(imuOutBuffer);
+        SERIAL_PORT.print(imuOutBuffer);
     }
 
     // Write any changes to EEPROM and close interface.
@@ -202,7 +206,7 @@ void imu_tasks(void)
         heading += (z*IMU_SAMPLE_INTERVAL_S);
       }
       //sprintf(imuOutBuffer, "pitch: %f\troll: %f\tyaw: %f\r\n", x, y, z);
-      //Serial.print(imuOutBuffer);
+      //SERIAL_PORT.print(imuOutBuffer);
     }
 
   }
