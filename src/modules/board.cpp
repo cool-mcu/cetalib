@@ -128,7 +128,7 @@ void board_init(void)
     // initiallize pushbutton
     pinMode(BUTTON_PIN, INPUT); // set digital pin as input
     
-    while(!digitalRead(BUTTON_PIN));                // wait for button level to stabilize
+    delay(500);                                     // wait for button level to stabilize
     buttonLevelCurrent = digitalRead(BUTTON_PIN);   // save button level
 
     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
