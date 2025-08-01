@@ -92,6 +92,7 @@ void loop() {
   leftOptoSampleCurrentTime = millis();
   if ((leftOptoSampleCurrentTime - leftOptoSamplePrevTime) >= leftOptoSampleInterval)
   {
+    leftOptoSamplePrevTime = leftOptoSampleCurrentTime;
     sprintf(pubPayload, "%4.3f", myRobot->reflectance->get_left_sensor());
     myRobot->mqttc->send_message(leftOptoTopic, pubPayload);
   }
