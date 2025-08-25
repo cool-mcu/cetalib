@@ -3,7 +3,7 @@
  *
  * File:            motor.h
  * Project:         
- * Date:            Mar 29, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -19,6 +19,10 @@
  * Left Motor connected to "Motor3" connector
  * Right Motor connected to "Motor4" connector 
  *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ * Left Motor connected to "MotorL" connector
+ * Right Motor connected to "MotorR" connector
  */
 
 #ifndef MOTOR_H_
@@ -39,6 +43,13 @@
   #define LEFT_MOTOR_IN2_PIN        21      // Left Motor IN2 Pin:    Motor_3_BIN2
   #define RIGHT_MOTOR_IN1_PIN       11      // Right Motor IN1 Pin:   Motor_4_AIN1
   #define RIGHT_MOTOR_IN2_PIN       10      // Right Motor IN2 Pin:   Motor_4_AIN2 
+  #define PWM_FREQ        500           // 500 Hz
+  #define PWM_RESOLUTION  1000          // 1000 steps
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+  #define LEFT_MOTOR_DIR_PIN      6
+  #define LEFT_MOTOR_SPEED_PIN    7
+  #define RIGHT_MOTOR_DIR_PIN     14
+  #define RIGHT_MOTOR_SPEED_PIN   15 
   #define PWM_FREQ        500           // 500 Hz
   #define PWM_RESOLUTION  1000          // 1000 steps
 #else

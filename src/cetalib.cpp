@@ -3,7 +3,7 @@
  *
  * File:            cetalib.cpp
  * Project:         
- * Date:            Mar 29, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -16,6 +16,9 @@
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select "Board = SparkFun XRP Controller")
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
  *
  */
 
@@ -49,23 +52,57 @@ extern const struct CETALIB_INTERFACE CETALIB = {
   .diffDrive = &DIFFDRIVE,
   .oled = &OLED
 };
+
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
 extern const struct BOARD_INTERFACE BOARD;
 extern const struct MOTOR_INTERFACE MOTOR;
 extern const struct REFLECTANCE_INTERFACE REFLECTANCE;
+extern const struct SERVOARM_INTERFACE SERVOARM;
 extern const struct ENCODER_INTERFACE ENCODER;
 extern const struct RANGEFINDER_INTERFACE RANGEFINDER;
+extern const struct MQTTC_INTERFACE MQTTC;
+extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE;
 extern const struct OLED_INTERFACE OLED;
+
 
 
 extern const struct CETALIB_INTERFACE CETALIB = {
   .board = &BOARD,
   .motor = &MOTOR,
   .reflectance = &REFLECTANCE,
+  .servoarm = &SERVOARM,
   .encoder = &ENCODER,
   .rangefinder = &RANGEFINDER,
+  .mqttc = &MQTTC,
+  .diffDrive = &DIFFDRIVE,
   .oled = &OLED
 };
+
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+extern const struct BOARD_INTERFACE BOARD;
+extern const struct MOTOR_INTERFACE MOTOR;
+extern const struct REFLECTANCE_INTERFACE REFLECTANCE;
+extern const struct SERVOARM_INTERFACE SERVOARM;
+extern const struct ENCODER_INTERFACE ENCODER;
+extern const struct RANGEFINDER_INTERFACE RANGEFINDER;
+extern const struct MQTTC_INTERFACE MQTTC;
+extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE;
+//extern const struct OLED_INTERFACE OLED;  // oled module not yet working on this platform
+
+
+
+extern const struct CETALIB_INTERFACE CETALIB = {
+  .board = &BOARD,
+  .motor = &MOTOR,
+  .reflectance = &REFLECTANCE,
+  .servoarm = &SERVOARM,
+  .encoder = &ENCODER,
+  .rangefinder = &RANGEFINDER,
+  .mqttc = &MQTTC,
+  .diffDrive = &DIFFDRIVE
+  //.oled = &OLED
+};
+
 #else
   #error Unsupported board selection
 #endif

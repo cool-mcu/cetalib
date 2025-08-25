@@ -13,7 +13,11 @@
   (Select Board: "SparkFun XRP Controller")
   USER LED is a WS2812B NeoPixel driven with fixed color (RED)
 
-  created 17 May 2025
+  Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+  (Select "Board = SparkFun XRP Controller (Beta)")
+  USER LED is the built-in LED on the Pico W board
+
+  created 18 Aug 2025
   by dBm Signal Dynamics Inc.
 
 */

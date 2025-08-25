@@ -3,7 +3,7 @@
  *
  * File:            motor_interface.h
  * Project:         
- * Date:            Mar 29, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -19,6 +19,10 @@
  * Left Motor connected to "Motor3" connector
  * Right Motor connected to "Motor4" connector 
  *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ * Left Motor connected to "MotorL" connector
+ * Right Motor connected to "MotorR" connector
  */
 
 #ifndef MOTOR_INTERFACE_H_

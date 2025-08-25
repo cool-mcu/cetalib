@@ -3,7 +3,7 @@
  *
  * File:            motor.cpp
  * Project:         
- * Date:            Mar 29, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -17,7 +17,12 @@
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select Board: "SparkFun XRP Controller")
  * Left Motor connected to "Motor3" connector
- * Right Motor connected to "Motor4" connector 
+ * Right Motor connected to "Motor4" connector
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ * Left Motor connected to "MotorL" connector
+ * Right Motor connected to "MotorR" connector
  *
  */
 
@@ -115,7 +120,43 @@ void motor_init(bool left_flip_dir, bool right_flip_dir)
     // Initiallize PWM functionalty
     analogWriteFreq(PWM_FREQ);
     analogWriteRange(PWM_RESOLUTION);
+
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+
+    // Initiallize Left Motor PWM Pins and "forward" direction
+    digitalWrite(LEFT_MOTOR_SPEED_PIN, LOW);
+    pinMode(LEFT_MOTOR_SPEED_PIN, OUTPUT);
+    if(left_flip_dir == false)
+    {
+        leftMotorDir = 1;   // default motor direction setting
+    }
+    else
+    {
+        leftMotorDir = 0;
+    }
+    leftMotorDirFwd = leftMotorDir;
+    digitalWrite(LEFT_MOTOR_DIR_PIN, leftMotorDir);
+    pinMode(LEFT_MOTOR_DIR_PIN, OUTPUT);
+
+    // Initiallize Right Motor PWM Pins and "forward" direction
+    digitalWrite(RIGHT_MOTOR_SPEED_PIN, LOW);
+    pinMode(RIGHT_MOTOR_SPEED_PIN, OUTPUT);
+    if(right_flip_dir == false)
+    {
+        rightMotorDir = 0;   // default motor direction setting
+    }
+    else
+    {
+        rightMotorDir = 1;
+    }
+    rightMotorDirFwd = rightMotorDir;
+    digitalWrite(RIGHT_MOTOR_DIR_PIN, rightMotorDir);
+    pinMode(RIGHT_MOTOR_DIR_PIN, OUTPUT);
     
+    // Initiallize PWM functionalty
+    analogWriteFreq(PWM_FREQ);
+    analogWriteRange(PWM_RESOLUTION);
+
     #else
         #error Unsupported board selection
     #endif
@@ -175,6 +216,10 @@ void motor_set_left_effort(float leftMotorEffort)
         break;
     }
     
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+    digitalWrite(LEFT_MOTOR_DIR_PIN, leftMotorDir);                         // set direction
+    analogWrite(LEFT_MOTOR_SPEED_PIN, (leftMotorEffort*PWM_RESOLUTION));    // set PWM duty value
+
     #else
         #error Unsupported board selection
     #endif
@@ -233,6 +278,10 @@ void motor_set_right_effort(float rightMotorEffort)
       default:
         break;
     }
+
+    #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+    digitalWrite(RIGHT_MOTOR_DIR_PIN, rightMotorDir);                           // set direction
+    analogWrite(RIGHT_MOTOR_SPEED_PIN, (rightMotorEffort*PWM_RESOLUTION));      // set PWM duty value
     
     #else
         #error Unsupported board selection

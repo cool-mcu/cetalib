@@ -3,7 +3,7 @@
  *
  * File:            board.cpp
  * Project:         
- * Date:            Mar 29, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -18,6 +18,10 @@
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select Board: "SparkFun XRP Controller")
  * USER LED is a WS2812B NeoPixel driven with fixed color (RED)
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ * USER LED is the built-in LED on the Pico W board
  *
  */
 
@@ -52,6 +56,20 @@ extern const struct BOARD_INTERFACE BOARD = {
     .get_potentiometer      = &board_get_potentiometer
 };
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+extern const struct BOARD_INTERFACE BOARD = {
+    .initialize             = &board_init,
+    .tasks                  = &board_tasks,
+    .led_on                 = &board_led_on,
+    .led_off                = &board_led_off,
+    .led_toggle             = &board_led_toggle,
+    .led_blink              = &board_led_blink,
+    .led_pattern            = &board_led_pattern,
+    .is_button_pressed      = &board_is_button_pressed,
+    .is_button_released     = &board_is_button_released,
+    .get_button_level       = &board_get_button_level,
+    .wait_for_button        = &board_wait_for_button
+};
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
 extern const struct BOARD_INTERFACE BOARD = {
     .initialize             = &board_init,
     .tasks                  = &board_tasks,
@@ -111,7 +129,7 @@ static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
 void board_init(void)
 {
     // initiallize user LED
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
         pinMode(LED_PIN, OUTPUT);   // set digital pin as output
         digitalWrite(LED_PIN, 0);   // set initial level
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
@@ -151,7 +169,7 @@ void board_tasks(void)
                 switch(ledState)
                 {
                     case OFF:
-                        #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
                             digitalWrite(LED_PIN, 1);
                         #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
                             put_pixel(pio, sm, urgb_u32(10, 0, 0));
@@ -161,7 +179,7 @@ void board_tasks(void)
                         ledState = ON;
                         break;
                     case ON:
-                        #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
                             digitalWrite(LED_PIN, 0);
                         #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
                             put_pixel(pio, sm, urgb_u32(0, 0, 0));
@@ -189,7 +207,7 @@ void board_tasks(void)
 
                 if(0 == ledOutputValue[ledPatternIndex][ledValueIndex++])
                 {
-                    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
                         digitalWrite(LED_PIN, 0);
                     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
                         put_pixel(pio, sm, urgb_u32(0, 0, 0));
@@ -199,7 +217,7 @@ void board_tasks(void)
                 }
                 else
                 {
-                    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+                    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
                         digitalWrite(LED_PIN, 1);
                     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
                         put_pixel(pio, sm, urgb_u32(10, 0, 0));
@@ -221,7 +239,7 @@ void board_tasks(void)
 
 void board_led_on(void)
 {
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
         digitalWrite(LED_PIN, 1);
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         put_pixel(pio, sm, urgb_u32(10, 0, 0));
@@ -234,7 +252,7 @@ void board_led_on(void)
 
 void board_led_off(void)
 {
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
         digitalWrite(LED_PIN, 0);
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         put_pixel(pio, sm, urgb_u32(0, 0, 0));

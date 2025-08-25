@@ -1,8 +1,8 @@
 # cetalib Library for Arduino
 
-**cetalib** is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit) and the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html).
+**cetalib** is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit), the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html) and the [SparkFun XRP Robot (Beta)](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit-beta.html)
 
-[<img src="./assets/ceta-and-xrp-robot.png?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
+[<img src="./assets/github-cetalib-home-all-robots.png?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
 
 This robot and library support the learning objectives of our [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
 
@@ -57,11 +57,15 @@ After creating a new sketch, the very first thing you need to do is select the a
 
 The SparkFun XRP Robot uses the **SparkFun XRP Controller** board type:
 
-<img src="./assets/xrp_board_type.jpg?raw=true">
+<img src="./assets/xrp_board_type_V2.jpg?raw=true">
+
+The SparkFun XRP Robot (Beta) uses the **SparkFun XRP Controller (Beta)** board type:
+
+<img src="./assets/xrp_beta_board_type_V2.jpg?raw=true">
 
 While the CETA IoT Robot (Pico WH) uses the **Raspberry Pi Pico W** board type:
 
-<img src="./assets/ceta_board_type.jpg?raw=true">
+<img src="./assets/ceta_board_type_V2.jpg?raw=true">
 
 Next, to access the library modules in a sketch:
 * #include the cetalib.h header file at the top of the sketch

@@ -1,3 +1,19 @@
+/*
+  CETALIB "servoarm" Library Example: "servoarm_set_get_angle.ino"
+
+  This example shows usage of the servoarm "set_angle()" and "get_angle()" methods.
+
+  Hardware Configurations Supported:
+ 
+  CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+  (Select Board: "Raspberry Pi Pico W")
+  Uses SG92R type servo connected to GP22
+
+  created 18 Aug 2025
+  by dBm Signal Dynamics Inc.
+
+*/
+
 #include <stdio.h>
 #include <cetalib.h>
 
@@ -10,7 +26,7 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 // define an output print buffer
 char outBuffer[128];
 
-// encoder outputs
+// servo angle
 int angle;
 
 // the setup function runs once when you press reset or power the board

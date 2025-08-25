@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            servoarm.cpp
  * Project:         
- * Date:            June 28, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            Aug 18, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "servoarm" driver interface functions
  *
@@ -17,8 +18,19 @@
  * - refresh interval: 20000 uS
  * - uses PIO0 peripheral
  * 
- * Hardware Configuration:
- * CETA IoT Robot (schematic #14-00069B), based on RPI-Pico-WH with SG92R Servo  
+ * Hardware Configurations Supported:
+ *
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select Board: "Raspberry Pi Pico W")
+ * Uses SG92R type servo connected to GP22
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select Board: "SparkFun XRP Controller")
+ * Uses SG92R type servo connected to GP6
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ * Uses SG92R type servo connected to GP16
  *
  */
 
@@ -62,9 +74,10 @@ static enum SERVOARM_CALIBRATION_STATE servoarmCalState = SERVOARM_CAL_IDLE;
 
 /*** Public Function Definitions **********************************************/
 
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 void servoarm_init(void)
 {
-    // calibraation variables
+    // calibration variables
     int calAngle = 0;
 
     // Initiallize Servo1 using min/max pulses experimentally confirming 0-180 deg rotation
@@ -170,6 +183,201 @@ void servoarm_init(void)
     // Write any changes to EEPROM and close interface.
     EEPROM.end();
 }
+
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+void servoarm_init(void)
+{
+    // calibration variables
+    int calAngle = 90;
+    char c;
+
+    // Initiallize Servo1 using min/max pulses experimentally confirming 0-180 deg rotation
+    Servo1.attach(SERVOARM_PIN, SERVOARM_MIN_PULSE_WIDTH, SERVOARM_MAX_PULSE_WIDTH);
+
+    // Initiallize a default (safe) home position for the servo
+    setAngle = servoarmCal.home_angle;
+    servoarm_set_angle(setAngle);
+
+    // Perform servoarm position calibration if EEPROM calibration memory is blank
+    EEPROM.begin(1024);
+    uint32_t testRead = 0;
+    if(EEPROM.get(SERVOARM_CAL_EEPROM_ADDRESS_START, testRead) == 0xFFFFFFFF)
+    {
+        SERIAL_PORT.println("ServoArm Calibration Routine Triggered. Press button to begin.");
+        // EEPROM is blank, perform calibration procedure
+        servoarmCalState = SERVOARM_CAL_WAIT_BEGIN;
+        board_led_pattern(5);
+        while (servoarmCalState != SERVOARM_CAL_IDLE)
+        {
+            board_tasks();
+            switch(servoarmCalState)
+            {
+                case SERVOARM_CAL_WAIT_BEGIN:
+                    if(board_is_button_pressed())
+                    {
+                        board_led_pattern(1);                   // indicate "SERVOARM_CAL_HOME" state
+                        servoarmCalState = SERVOARM_CAL_HOME;   // set the "home" angle
+                        SERIAL_PORT.println("Enter '+' or '-' to set HOME position. Press button when done.");
+                    }
+                    break;
+                case SERVOARM_CAL_HOME:
+                    if(board_is_button_pressed())
+                    {
+                        servoarmCal.home_angle = calAngle;      // save current setting as "HOME"
+                        board_led_pattern(2);                   // indicate "SERVOARM_CAL_LIFT" state
+                        servoarmCalState = SERVOARM_CAL_LIFT;   // set the "lift" angle
+                        SERIAL_PORT.println("Enter '+' or '-' to set LIFT position. Press button when done.");
+                    }
+                    else
+                    {
+                        if(SERIAL_PORT.available() > 0)
+                        {
+                            c = SERIAL_PORT.read();
+                            switch(c)
+                            {
+                                case '+':
+                                    if(calAngle >= 180)
+                                    {
+                                        Servo1.write(180);
+                                    }
+                                    else
+                                    {
+                                        Servo1.write(calAngle++);
+                                    }
+                                    break;
+                                case '-':
+                                    if(calAngle <= 0)
+                                    {
+                                        Servo1.write(0);
+                                    }
+                                    else
+                                    {
+                                        Servo1.write(calAngle--);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                        SERIAL_PORT.println(calAngle);
+                        }
+                    }
+                    break;
+                case SERVOARM_CAL_LIFT:
+                    if(board_is_button_pressed())
+                    {
+                        servoarmCal.lift_angle = calAngle;      // save current setting as "LIFT"
+                        board_led_pattern(3);                   // indicate "SERVOARM_CAL_DROP" state
+                        servoarmCalState = SERVOARM_CAL_DROP;   // set the "drop" angle
+                        SERIAL_PORT.println("Enter '+' or '-' to set DROP position. Press button when done.");
+                    }
+                    else
+                    {
+                        if(SERIAL_PORT.available() > 0)
+                        {
+                            c = SERIAL_PORT.read();
+                            switch(c)
+                            {
+                                case '+':
+                                    if(calAngle >= 180)
+                                    {
+                                        Servo1.write(180);
+                                    }
+                                    else
+                                    {
+                                        Servo1.write(calAngle++);
+                                    }
+                                    break;
+                                case '-':
+                                    if(calAngle <= 0)
+                                    {
+                                        Servo1.write(0);
+                                    }
+                                    else
+                                    {
+                                        Servo1.write(calAngle--);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                        SERIAL_PORT.println(calAngle);
+                        }
+                    }
+                    break;
+                case SERVOARM_CAL_DROP:
+                    if(board_is_button_pressed())
+                    {
+                        servoarmCal.drop_angle = calAngle;      // save current setting as "DROP"
+                        board_led_off();                        // turn off the led
+                        servoarmCalState = SERVOARM_CAL_IDLE;   // terminate calibration
+                        SERIAL_PORT.println("ServoArm Calibration Routine Completed.");
+                    }
+                    else
+                    {
+                        if(SERIAL_PORT.available() > 0)
+                        {
+                            c = SERIAL_PORT.read();
+                            switch(c)
+                            {
+                                case '+':
+                                    if(calAngle >= 180)
+                                    {
+                                        Servo1.write(180);
+                                    }
+                                    else
+                                    {
+                                        Servo1.write(calAngle++);
+                                    }
+                                    break;
+                                case '-':
+                                    if(calAngle <= 0)
+                                    {
+                                        Servo1.write(0);
+                                    }
+                                    else
+                                    {
+                                        Servo1.write(calAngle--);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                        SERIAL_PORT.println(calAngle);
+                        }
+                    }
+                    break;    
+                default:
+                    servoarmCalState = SERVOARM_CAL_IDLE;
+                    board_led_off();
+                    break;
+            }
+        }
+        // Save calibration values to EEPROM memory
+        EEPROM.put(SERVOARM_CAL_EEPROM_ADDRESS_START, servoarmCal);
+        SERIAL_PORT.print("ServoArm Home Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.home_angle);
+        SERIAL_PORT.print(" ServoArm Lift Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.lift_angle);
+        SERIAL_PORT.print(" ServoArm Drop Position (angle): ");
+        SERIAL_PORT.println(servoarmCal.drop_angle);
+    }
+    else
+    {
+        // EEPROM is programmed with calibration values, so use them
+        EEPROM.get(SERVOARM_CAL_EEPROM_ADDRESS_START, servoarmCal);
+        SERIAL_PORT.print("ServoArm Home Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.home_angle);
+        SERIAL_PORT.print(" ServoArm Lift Position (angle): ");
+        SERIAL_PORT.print(servoarmCal.lift_angle);
+        SERIAL_PORT.print(" ServoArm Drop Position (angle): ");
+        SERIAL_PORT.println(servoarmCal.drop_angle);
+    }
+    // Write any changes to EEPROM and close interface.
+    EEPROM.end();
+}
+#else
+  #error Unsupported board selection
+#endif
 
 void servoarm_set_angle(int desiredAngle)
 {

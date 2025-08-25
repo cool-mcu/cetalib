@@ -17,6 +17,9 @@
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select "Board = SparkFun XRP Controller")
  *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ *
  */
 
  #ifndef CETALIB_INTERFACE_H_
@@ -52,16 +55,37 @@
    const struct DIFFDRIVE_INTERFACE *diffDrive;      // Pointer to a DIFFDRIVE_INTERFACE instance
    const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
  };
+
  #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
  struct CETALIB_INTERFACE
  {
    const struct BOARD_INTERFACE *board;              // Pointer to a BOARD_INTERFACE instance
    const struct MOTOR_INTERFACE *motor;              // Pointer to a MOTOR_INTERFACE instance
    const struct REFLECTANCE_INTERFACE *reflectance;  // Pointer to a REFLECTANCE_INTERFACE instance
+   const struct SERVOARM_INTERFACE *servoarm;        // Pointer to a SERVOARM_INTERFACE instance
    const struct ENCODER_INTERFACE *encoder;          // Pointer to a ENCODER_INTERFACE instance
    const struct RANGEFINDER_INTERFACE *rangefinder;  // Pointer to a RANGEFINDER_INTERFACE instance
+   const struct MQTTC_INTERFACE *mqttc;              // Pointer to a MQTTC_INTERFACE instance
+   const struct DIFFDRIVE_INTERFACE *diffDrive;      // Pointer to a DIFFDRIVE_INTERFACE instance 
    const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
-  };
+   
+ };
+ 
+ #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+ struct CETALIB_INTERFACE
+ {
+   const struct BOARD_INTERFACE *board;              // Pointer to a BOARD_INTERFACE instance
+   const struct MOTOR_INTERFACE *motor;              // Pointer to a MOTOR_INTERFACE instance
+   const struct REFLECTANCE_INTERFACE *reflectance;  // Pointer to a REFLECTANCE_INTERFACE instance
+   const struct SERVOARM_INTERFACE *servoarm;        // Pointer to a SERVOARM_INTERFACE instance
+   const struct ENCODER_INTERFACE *encoder;          // Pointer to a ENCODER_INTERFACE instance
+   const struct RANGEFINDER_INTERFACE *rangefinder;  // Pointer to a RANGEFINDER_INTERFACE instance
+   const struct MQTTC_INTERFACE *mqttc;              // Pointer to a MQTTC_INTERFACE instance
+   const struct DIFFDRIVE_INTERFACE *diffDrive;      // Pointer to a DIFFDRIVE_INTERFACE instance
+   // const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
+   
+ };
+
  #else
    #error Unsupported board selection
  #endif

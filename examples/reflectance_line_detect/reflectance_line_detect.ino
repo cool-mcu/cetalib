@@ -16,7 +16,11 @@
   (Select Board: "SparkFun XRP Controller")
   Reflectance sensors connected to GP44/ADC4 and GP45/ADC5.
 
-  created 19 May 2025
+  Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+  (Select "Board = SparkFun XRP Controller (Beta)")
+  Reflectance sensors connected to GP26/ADC1 and GP27/ADC2.
+
+  created 18 Aug 2025
   by dBm Signal Dynamics Inc.
 
 */

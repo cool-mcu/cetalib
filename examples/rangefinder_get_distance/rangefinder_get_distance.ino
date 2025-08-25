@@ -4,10 +4,17 @@
   This example demonstrates the usage of the "rangefinder->get_distance()" method.
 
   Hardware Configurations:
+ 
+  CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+  (Select "Board = Raspberry Pi Pico W")
+ 
+  Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+  (Select "Board = SparkFun XRP Controller")
 
-  CETA IoT Robot (Pico WH) or SparkFun XRP Robot with HC-SR04 Ultrasonic Sensor
+  Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+  (Select "Board = SparkFun XRP Controller (Beta)")
 
-  created 31 March 2025
+  created 18 Aug 2025
   by dBm Signal Dynamics Inc.
 
 */

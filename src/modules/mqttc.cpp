@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
- * File:            mqttc.h
+ * File:            mqttc.cpp
  * Project:         
- * Date:            July 25, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -18,11 +18,15 @@
  * Hardware Configurations Supported:
  * 
  * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
- * (Select Board: "Raspberry Pi Pico W")
+ * (Select "Board = Raspberry Pi Pico W")
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
- * (Select Board: "SparkFun XRP Controller")
+ * (Select "Board = SparkFun XRP Controller")
  *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ *
+ */
 
 /** Include Files *************************************************************/
 #include <Arduino.h>                // Required for Arduino functions
@@ -150,9 +154,11 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
       break;
   }
   
+  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
   // Initialize MQTTC CONNECTION STATUS LED
   pinMode(MQTTC_STAT_LED_PIN, OUTPUT);     // set digital pin as output
   digitalWrite(MQTTC_STAT_LED_PIN, 0);     // initialize LED state
+  #endif
 
   // Attempt to connect to Wifi network (blocking code):
   wifiConnect();
@@ -246,8 +252,10 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
     }
   }
 
+  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
   // if you get here, you are connected and ready to go!
   digitalWrite(MQTTC_STAT_LED_PIN, 1);
+  #endif
 
   // Initialize timeout for connectTasks()
   connStatusPrevSampleTime = 0;
@@ -337,17 +345,21 @@ char* mqttc_receive_message(void)
 
 void wifiConnect(void){
     // attempt to connect to Wifi network:
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
     digitalWrite(MQTTC_STAT_LED_PIN, 0);
+    #endif
     SERIAL_PORT.print("\nAttempting to connect to WPA SSID: ");
     SERIAL_PORT.println(ssid);
     while (WiFi.begin(ssid, passPhrase) != WL_CONNECTED) {
         // failed, retry
         SERIAL_PORT.print(".");
         delay(1000);
+        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         digitalWrite(MQTTC_STAT_LED_PIN, 1);
         delay(100);
         digitalWrite(MQTTC_STAT_LED_PIN, 0);
         delay(100);
+        #endif
     }
 
     // once you are connected :
@@ -357,12 +369,16 @@ void wifiConnect(void){
 
 void mqttClientConnect(void){
     // attempt insecure connection to MQTT Broker
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
     digitalWrite(MQTTC_STAT_LED_PIN, 0);
+    #endif
     SERIAL_PORT.print("\nAttempting to connect to the MQTT broker: ");
     SERIAL_PORT.println(broker);
     while(!mqttClient.connect(broker, port)){
         // failed, retry
         SERIAL_PORT.print(".");
+        delay(500);
+        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         digitalWrite(MQTTC_STAT_LED_PIN, 1);
         delay(100);
         digitalWrite(MQTTC_STAT_LED_PIN, 0);
@@ -371,6 +387,7 @@ void mqttClientConnect(void){
         delay(100);
         digitalWrite(MQTTC_STAT_LED_PIN, 0);
         delay(100);
+        #endif
     }
 
     // once you are connected :
@@ -386,13 +403,17 @@ void mqttClientDisconnect(void)
   mqttClient.stop();
   // disconnect from WiFi AP
   WiFi.end();
+  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
   // turn off CONNECTION led
   digitalWrite(MQTTC_STAT_LED_PIN, 0);
+  #endif
 }
 
 void mqttsClientConnect(void){
     // attempt secure connection to MQTT Broker
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
     digitalWrite(MQTTC_STAT_LED_PIN, 0);
+    #endif
     SERIAL_PORT.print("\nAttempting to connect to the MQTT broker: ");
     SERIAL_PORT.println(broker);
     // Select the correct server root CA certificate to use for the TLS connection
@@ -418,6 +439,8 @@ void mqttsClientConnect(void){
     while(!mqttsClient.connect(broker, port)){
         // failed, retry
         SERIAL_PORT.print(".");
+        delay(500);
+        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         digitalWrite(MQTTC_STAT_LED_PIN, 1);
         delay(100);
         digitalWrite(MQTTC_STAT_LED_PIN, 0);
@@ -426,6 +449,7 @@ void mqttsClientConnect(void){
         delay(100);
         digitalWrite(MQTTC_STAT_LED_PIN, 0);
         delay(100);
+        #endif
     }
 
     // once you are connected :
@@ -442,7 +466,9 @@ void mqttsClientDisconnect(void)
   // disconnect from WiFi AP
   WiFi.end();
   // turn off CONNECTION led
+  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
   digitalWrite(MQTTC_STAT_LED_PIN, 0);
+  #endif
 }
 
 // Set time via NTP, as required for x.509 validation
@@ -510,7 +536,9 @@ void connectionTasks(void)
       SERIAL_PORT.println("WiFi Status: connected");
       if(!mqttClient.connected())
       {
+        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         digitalWrite(MQTTC_STAT_LED_PIN, 0);       // turn off CONNECT status LED
+        #endif
         mqttClient.flush();
         mqttClient.stop();
         SERIAL_PORT.println("TCP Status: disconnected..attempting to reconnect");
@@ -533,7 +561,9 @@ void connectionTasks(void)
         }
         
         connStatusPrevSampleTime = 0;
+        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         digitalWrite(MQTTC_STAT_LED_PIN, 1);       // turn on CONNECT status LED
+        #endif
       }
       else
       {
@@ -563,7 +593,9 @@ void connectionTasks(void)
       }
       
       connStatusPrevSampleTime = 0;
+      #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
       digitalWrite(MQTTC_STAT_LED_PIN, 1);
+      #endif
     }
   }
 }
@@ -580,7 +612,9 @@ void connectionTasksSecure(void)
       SERIAL_PORT.println("WiFi Status: connected");
       if(!mqttsClient.connected())
       {
+        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         digitalWrite(MQTTC_STAT_LED_PIN, 0);       // turn off CONNECT status LED
+        #endif
         mqttsClient.flush();
         mqttsClient.stop();
         SERIAL_PORT.println("TCP Status: disconnected..attempting to reconnect");
@@ -603,7 +637,9 @@ void connectionTasksSecure(void)
         }
         
         connStatusPrevSampleTime = 0;
+        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
         digitalWrite(MQTTC_STAT_LED_PIN, 1);       // turn on CONNECT status LED
+        #endif
       }
       else
       {
@@ -633,7 +669,9 @@ void connectionTasksSecure(void)
       }
       
       connStatusPrevSampleTime = 0;
+      #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
       digitalWrite(MQTTC_STAT_LED_PIN, 1);
+      #endif
     }
   }
 }

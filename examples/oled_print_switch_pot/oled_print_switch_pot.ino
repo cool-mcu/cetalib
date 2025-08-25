@@ -7,10 +7,15 @@
 
   Hardware Configuration:
 
-  CETA IoT Robot (schematic #14-00069B) based on RPI-Pico-WH, with Adafruit 
-  128x64 OLED display (#938) connected to I2C1 pins (SDA/GP18)/(SCL/GP19)
+  CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+  (Select "Board = Raspberry Pi Pico W")
+  (Uses "Wire1" instance (I2C1 on pins SDA/GP18 & SCL/GP19))
+  
+  Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+  (Select "Board = SparkFun XRP Controller")
+  (Uses "Wire" instance (I2C0 on pins SDA/GP04 & SCL/GP05))
 
-  created 30 Aug 2024
+  created 18 Aug 2025
   by dBm Signal Dynamics Inc.
 
 */
@@ -31,7 +36,6 @@ void setup() {
   myRobot->board->initialize();
   if (!myRobot->oled->initialize())
   {
-    Serial.println("Failed to initialize OLED!. Stopping.");
     myRobot->board->led_blink(10);
     while (1)
     {
@@ -42,17 +46,21 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+  #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
   potValue = myRobot->board->get_potentiometer();
+  #else
+  potValue = random(0, 4096);
+  #endif
   switchLevel = myRobot->board->get_button_level();
   if (0 == switchLevel)
   {
-    sprintf(oledOutBuffer, "Switch: Pressed \nPotentiometer: %d\n", potValue);
+    sprintf(oledOutBuffer, "Switch: Pressed \nPotentiometer: %4d\n", potValue);
     myRobot->oled->print(oledOutBuffer);
     myRobot->oled->home();
   }
   else
   {
-    sprintf(oledOutBuffer, "Switch: Released\nPotentiometer: %d\n", potValue);
+    sprintf(oledOutBuffer, "Switch: Released\nPotentiometer: %4d\n", potValue);
     myRobot->oled->print(oledOutBuffer);
     myRobot->oled->home();
   }

@@ -3,7 +3,7 @@
  *
  * File:            oled.cpp
  * Project:         
- * Date:            Mar 29, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -33,7 +33,11 @@
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select "Board = SparkFun XRP Controller")
- * (Uses "Wire" instance (I2C0 on pins SDA/GP04 & SCL/GP05)) 
+ * (Uses "Wire" instance (I2C0 on pins SDA/GP04 & SCL/GP05))
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ * (Uses "Wire1" instance (I2C1 on pins SDA/GP18 & SCL/GP19))
  *
  */
 
@@ -49,7 +53,7 @@
 
 /*** Global Variable Declarations *********************************************/
 
-#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
 // Declare an Adafruit SSD1306 object
 Adafruit_SSD1306 ADA_OLED(OLED_SCREEN_WIDTH, OLED_SCREEN_HEIGHT, &Wire1, -1);
 // Declare an SSD1306Ascii object
@@ -146,7 +150,7 @@ extern const struct OLED_INTERFACE OLED = {
 
 bool oled_init(void)
 {
-	#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+	#if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
 	// Setup Wire1 as interface (I2C1) 
   Wire1.setSDA(OLED_SDA_PIN);
   Wire1.setSCL(OLED_SCL_PIN);

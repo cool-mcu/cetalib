@@ -5,12 +5,21 @@
   cycle through the 3 positions when pressing the pushbutton. This task will be 
   needed for challenges where a bucket is transported by the robot.
 
-  Hardware Configuration:
+  Hardware Configurations Supported:
+ 
+  CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+  (Select Board: "Raspberry Pi Pico W")
+  Uses SG92R type servo connected to GP22
+  
+  Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+  (Select Board: "SparkFun XRP Controller")
+  Uses SG92R type servo connected to GP6
+ 
+  Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+  (Select "Board = SparkFun XRP Controller (Beta)")
+  Uses SG92R type servo connected to GP16
 
-  CETA IoT Robot (schematic #14-00069B) based on RPI-Pico-WH, with ABRA SG92R
-  micro servo conneected to 3.3V, GND, and pin GP22
-
-  created 08 July 2024
+  created 18 Aug 2025
   by dBm Signal Dynamics Inc.
 
 */

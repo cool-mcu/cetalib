@@ -8,7 +8,10 @@
   Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
   (Select "Board = SparkFun XRP Controller")
 
-  created 7 April 2025
+  Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+  (Select "Board = SparkFun XRP Controller (Beta)")
+
+  created 18 Aug 2025
   by dBm Signal Dynamics Inc.
 
 */

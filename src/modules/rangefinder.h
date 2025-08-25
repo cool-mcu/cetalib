@@ -3,7 +3,7 @@
  *
  * File:            rangefinder.h
  * Project:         
- * Date:            Mar 29, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -19,6 +19,9 @@
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select "Board = SparkFun XRP Controller")
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
  *
  */
 
@@ -37,6 +40,9 @@
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
     #define HCSR04_TRIGGER_PIN  0
     #define HCSR04_ECHO_PIN     1
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+    #define HCSR04_TRIGGER_PIN  20
+    #define HCSR04_ECHO_PIN     21
 #else
     #error Unsupported board selection
 #endif

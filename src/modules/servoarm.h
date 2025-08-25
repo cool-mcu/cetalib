@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            servoarm.h
  * Project:         
- * Date:            June 28, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            Aug 18, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "servoarm" driver interface functions
  *
@@ -17,8 +18,19 @@
  * - refresh interval: 20000 uS
  * - uses PIO0 peripheral
  * 
- * Hardware Configuration:
- * CETA IoT Robot (schematic #14-00069B), based on RPI-Pico-WH with SG92R Servo  
+ * Hardware Configurations Supported:
+ *
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select Board: "Raspberry Pi Pico W")
+ * Uses SG92R type servo connected to GP22
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select Board: "SparkFun XRP Controller")
+ * Uses SG92R type servo connected to GP6
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
+ * Uses SG92R type servo connected to GP16
  *
  */
 
@@ -30,8 +42,18 @@
 #include "servoarm_interface.h"
 
 /*** Macros *******************************************************************/
-#define SERVOARM_PIN                      22
-#define POT_PIN                           A2
+
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+  #define SERVOARM_PIN                      22
+  #define POT_PIN                           A2
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+  #define SERVOARM_PIN                      6
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+  #define SERVOARM_PIN                      16  
+#else
+  #error Unsupported board selection
+#endif
+
 #define SERVOARM_MIN_PULSE_WIDTH          544   // Corresponds to 0 deg position
 #define SERVOARM_MAX_PULSE_WIDTH          2500  // Corresponds to 180 deg position
 #define HOME_POSITION_DEFAULT_ANGLE       102   // Default "home" position servo angle

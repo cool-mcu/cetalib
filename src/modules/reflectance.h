@@ -3,7 +3,7 @@
  *
  * File:            reflectance.h
  * Project:         
- * Date:            May 18, 2025
+ * Date:            Aug 18, 2025
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -16,6 +16,9 @@
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select "Board = SparkFun XRP Controller")
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
  *
  */
 
@@ -35,6 +38,9 @@
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
   #define LEFT_SENSOR_PIN             A4        // Left sensor connected to analog pin ADC4
   #define RIGHT_SENSOR_PIN            A5        // Right sensor connected to analog pin ADC5
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+  #define LEFT_SENSOR_PIN             A0        // Left sensor connected to analog pin ADC0
+  #define RIGHT_SENSOR_PIN            A1        // Right sensor connected to analog pin ADC1
 #else
   #error Unsupported board selection
 #endif

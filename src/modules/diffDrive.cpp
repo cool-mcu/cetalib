@@ -1,15 +1,24 @@
 /*
- * Copyright (C) 2024 dBm Signal Dynamics Inc.
+ * Copyright (C) 2025 dBm Signal Dynamics Inc.
  *
  * File:            diffDrive.cpp
  * Project:         
- * Date:            July 22, 2024
- * Framework:       Arduino (Arduino-Pico Board Pkge by Earl Philhower v3.8.1)
+ * Date:            Aug 18, 2025
+ * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
+ *                  (https://github.com/earlephilhower/arduino-pico)
  * 
- * cetalib "differential drive" driver interface functions
+ * "differential drive" driver interface file - defines "DIFFDRIVE_INTERFACE" structure
  *
- * Hardware Configuration:
- * CETA IoT Robot (schematic #14-00069A/B), based on RPI-Pico-WH 
+ * Hardware Configurations Supported:
+ * 
+ * CETA IoT Robot (Schematic #14-00069A/B), based on RPI-Pico-WH
+ * (Select "Board = Raspberry Pi Pico W")
+ * 
+ * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
+ * (Select "Board = SparkFun XRP Controller")
+ *
+ * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
+ * (Select "Board = SparkFun XRP Controller (Beta)")
  *
  */
 
@@ -29,9 +38,14 @@
     #define SERIAL_PORT Serial1     // Use Serial1 if USB is disabled
 #endif
 /*** Global Variable Declarations *********************************************/
-static float left_right_compensation = LEFT_RIGHT_COMPENSATION_DEFAULT;
+
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+  static float left_right_compensation = LEFT_RIGHT_COMPENSATION_DEFAULT;
+#endif
 
 /*** Type Declarations ********************************************************/
+
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE = {
     .initialize             = &diffDrive_init,
     .set_efforts            = &diffDrive_set_efforts,
@@ -42,6 +56,16 @@ extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE = {
     .save_straight_compensation = &diffDrive_save_straight_compensation
 };
 
+#elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE = {
+    .initialize             = &diffDrive_init,
+    .set_efforts            = &diffDrive_set_efforts,
+    .stop                   = &diffDrive_stop
+};
+#else
+  #error Unsupported board selection
+#endif
+
 /*** Private Function Prototypes **********************************************/
 
 /*** Public Function Definitions **********************************************/
@@ -50,6 +74,7 @@ void diffDrive_init(bool left_flip_dir, bool right_flip_dir)
 {
     motor_init(left_flip_dir, right_flip_dir);
     
+    #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
     // Update left_right_compensation variable with default or saved value
     EEPROM.begin(1024);
     uint32_t testRead = 0;
@@ -66,6 +91,7 @@ void diffDrive_init(bool left_flip_dir, bool right_flip_dir)
     SERIAL_PORT.print("\"diffDrive_straight()\" Left Right Compensation: ");
     SERIAL_PORT.println(left_right_compensation);
     SERIAL_PORT.println();
+    #endif
 }
 
 void diffDrive_set_efforts(float leftEffort, float rightEffort)
@@ -78,13 +104,16 @@ void diffDrive_stop(void)
     motor_set_efforts(0, 0);
 }
 
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 void diffDrive_straight(float straightEffort)
 {
     float leftMotorEffort = straightEffort;
     float rightMotorEffort = leftMotorEffort/left_right_compensation;
     motor_set_efforts(leftMotorEffort, rightMotorEffort);
 }
+#endif
 
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 void diffDrive_turn(float turnDegrees, float turnEffort)
 {
     float heading;
@@ -114,7 +143,9 @@ void diffDrive_turn(float turnDegrees, float turnEffort)
     } while (abs(heading) < turn_degrees);
     motor_set_efforts(0.0, 0.0);
 }
+#endif
 
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 void diffDrive_clear_calibration(void)
 {
     EEPROM.begin(1024);
@@ -124,7 +155,9 @@ void diffDrive_clear_calibration(void)
     }
     EEPROM.end();
 }
+#endif
 
+#if defined(ARDUINO_RASPBERRY_PI_PICO_W)
 void diffDrive_save_straight_compensation(float leftRightComp)
 {
     // update the compensation value
@@ -133,4 +166,5 @@ void diffDrive_save_straight_compensation(float leftRightComp)
     EEPROM.put(DIFFDRIVE_CAL_EEPROM_ADDRESS_START, leftRightComp);
     EEPROM.end();
 }
+#endif
 
