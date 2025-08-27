@@ -34,11 +34,17 @@
 
 /*** Global Variable Declarations *********************************************/
 #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio2, -1, 0);
-PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio2, -1, 0);
+//PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, true, 0, COUNT_4X, pio2, -1, 0);
+PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, true);
+//PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio2, -1, 0);
+PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false);
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
-PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio1, -1, 0);
-PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio1, -1, 0);
+//PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, true, 0, COUNT_4X, pio1, -1, 0);
+//PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, true, 0, COUNT_4X, pio0, -1, 0);
+PioEncoder leftEncoder(LEFT_MOTOR_ENCODER_A_PIN, true);
+//PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio1, -1, 0);
+//PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false, 0, COUNT_4X, pio0, -1, 0);
+PioEncoder rightEncoder(RIGHT_MOTOR_ENCODER_A_PIN, false);
 #endif
 
 /*** Type Declarations ********************************************************/
@@ -69,9 +75,7 @@ int encoder_get_left_position_counts(void)
     #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
         return 0;
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
-        // left motor encoder output is negative for forward motion
-        // need to correct with multiplication by -1.
-        return (-1)*leftEncoder.getCount();
+        return leftEncoder.getCount();
     #endif
 }
 
