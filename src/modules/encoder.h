@@ -36,8 +36,8 @@
  
 /*** Macros *******************************************************************/
 #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-#define LEFT_MOTOR_ENCODER_A_PIN  22
-#define RIGHT_MOTOR_ENCODER_A_PIN 2
+#define LEFT_MOTOR_ENCODER_A_PIN  30
+#define RIGHT_MOTOR_ENCODER_A_PIN 24
 #define RESOLUTION 585.0  // Number of counts per wheel rotation  
                           // (12 counts/motor shaft revolution) * (48.75:1 gear ratio)
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)

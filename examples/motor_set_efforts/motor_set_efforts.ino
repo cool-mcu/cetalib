@@ -47,7 +47,7 @@ void setup() {
   Serial.println();
   Serial.println();
   myRobot->board->initialize();
-  myRobot->motor->initialize(false, false);
+  myRobot->motor->initialize(true, true);
   Serial.println("robotState: STOP1");
 }
 

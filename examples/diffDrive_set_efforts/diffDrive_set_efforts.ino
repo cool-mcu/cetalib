@@ -47,7 +47,7 @@ void setup() {
   Serial.println();
   Serial.println();
   myRobot->board->initialize();
-  myRobot->diffDrive->initialize(false, false);
+  myRobot->diffDrive->initialize(true, true);
   Serial.println("robotState: STOP1");
 }
 

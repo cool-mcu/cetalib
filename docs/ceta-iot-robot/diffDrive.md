@@ -3,9 +3,9 @@
 The [CETA IoT Robot](https://www.cool-mcu.com/pages/robot-kit) is a mobile robot platform where driving from one place to another is central to the design of any program. The "differential Drive" module makes driving easy and has functions to:
 
 * **Set the motor efforts**, which is the average voltage suplied to the motors.
-* **Make point turns** for a desired number of degrees, either clockwise or countercloskwise
+* **Make point turns** for a desired number of degrees, either clockwise or counterclockwise
 
-The current robot design does not provide wheel speed feedback, so the robot will settle on an arbitrary speed, given specific motor effort settings. 
+This robot does not provide wheel speed feedback, so the robot will settle on an arbitrary speed, given specific motor effort settings. 
 
 <img src="../../assets/diffDrive-assembly.jpg?raw=true"><br>
   
