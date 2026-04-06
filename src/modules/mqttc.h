@@ -10,7 +10,7 @@
  * cetalib "mqttc" (MQTT Client) driver interface functions
  *
  * This library uses the "WiFi" library implementation in Arduino-Pico:
- * https://github.com/earlephilhower/arduino-pico/blob/master/libraries/Servo/src/Servo.h
+ * https://github.com/earlephilhower/arduino-pico/tree/master/libraries/WiFi/src 
  * 
  * This library also uses the ArduinoMqttClient library:
  * https://github.com/arduino-libraries/ArduinoMqttClient 

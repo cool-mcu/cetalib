@@ -4,9 +4,9 @@
 
 [<img src="./assets/github-cetalib-home-all-robots.png?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
 
-This robot and library support the learning objectives of our [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/rpi-pico-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
+This robot and library support the learning objectives of our [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
 
-## Primary Modules in the Library (CETA IoT Robot (Pico WH))
+## Primary Modules in the Library
 * [board](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/board.md)
   * Provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER
 * [diffDrive](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/diffDrive.md)
@@ -23,6 +23,8 @@ This robot and library support the learning objectives of our [CETA Robotics and
   * Provides basic functions for controlling a SG92R Servo motor
 * [oled](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/oled.md)
   * Provides basic text display functions for a 128x64 OLED display
+* [joystick](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/joystick.md)
+  * Enables remote operation using a Logitech F310 Gamepad
 
 # Dependencies
 

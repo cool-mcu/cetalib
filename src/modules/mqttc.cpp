@@ -10,7 +10,7 @@
  * cetalib "mqttc" (MQTT Client) driver interface functions
  *
  * This library uses the "WiFi" library implementation in Arduino-Pico:
- * https://github.com/earlephilhower/arduino-pico/blob/master/libraries/Servo/src/Servo.h
+ * https://github.com/earlephilhower/arduino-pico/tree/master/libraries/WiFi/src
  * 
  * This library also uses the ArduinoMqttClient library:
  * https://github.com/arduino-libraries/ArduinoMqttClient 
@@ -129,6 +129,13 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
                     const char *MQusername, const char *MQpassword, const char *subTopicIDs[],
                     int size_subTopicIDs)
 {
+  
+  // check if WiFi already in use by "joystick" module
+  if(WiFi.status() == WL_CONNECTED)
+  {
+      SERIAL_PORT.println("WiFi already in use. Cannot start STA");
+      return false;
+  }
   
   // Save SSID & Passphrase
   strcpy(ssid, MySSID);
