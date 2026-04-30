@@ -1,0 +1,359 @@
+# reflectance Module
+
+This module provides functions to interact with the LEFT OPTO and RIGHT OPTO reflectance sensors on the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html).
+
+<img src="../../assets/xrp-reflectance.png?raw=true"><br>
+
+XRP Controller RP2350 MCU GPIO Pin Connections:
+* GP44/ADC4: LEFT OPTO sensor
+* GP45/ADC5: RIGHT OPTO sensor
+
+For detailed lessons covering robot components, schematics and step-by-step robot assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators).
+
+## Methods:
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>) // Always returns '0.0'
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `void initialize(void)`
+
+Initiallize pins, state variables, calibrate if needed.
+
+### Syntax
+
+```c++
+myRobot->reflectance->initialize();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* None.
+
+### Example
+
+```c++
+// Initialize the reflectance module, then do nothing.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+void setup() {
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  // Use the reflectance functions here
+}
+```
+
+### See also
+
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `float get_left_sensor(void)`
+
+Sample the LEFT OPTO reflectance sensor reading.
+
+### Syntax
+
+```c++
+float left_opto = myRobot->reflectance->get_left_sensor();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: current reflectance sensor reading (0.0 to 1.0)
+
+### Notes
+
+* Readings closer to 1 correspond to the sensor being over a black line
+
+### Example
+
+```c++
+// Print the LEFT OPTO reflectance sensor value every second.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float left_opto;
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  left_opto = myRobot->reflectance->get_left_sensor();
+  Serial.printf("Left Opto: %.2f\r\n", left_opto);
+  delay(1000);
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `float get_middle_sensor(void)`
+
+Sample the MIDDLE OPTO reflectance sensor reading. Since there is no MIDDLE OPTO sensor on XRP, this function always returns '0.0'.
+
+### Syntax
+
+```c++
+float middle_opto = myRobot->reflectance->get_middle_sensor();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: '0.0'
+
+### Notes
+
+* Do not use this method for XRP.
+
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `float get_right_sensor(void)`
+
+Sample the RIGHT OPTO reflectance sensor reading.
+
+### Syntax
+
+```c++
+float right_opto = myRobot->reflectance->get_right_sensor();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **float**: current reflectance sensor reading (0.0 to 1.0)
+
+### Notes
+
+* Readings closer to 1 correspond to the sensor being over a black line
+
+### Example
+
+```c++
+// Print the RIGHT OPTO reflectance sensor value every second.
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+float right_opto;
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  right_opto = myRobot->reflectance->get_right_sensor();
+  Serial.printf("Right Opto: %.2f\r\n", right_opto);
+  delay(1000);
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>))
+* [get_line_status()](<#int-get_line_statusvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `int get_line_status(void)`
+
+Sample/Return current line detection status.
+
+### Syntax
+
+```c++
+int line_detect = myRobot->reflectance->get_line_status();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* **int**: current line detection alarm status (0, 1, 4 or 5)
+
+  * 0: (Left: 0, Middle: 0, Right: 0)
+  * 1: (Left: 0, Middle: 0, Right: 1)
+  * 4: (Left: 1, Middle: 0, Right: 0)
+  * 5: (Left: 1, Middle: 0, Right: 1)
+
+### Notes
+
+* The function requires a calibration procedure to be completed, which samples, then calculates/saves optimal
+OPTO sensor trip thesholds into EEPROM memory.
+* The calibration procedure is triggered by calling the "reflectance->initialize()" function after clearing the calibration memory using the "reflectance->clear_calibration()" function as shown below.
+    * See code example below
+    * Follow the instructions provided in the serial terminal window to complete the calibration procedure
+
+### Example
+
+```c++
+// Sample/display the line detection status value every second.
+// Hold USER SWITCH pressed for 2 seconds after reset to trigger a OPTO calibration sequence
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+int line_detect;
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  myRobot->board->initialize();
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->reflectance->clear_calibration();
+  }
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  line_detect = myRobot->reflectance->get_line_status();
+  switch (line_detect)
+  {
+    case 0:
+      Serial.println("Left: 0, Middle: 0, Right: 0");
+      break;
+    case 1:
+      Serial.println("Left: 0, Middle: 0, Right: 1");
+      break;
+    case 4:
+      Serial.println("Left: 1, Middle: 0, Right: 0");
+      break;
+    case 5:
+      Serial.println("Left: 1, Middle: 0, Right: 1");
+      break;
+    default:
+      break;
+  }
+  delay(1000);
+}
+```
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [clear_calibration()](<#void-clear_calibrationvoid>)
+
+## `void clear_calibration(void)`
+
+Delete calibration data in EEPROM memory.
+
+### Syntax
+
+```c++
+myRobot->reflectance->clear_calibration();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* To initiate the procedure to update OPTO sensor trip thresholds, call this function before calling the "reflectance->initialize()" function, as shown below.
+
+### Example
+
+```c++
+// Sample/display the line detection status value every second.
+// Hold USER SWITCH pressed for 2 seconds after reset to trigger a OPTO calibration sequence
+
+#include <cetalib.h>
+
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+int line_detect;
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  myRobot->board->initialize();
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->reflectance->clear_calibration();
+  }
+  myRobot->reflectance->initialize();
+}
+
+void loop() {
+  line_detect = myRobot->reflectance->get_line_status();
+  switch (line_detect)
+  {
+    case 0:
+      Serial.println("Left: 0, Middle: 0, Right: 0");
+      break;
+    case 1:
+      Serial.println("Left: 0, Middle: 0, Right: 1");
+      break;
+    case 4:
+      Serial.println("Left: 1, Middle: 0, Right: 0");
+      break;
+    case 5:
+      Serial.println("Left: 1, Middle: 0, Right: 1");
+      break;
+    default:
+      break;
+  }
+  delay(1000);
+}
+```
+
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [get_left_sensor()](<#float-get_left_sensorvoid>)
+* [get_middle_sensor()](<#float-get_middle_sensorvoid>)
+* [get_right_sensor()](<#float-get_right_sensorvoid>)
+* [get_line_status()](<#int-get_line_statusvoid>)

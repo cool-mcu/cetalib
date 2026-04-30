@@ -4,7 +4,7 @@ This module provides functions to interact with a [Logitech F310](https://www.lo
 
 <img src="../../assets/joystick-system.png?raw=true">
 
-After uploading your joystick enabled sketch to the robot, it will start a dedicated WiFi Access Point having the following Network SSID:
+After uploading your joystick enabled sketch to the robot, it will start a dedicated WiFi Access Point having the following Network SSID, depending on robot type:
 
 * "XRP_abcd", or
 * "XRPBeta_abcd", or
@@ -14,7 +14,9 @@ Where "abcd" are the lower 2 bytes of your robot's unique MAC address.
 
 Scan for wireless networks, and connect to your robot. The WiFi password is identical to the SSID.
 
-Next, ensure your F310 is plugged in to your PC, then follow [these instructions](https://github.com/cool-mcu/cetalib/blob/main/utilities/joystick/README.md) to execute the "cetalib-joystick-client.py" python script in your terminal/command window.
+Next, ensure your F310 is plugged in to your PC, then execute the [CETALIB Joystick UDP Client](https://github.com/cool-mcu/cetalib/blob/main/utilities/joystick/README.md) python script in your terminal/command window.
+
+For detailed lessons covering the use of this module, [contact us](mailto:info@cool-mcu.com) to enrol in the [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)

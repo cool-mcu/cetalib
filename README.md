@@ -1,30 +1,34 @@
 # cetalib Library for Arduino
 
-**cetalib** is an Arduino-based programming library that provides functions to make it easy to use all the features of the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit), the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html) and the [SparkFun XRP Robot (Beta)](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit-beta.html)
+**cetalib** is an Arduino-based programming library that provides functions to make it easy to use all the features of the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html), the [SparkFun XRP Robot (Beta)](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit-beta.html), and the [CETA IoT Robot (Pico WH)](https://www.cool-mcu.com/pages/robot-kit).
 
 [<img src="./assets/github-cetalib-home-all-robots.png?raw=true">](https://www.cool-mcu.com/pages/robot-kit)
 
 This robot and library support the learning objectives of our [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
 
 ## Primary Modules in the Library
-* [board](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/board.md)
+* [board](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/board.md)
   * Provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER
-* [diffDrive](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/diffDrive.md)
+* [diffDrive](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/diffDrive.md)
   * Provides functions to control the direction and voltage applied to both DC motors
-* [imu](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/imu.md)
-  * Provides functions to obtain heading and acceleration data from an onboard LSM6DSOX IMU (Inertial Measurement Unit)
-* [mqttc](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/mqttc.md)
-  * Provides WiFi and MQTT Client network connectivity functions to allow the robot to be monitored and controlled over the internet
-* [rangefinder](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/rangefinder.md)
-  * Provides basic functions for using an HC-SR04 Ultrasonic Rangefinder
-* [reflectance](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/reflectance.md)
-  * Provides basic functions for obtaining readings from the 3 opto line-sensors
-* [servoarm](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/servoarm.md)
-  * Provides basic functions for controlling a SG92R Servo motor
-* [oled](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/oled.md)
-  * Provides basic text display functions for a 128x64 OLED display
-* [joystick](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/joystick.md)
+* [encoder](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/encoder.md)
+  * Provides functions to control the direction and voltage applied to both DC motors  
+* imu
+  * Provides functions to obtain temperature, heading and acceleration data from an onboard LSM6DSOX IMU (Inertial Measurement Unit)
+* [joystick](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/joystick.md)
   * Enables remote operation using a Logitech F310 Gamepad
+* [mqttc](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/mqttc.md)
+  * Provides WiFi and MQTT Client network connectivity functions to allow the robot to be monitored and controlled over the internet
+* [oled](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/oled.md)
+  * Provides basic text display functions for a 128x64 OLED display  
+* [rangefinder](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/rangefinder.md)
+  * Provides basic functions for using an HC-SR04 Ultrasonic Rangefinder
+* [reflectance](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/reflectance.md)
+  * Provides basic functions for obtaining readings from the 3 opto line-sensors
+* [servoarm](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/servoarm.md)
+  * Provides basic functions for controlling a SG92R Servo motor
+
+
 
 # Dependencies
 
@@ -59,15 +63,15 @@ After creating a new sketch, the very first thing you need to do is select the a
 
 The SparkFun XRP Robot uses the **SparkFun XRP Controller** board type:
 
-<img src="./assets/xrp_board_type_V2.jpg?raw=true">
+<img src="./assets/xrp_board_type_V2.jpg?raw=true"><br>
 
 The SparkFun XRP Robot (Beta) uses the **SparkFun XRP Controller (Beta)** board type:
 
-<img src="./assets/xrp_beta_board_type_V2.jpg?raw=true">
+<img src="./assets/xrp_beta_board_type_V2.jpg?raw=true"><br>
 
 While the CETA IoT Robot (Pico WH) uses the **Raspberry Pi Pico W** board type:
 
-<img src="./assets/ceta_board_type_V2.jpg?raw=true">
+<img src="./assets/ceta_board_type_V2.jpg?raw=true"><br>
 
 Next, to access the library modules in a sketch:
 * #include the cetalib.h header file at the top of the sketch
@@ -87,7 +91,7 @@ float distance = myRobot->rangefinder->get_distance();
 ```
 The autocomplete feature of the Arduino 2.x IDE automatically lists all available modules, then functions for a specific module, simplifying the coding process:
 
-<image src="./assets/arduino-ide-autocomplete.gif?raw=true">
+<image src="./assets/arduino-ide-autocomplete.gif?raw=true"><br>
 
 # Documentation
 

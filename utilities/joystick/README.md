@@ -24,12 +24,12 @@ Isolating dependencies is recommended to keep your system Python clean.
 Navigate to the folder containing the "cetalib-joystick-client.py" python script, then enter the following:
 
 Windows 11 (PowerShell/CMD):
-* python -m venv venv
+* python -m venv .venv
 * .\venv\Scripts\activate.bat
 
 macOS (Terminal):
-* python3 -m venv venv
-* source venv/bin/activate
+* python3 -m venv .venv
+* source .venv/bin/activate
 
 ### 3. Install Dependencies
 With your virtual environment activated, run:
