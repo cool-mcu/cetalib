@@ -3,7 +3,7 @@
 This module provides functions to interact with the USER LED and USER SWITCH on the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html).
 
 <center>
-<img src="../../assets/xrp-board.JPG?raw=true">
+<img src="../../assets/xrp-board.jpg?raw=true">
 </center><br>
 
 XRP Controller RP2350 MCU GPIO Pin Connections:
