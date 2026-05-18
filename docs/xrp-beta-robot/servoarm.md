@@ -1,14 +1,14 @@
 # servoarm Module
 
-This module provides functions to interact with the provided [Servo motor](https://www.sparkfun.com/servo-generic-sub-micro-size.html) to implement basic LIFT/DROP functions for the [SparkFun XRP Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit.html).
+This module provides functions to interact with the provided [Servo motor](https://www.sparkfun.com/servo-generic-sub-micro-size.html) to implement basic LIFT/DROP functions for the [SparkFun XRP Beta Robot](https://www.sparkfun.com/experiential-robotics-platform-xrp-kit-beta.html).
 
-<center><img src="../../assets/xrp-servoarm.jpg?raw=true"></center><br>
+<center><img src="../../assets/xrp-beta-servoarm.jpg?raw=true"></center><br>
 
-XRP Controller RP2350 MCU GPIO Pin Connections:
+XRP Controller Beta RP2040 MCU GPIO Pin Connections:
 
 Using the "Servo1" pin header:
 
-* WHITE wire:  PWM Signal - Connect to GP6
+* WHITE wire:  PWM Signal - Connect to GP16
 * RED wire:     Connect to 5V
 * BLACK wire:   Connect to GND
 

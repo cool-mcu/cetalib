@@ -7,25 +7,25 @@
 This robot and library support the learning objectives of our [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators). If you are a teacher and are interested in kick-starting your STEM curriculum, [contact us](mailto:info@cool-mcu.com) to enrol in the curriculum.
 
 ## Primary Modules in the Library
-* [board](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/board.md)
+* **board** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/board.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/board.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/board.md))
   * Provides functions to interact with the USER LED, USER SWITCH and USER POTENTIOMETER
-* [diffDrive](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/diffDrive.md)
+* **diffDrive** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/diffDrive.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/diffDrive.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/diffDrive.md))
   * Provides functions to control the direction and voltage applied to both DC motors
-* [encoder](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/encoder.md)
+* **encoder** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/encoder.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/encoder.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/encoder.md))
   * Provides functions to control the direction and voltage applied to both DC motors  
-* imu
+* **imu** (XRP, XRP Beta, CETA IoT)
   * Provides functions to obtain temperature, heading and acceleration data from an onboard LSM6DSOX IMU (Inertial Measurement Unit)
-* [joystick](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/joystick.md)
+* **joystick** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/joystick.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/joystick.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/joystick.md))
   * Enables remote operation using a Logitech F310 Gamepad
-* [mqttc](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/mqttc.md)
+* **mqttc** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/mqttc.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/mqttc.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/mqttc.md))
   * Provides WiFi and MQTT Client network connectivity functions to allow the robot to be monitored and controlled over the internet
-* [oled](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/oled.md)
+* **oled** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/oled.md), XRP Beta, [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/oled.md))
   * Provides basic text display functions for a 128x64 OLED display  
-* [rangefinder](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/rangefinder.md)
+* **rangefinder** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/rangefinder.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/rangefinder.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/rangefinder.md))
   * Provides basic functions for using an HC-SR04 Ultrasonic Rangefinder
-* [reflectance](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/reflectance.md)
-  * Provides basic functions for obtaining readings from the 3 opto line-sensors
-* [servoarm](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/servoarm.md)
+* **reflectance** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/reflectance.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/reflectance.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/reflectance.md))
+  * Provides basic functions for obtaining readings from the opto line-sensors
+* **servoarm** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/servoarm.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/servoarm.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/servoarm.md))
   * Provides basic functions for controlling a SG92R Servo motor
 
 
@@ -42,6 +42,7 @@ The following libraries need to be installed into your Arduino environment:
 * [Adafruit-GFX-Library (v1.11.10)](https://github.com/adafruit/Adafruit-GFX-Library/archive/refs/tags/1.11.10.zip)
 * [SSD1306Ascii Library (v1.3.5)](https://github.com/greiman/SSD1306Ascii/archive/refs/tags/1.3.5.zip)
 * [rp2040-encoder-library (v0.2.0)](https://github.com/gbr1/rp2040-encoder-library/archive/refs/tags/0.2.0.zip)
+* [FreqCountRP2](https://github.com/dpwe/FreqCountRP2) (manually zip/download a copy of the repository)
 
 The following core needs to be installed into your Arduino environment using the Boards Manager:
 * [Raspberry Pi Pico/RP2040 Core by Earl Philhower](https://github.com/earlephilhower/arduino-pico)
