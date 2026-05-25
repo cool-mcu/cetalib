@@ -149,14 +149,14 @@ bool joystick_init(void)
   // Note: the WiFi passphrase is set to match the SSID
   WiFi.macAddress(macAddr);     // read/save the mac address of the radio
   #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
-  sprintf(apSSID, "CETAIoT_%02x%02x", macAddr[1], macAddr[0]);
-  sprintf(apPassphrase, "CETAIoT_%02x%02x", macAddr[1], macAddr[0]);
+  sprintf(apSSID, "CETAIoT_%02x%02x", macAddr[4], macAddr[5]);
+  sprintf(apPassphrase, "CETAIoT_%02x%02x", macAddr[4], macAddr[5]);
   #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-  sprintf(apSSID, "XRP_%02x%02x", macAddr[1], macAddr[0]);
-  sprintf(apPassphrase, "XRP_%02x%02x", macAddr[1], macAddr[0]);
+  sprintf(apSSID, "XRP_%02x%02x", macAddr[4], macAddr[5]);
+  sprintf(apPassphrase, "XRP_%02x%02x", macAddr[4], macAddr[5]);
   #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
-  sprintf(apSSID, "XRPBeta_%02x%02x", macAddr[1], macAddr[0]);
-  sprintf(apPassphrase, "XRPBeta_%02x%02x", macAddr[1], macAddr[0]);
+  sprintf(apSSID, "XRPBeta_%02x%02x", macAddr[4], macAddr[5]);
+  sprintf(apPassphrase, "XRPBeta_%02x%02x", macAddr[4], macAddr[5]);
   #else
    #error Unsupported board selection
   #endif
