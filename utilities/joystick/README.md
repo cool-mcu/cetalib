@@ -25,7 +25,7 @@ Navigate to the folder containing the "cetalib-joystick-client.py" python script
 
 Windows 11 (PowerShell/CMD):
 * python -m venv .venv
-* .\.venv\Scripts\activate.bat
+* .\\.venv\Scripts\activate.bat
 
 macOS (Terminal):
 * python3 -m venv .venv
