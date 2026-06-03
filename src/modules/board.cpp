@@ -17,7 +17,9 @@
  * 
  * Sparkfun XRP Robot Platform (#KIT-27644), based on the RPI RP2350B MCU
  * (Select Board: "SparkFun XRP Controller")
- * USER LED is a WS2812B NeoPixel driven with fixed color (RED)
+ * USER LED is a WS2812B NeoPixel driven with an adjustable color palette:
+ * 
+ * Color Palette: WHITE, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE
  *
  * Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
  * (Select "Board = SparkFun XRP Controller (Beta)")
@@ -64,6 +66,7 @@ extern const struct BOARD_INTERFACE BOARD = {
     .led_toggle             = &board_led_toggle,
     .led_blink              = &board_led_blink,
     .led_pattern            = &board_led_pattern,
+    .led_set_color          = &board_led_set_color,
     .is_button_pressed      = &board_is_button_pressed,
     .is_button_released     = &board_is_button_released,
     .get_button_level       = &board_get_button_level,
@@ -100,14 +103,15 @@ static int ledOutputValue[5][10] = {       // provide 5 unique flashing patterns
   {1, 0, 1, 0, 1, 0, 1, 0, 0, 0},   // Pattern 4 - blink 4x/sec
   {1, 0, 1, 0, 1, 0, 1, 0, 1, 0}    // Pattern 5 - blink 5x/sec (constant)
 };
-static int ledPatternIndex;       // row pointer: selects flashing pattern
-static int ledValueIndex;         // column pointer: selects current LED value
+static int ledPatternIndex;         // row pointer: selects flashing pattern
+static int ledValueIndex;           // column pointer: selects current LED value
 
 // button-related variables
 static int buttonLevelCurrent, buttonLevelPrevious;
 
 // define neopixel-related variables/functions
 #if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+static RGB_LED_COLOR UserLEDColor;   // define variable to hold the color selection
 PIO pio;
 uint sm;
 uint offset;
@@ -133,6 +137,7 @@ void board_init(void)
         pinMode(LED_PIN, OUTPUT);   // set digital pin as output
         digitalWrite(LED_PIN, 0);   // set initial level
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+        UserLEDColor = RED;   // set default USER LED color for XRP Robot.    
         bool success = pio_claim_free_sm_and_add_program_for_gpio_range(&ws2812_program, &pio, &sm, &offset, LED_PIN, 1, true);
         hard_assert(success);
         ws2812_program_init(pio, sm, offset, LED_PIN, 800000, IS_RGBW);
@@ -172,7 +177,33 @@ void board_tasks(void)
                         #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
                             digitalWrite(LED_PIN, 1);
                         #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-                            put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                            switch(UserLEDColor)
+                            {
+                                case RED:
+                                    put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                                    break;
+                                case WHITE:
+                                    put_pixel(pio, sm, urgb_u32(10, 10, 10));
+                                    break;
+                                case YELLOW:
+                                    put_pixel(pio, sm, urgb_u32(10, 10, 0));
+                                    break;
+                                case CYAN:
+                                    put_pixel(pio, sm, urgb_u32(0, 10, 10));
+                                    break;
+                                case PURPLE:
+                                    put_pixel(pio, sm, urgb_u32(10, 0, 10));
+                                    break;
+                                case BLUE:
+                                    put_pixel(pio, sm, urgb_u32(0, 0, 10));
+                                    break;
+                                case GREEN:
+                                    put_pixel(pio, sm, urgb_u32(0, 10, 0));
+                                    break;
+                                default:
+                                    put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                                    break;
+                            }    
                         #else
                             #error Unsupported board selection
                         #endif
@@ -220,7 +251,33 @@ void board_tasks(void)
                     #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
                         digitalWrite(LED_PIN, 1);
                     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-                        put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                        switch(UserLEDColor)
+                            {
+                                case RED:
+                                    put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                                    break;
+                                case WHITE:
+                                    put_pixel(pio, sm, urgb_u32(10, 10, 10));
+                                    break;
+                                case YELLOW:
+                                    put_pixel(pio, sm, urgb_u32(10, 10, 0));
+                                    break;
+                                case CYAN:
+                                    put_pixel(pio, sm, urgb_u32(0, 10, 10));
+                                    break;
+                                case PURPLE:
+                                    put_pixel(pio, sm, urgb_u32(10, 0, 10));
+                                    break;
+                                case BLUE:
+                                    put_pixel(pio, sm, urgb_u32(0, 0, 10));
+                                    break;
+                                case GREEN:
+                                    put_pixel(pio, sm, urgb_u32(0, 10, 0));
+                                    break;
+                                default:
+                                    put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                                    break;
+                            }    
                     #else
                         #error Unsupported board selection
                     #endif
@@ -242,7 +299,33 @@ void board_led_on(void)
     #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
         digitalWrite(LED_PIN, 1);
     #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        put_pixel(pio, sm, urgb_u32(10, 0, 0));
+        switch(UserLEDColor)
+        {
+            case RED:
+                put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                break;
+            case WHITE:
+                put_pixel(pio, sm, urgb_u32(10, 10, 10));
+                break;
+            case YELLOW:
+                put_pixel(pio, sm, urgb_u32(10, 10, 0));
+                break;
+            case CYAN:
+                put_pixel(pio, sm, urgb_u32(0, 10, 10));
+                break;
+            case PURPLE:
+                put_pixel(pio, sm, urgb_u32(10, 0, 10));
+                break;
+            case BLUE:
+                put_pixel(pio, sm, urgb_u32(0, 0, 10));
+                break;
+            case GREEN:
+                put_pixel(pio, sm, urgb_u32(0, 10, 0));
+                break;
+            default:
+                put_pixel(pio, sm, urgb_u32(10, 0, 0));
+                break;
+        }    
     #else
         #error Unsupported board selection
     #endif
@@ -319,6 +402,11 @@ void board_led_pattern(int pattern)
         ledPatternIndex = pattern - 1;
         ledFunctionState = PATTERN;
     }
+}
+
+void board_led_set_color(RGB_LED_COLOR color)
+{
+    UserLEDColor = color;
 }
 
 bool board_is_button_pressed(void)

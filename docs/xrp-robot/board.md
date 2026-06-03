@@ -10,7 +10,9 @@ XRP Controller RP2350 MCU GPIO Pin Connections:
 * GP37: USER LED (Uses the WS2812 RGB LED).
 * GP36: USER SWITCH
 
-Note that the RGB led is configured to use a fixed color (RED).
+**Note that the RGB led has the following color palette: WHITE, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE.**
+
+Use the "**board->led_set_color()**" method to set the desired color.
 
 For detailed lessons covering robot components, schematics and step-by-step robot assembly instructions, [contact us](mailto:info@cool-mcu.com) to enrol in the [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators).
 
@@ -22,6 +24,7 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -29,7 +32,7 @@ For detailed lessons covering robot components, schematics and step-by-step robo
 
 ## `void initialize(void)`
 
-Initialize pin settings and module state variables. Must be called once in setup() before use.
+Initialize pin settings, LED state and color, and module state variables. Must be called once in setup() before use.
 
 ### Syntax
 
@@ -46,7 +49,7 @@ myRobot->board->initialize();
 
 ### Notes
 
-* None.
+* USER RGB LED color is set to RED by default.
 
 ### Example
 
@@ -74,6 +77,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -129,6 +133,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -183,6 +188,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -237,6 +243,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -289,6 +296,7 @@ void loop() {
 * [led_off()](<#void-led_offvoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -345,6 +353,7 @@ void loop() {
 * [led_off()](<#void-led_offvoid>)
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -401,6 +410,70 @@ void loop() {
 * [led_off()](<#void-led_offvoid>)
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
+* [is_button_pressed()](<#bool-is_button_pressedvoid>)
+* [is_button_released()](<#bool-is_button_releasedvoid>)
+* [get_button_level()](<#int-get_button_levelvoid>)
+* [wait_for_button()](<#void-wait_for_buttonvoid>)
+
+## `void led_set_color(RBG_LED_COLOR color)`
+
+Sets the color of the USER LED using the following palette: WHITE, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE
+
+### Syntax
+
+```c++
+RGB_LED_Color ledColor = CYAN;
+myRobot->board->led_set_color(ledColor);  // set the USER LED color to CYAN
+```
+### Parameters
+
+* **color**: RGB LED color enumeration value, from the following list: {WHITE, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE}
+
+### Returns
+
+* None.
+
+### Notes
+
+* The "**board->initialize()**" method initializes the default color as RED. You only need to use "**board->led_set_color()**" if you need different colors in your application.
+
+### Example
+
+```c++
+// Choose a color for the USER LED from the color palette.
+
+#include <cetalib.h>
+
+// define & initialize a pointer to the CETALIB functions
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+// define a LED color variable and initialize it with a color from the palette
+RGB_LED_COLOR ledColor = PURPLE; // Choose: WHITE, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  myRobot->board->initialize();             // default color is RED
+  myRobot->board->led_set_color(ledColor);  // default color is changed!
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  myRobot->board->led_on();
+  delay(500);
+  myRobot->board->led_off();
+  delay(500);                   
+}
+```
+### See also
+
+* [initialize()](<#void-initializevoid>)
+* [tasks()](<#void-tasksvoid>)
+* [led_on()](<#void-led_onvoid>)
+* [led_off()](<#void-led_offvoid>)
+* [led_toggle()](<#void-led_togglevoid>)
+* [led_blink()](<#void-led_blinkint-frequency>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
@@ -456,6 +529,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
 * [wait_for_button()](<#void-wait_for_buttonvoid>)
@@ -510,6 +584,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
 * [wait_for_button()](<#void-wait_for_buttonvoid>)
@@ -566,6 +641,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [wait_for_button()](<#void-wait_for_buttonvoid>)
@@ -620,6 +696,7 @@ void loop() {
 * [led_toggle()](<#void-led_togglevoid>)
 * [led_blink()](<#void-led_blinkint-frequency>)
 * [led_pattern()](<#void-led_patternint-pattern>)
+* [led_set_color()](<#void-led_set_colorrbg_led_color-color>)
 * [is_button_pressed()](<#bool-is_button_pressedvoid>)
 * [is_button_released()](<#bool-is_button_releasedvoid>)
 * [get_button_level()](<#int-get_button_levelvoid>)
