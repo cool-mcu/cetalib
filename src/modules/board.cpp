@@ -404,10 +404,12 @@ void board_led_pattern(int pattern)
     }
 }
 
+#if defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
 void board_led_set_color(RGB_LED_COLOR color)
 {
     UserLEDColor = color;
 }
+#endif
 
 bool board_is_button_pressed(void)
 {
