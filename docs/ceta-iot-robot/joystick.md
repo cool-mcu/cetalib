@@ -8,11 +8,11 @@ After uploading your joystick enabled sketch to the robot, it will start a dedic
 
 Next, ensure your F310 is plugged in to your PC, then execute the [CETALIB Joystick UDP Client](https://github.com/cool-mcu/cetalib/blob/main/utilities/joystick/README.md) python script in your terminal/command window.
 
-For detailed lessons covering the use of this module, [contact us](mailto:info@cool-mcu.com) to enrol in the [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators).
-
 **NOTE:** This module requires the [Network Module APIs](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/network.md) to manage the WiFi connection to the network. Before compilation, you will need to allocate 64kB of Flash memory to support a Filesystem as shown here:
 
 <center><img src="../../assets/ceta_iot_filesystem_allocate.jpg?raw=true"></center><br>
+
+For detailed lessons covering the use of this module, [contact us](mailto:info@cool-mcu.com) to enrol in the [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators).
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
