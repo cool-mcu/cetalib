@@ -8,6 +8,13 @@
   "Left Trigger" lifts the servo arm (increasing servo angle)
   "Right Trigger" lowers the servo arm (decreasing servo angle)
 
+  This application requires the "network" module to provision/connect to a WiFi network.
+  Make sure to select "Tools -> Flash Size" and select a 64kB Flash partition for 
+  the filesystem.
+  
+  Please review the documentation for the network module to understand how WiFi
+  provisioning works (https://github.com/cool-mcu/cetalib).
+
   Hardware Configuration:
 
   Windows/MacOS PC with Logitech F310 Gamepad connected in "D" mode.
@@ -22,7 +29,7 @@
   Sparkfun XRP (Beta) Robot Platform (#KIT-22230), based on the RPI Pico W
   (Select "Board = SparkFun XRP Controller (Beta)")
 
-  created 29 Mar 2026
+  updated 16 June 2026
   by dBm Signal Dynamics Inc.
 
 */
@@ -62,24 +69,43 @@ void setup() {
   myRobot->board->initialize();
   myServoArm.attach(servo_pin);
   myServoArm.write(servo_angle);
-  myRobot->diffDrive->initialize(false, false); // adjust parameters for forward motion in your robot
+  myRobot->diffDrive->initialize(true, true); // adjust parameters for forward motion in your robot
+  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  if (!myRobot->network->connect())
+  {
+    Serial.println("Failed to connect to AP. WiFi provisioning started...");
+    myRobot->network->provision();
+  }
+  Serial.println("\nConnected to the Network...");
+  // Attempt to initialize joystick UDP Server
   if(!myRobot->joystick->initialize())
   {
-    Serial.println("Joystick Initialization failed. Stopping.");
+    Serial.println();
+    Serial.println("Failed to initialize Joystick UDP Server!");
+    Serial.println("- Press/Hold BUTTON for 3 seconds to switch WiFi Network, or");
+    Serial.println("- Update sketch: Call 'network->connect()' and 'network->provision()' before calling 'joystick->initialize()'");
     myRobot->board->led_pattern(ledPatternFailure);
     while(1)
     {
       // blink the USER LED to indicate joystick error
       myRobot->board->tasks();
+      // sample USER SWITCH to reset WiFi credentials and reboot
+      if(myRobot->board->is_button_pressed())
+      {
+        myRobot->network->reset_connection();
+      }
     }
   }
   myRobot->board->led_pattern(ledPatternSuccess);
+  Serial.println("\nJoystick UDP Server is up!...\n");
 }
 
 // the loop function runs over and over again forever
 void loop() {
    // output an led blink pattern to indicate that the AP is ready for joystick connection
    myRobot->board->tasks();
+   // manage the WiFi connection
+   myRobot->network->tasks();
    // run the engine that captures gamepad data
    myRobot->joystick->tasks();
    // if there's new gamepad data available, process it

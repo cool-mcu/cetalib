@@ -16,9 +16,11 @@ This robot and library support the learning objectives of our [CETA Robotics and
 * **imu** (XRP, XRP Beta, CETA IoT)
   * Provides functions to obtain temperature, heading and acceleration data from an onboard LSM6DSOX IMU (Inertial Measurement Unit)
 * **joystick** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/joystick.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/joystick.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/joystick.md))
-  * Enables remote operation using a Logitech F310 Gamepad
+  * Enables remote control using a Logitech F310 Gamepad
 * **mqttc** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/mqttc.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/mqttc.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/mqttc.md))
-  * Provides WiFi and MQTT Client network connectivity functions to allow the robot to be monitored and controlled over the internet
+  * Provides MQTT Client network connectivity functions to allow the robot to be monitored and controlled over the internet
+* **network** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/network.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/network.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/network.md))
+  * Provides WiFi network management services such as provisioning and connection management
 * **oled** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/oled.md), XRP Beta, [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/oled.md))
   * Provides basic text display functions for a 128x64 OLED display  
 * **rangefinder** ([XRP](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-robot/rangefinder.md), [XRP Beta](https://github.com/cool-mcu/cetalib/blob/main/docs/xrp-beta-robot/rangefinder.md), [CETA IoT](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/rangefinder.md))
@@ -42,7 +44,7 @@ The following libraries need to be installed into your Arduino environment:
 * [Adafruit-GFX-Library (v1.11.10)](https://github.com/adafruit/Adafruit-GFX-Library/archive/refs/tags/1.11.10.zip)
 * [SSD1306Ascii Library (v1.3.5)](https://github.com/greiman/SSD1306Ascii/archive/refs/tags/1.3.5.zip)
 * [rp2040-encoder-library (v0.2.0)](https://github.com/gbr1/rp2040-encoder-library/archive/refs/tags/0.2.0.zip)
-* [FreqCountRP2](https://github.com/dpwe/FreqCountRP2) (manually zip/download a copy of the repository)
+
 
 The following core needs to be installed into your Arduino environment using the Boards Manager:
 * [Raspberry Pi Pico/RP2040 Core by Earl Philhower](https://github.com/earlephilhower/arduino-pico)
@@ -74,7 +76,21 @@ While the CETA IoT Robot (Pico WH) uses the **Raspberry Pi Pico W** board type:
 
 <img src="./assets/ceta_board_type_V2.jpg?raw=true"><br>
 
-Next, to access the library modules in a sketch:
+Next, you need to allocate a portion of Flash memory space to support a File System:
+
+For the **SparkFun XRP Robot**, allocate a **64kB** section as shown:
+
+<img src="./assets/xrp_filesystem_allocate.jpg?raw=true"><br>
+
+For the **SparkFun XRP Beta Robot**, allocate a **64kB** section as shown:
+
+<img src="./assets/xrp_beta_filesystem_allocate.jpg?raw=true"><br>
+
+For the **CETA IoT Robot**, allocate a **64kB** section as shown:
+
+<img src="./assets/ceta_iot_filesystem_allocate.jpg?raw=true"><br>
+
+Finally, to access the library modules in a sketch:
 * #include the cetalib.h header file at the top of the sketch
 * Define and initialize a pointer to the CETALIB INTERFACE functions
 * Access a function in a specific module using the arrow operator ("->")

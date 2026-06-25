@@ -3,7 +3,7 @@
  *
  * File:            joystick_interface.h
  * Project:         
- * Date:            Mar 28, 2026
+ * Date:            June 16, 2026
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -73,9 +73,9 @@ typedef struct
 
  struct JOYSTICK_INTERFACE
  {
-  bool (*initialize)(void);                   // Initialize/Start joystick AP and UDP server
-  void (*tasks)(void);                        // Listen/capture incoming joystick packets
-  int (*is_active)(void);			                // Has a joystick packet been received
+  bool (*initialize)(void);                   // Initialize/Start joystick UDP server if WiFi is available
+  void (*tasks)(void);                        // Monitor UDP connection & listen/capture incoming joystick packets
+  bool (*is_active)(void);			              // Has a joystick packet been received
   GAMEPAD* (*get_data)(void);				          // Returns a pointer to the latest raw gamepad switch data
   float (*get_left_tank_effort)(void);		    // Get left "tank drive" effort setting from Left Stick Y
   float (*get_right_tank_effort)(void);		    // Get right "tank drive" effort setting from Right Stick Y

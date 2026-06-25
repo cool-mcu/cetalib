@@ -4,19 +4,15 @@ This module provides functions to interact with a [Logitech F310](https://www.lo
 
 <img src="../../assets/joystick-system.png?raw=true">
 
-After uploading your joystick enabled sketch to the robot, it will start a dedicated WiFi Access Point having the following Network SSID, depending on robot type:
-
-* "XRP_abcd", or
-* "XRPBeta_abcd", or
-* "CETAIoT_abcd"
-
-Where "abcd" are the lower 2 bytes of your robot's unique MAC address.
-
-Scan for wireless networks, and connect to your robot. The WiFi password is identical to the SSID.
+After uploading your joystick enabled sketch to the robot, it will start a dedicated UDP server application, running on port 8888. Use the serial monitor, or your router's admin page to obtain the robot's IP address.
 
 Next, ensure your F310 is plugged in to your PC, then execute the [CETALIB Joystick UDP Client](https://github.com/cool-mcu/cetalib/blob/main/utilities/joystick/README.md) python script in your terminal/command window.
 
 For detailed lessons covering the use of this module, [contact us](mailto:info@cool-mcu.com) to enrol in the [CETA Robotics and IoT Curriculum for Pre-University Educators](https://www.cool-mcu.com/bundles/ceta-robotics-and-iot-curriculum-for-pre-university-educators).
+
+**NOTE:** This module requires the [Network Module APIs](https://github.com/cool-mcu/cetalib/blob/main/docs/ceta-iot-robot/network.md) to manage the WiFi connection to the network. Before compilation, you will need to allocate 64kB of Flash memory to support a Filesystem as shown here:
+
+<center><img src="../../assets/ceta_iot_filesystem_allocate.jpg?raw=true"></center><br>
 
 ## Methods:
 * [initialize()](<#bool-initializevoid>)
@@ -30,7 +26,7 @@ For detailed lessons covering the use of this module, [contact us](mailto:info@c
 
 ## `bool initialize(void)`
 
-Initialize pin settings and start an Access Point. Must be called once in setup() before use. 
+Initialize and Start the joystick UDP server if WiFi is available. Must be called once in setup() before use. 
 
 ### Syntax
 
@@ -43,20 +39,17 @@ myRobot->joystick->initialize();
 
 ### Returns
 
-* **boolean**: *true* if the AP starts successfully, *false* if the WiFi resource is already in use.
+* **bool**: *true* if the Server starts successfully, *false* if the WiFi resource is already in use.
 
 ### Notes
 
-* Robots that have an additional LED (CETA IoT & XRP Robots) will illuminate the WiFi status LED when the AP is running.
-* Sketches should enable the Serial console to display the AP messages on startup.
-* Sketches should also use the USER LED to indicate successful Joystick module initialization.
-* On successful initialization, scan WiFi networks on your PC and confirm your robot's AP SSID is found.
+* Examine the serial monitor outout, or your router's admin page to obtain the robot's IP address
 
 ### Example
 
 ```c++
-// Initialize the joystick module, then do nothing.
-// Examine Serial messages and scan for your AP SSID on the PC.
+// Initialize the joystick module, then receive messages.
+// Examine Serial messages to obtain your robot's IP address.
 
 #include <cetalib.h>
 
@@ -65,16 +58,33 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 void setup() {
   Serial.begin(115200);
   delay(5000);
-  if(!myRobot->joystick->initialize())
+  myRobot->board->initialize();
+  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  if (!myRobot->network->connect())
   {
-    Serial.println("Joystick Initialization failed. Stopping.");
-    while(1);
+    myRobot->network->provision();
   }
-  Serial.println("Joystick Initialization success!");
+  // Attempt to start the joystick server
+  if (!myRobot->joystick->initialize())
+  {
+    Serial.println("Failed to initialize Joystick server!");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      // blink the USER LED to indicate error
+      myRobot->board->tasks();
+      // sample the USER SWITCH to reset WiFi credentials and reboot 
+      if(myRobot->board->is_button_pressed())
+      {
+        myRobot->network->reset_connection();
+      }
+    }
+  }
 }
 
 void loop() {
-  // Use the joystick functions here
+  myRobot->network->tasks();  // manage WiFi connection
+  myRobot->joystick->tasks(); // capture gamepad data
 }
 ```
 
@@ -113,8 +123,10 @@ myRobot->joystick->tasks();
 ### Example
 
 ```c++
-// Prints a status message whenever a packet is received.
+// Initialize the joystick module, then receive messages.
+// Examine Serial messages to obtain your robot's IP address.
 // Run "cetalib-joystick-client.py" on the host PC to test this sketch.
+// Prints a status message whenever a gamepad packet is received.
 
 #include <cetalib.h>
 
@@ -123,20 +135,37 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 void setup() {
   Serial.begin(115200);
   delay(5000);
-  if(!myRobot->joystick->initialize())
+  myRobot->board->initialize();
+  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  if (!myRobot->network->connect())
   {
-    Serial.println("Joystick Initialization failed. Stopping.");
-    while(1);
+    myRobot->network->provision();
   }
-  Serial.println("Joystick Initialization success!");
+  // Attempt to start the joystick server
+  if (!myRobot->joystick->initialize())
+  {
+    Serial.println("Failed to initialize Joystick server!");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      // blink the USER LED to indicate error
+      myRobot->board->tasks();
+      // sample the USER SWITCH to reset WiFi credentials and reboot 
+      if(myRobot->board->is_button_pressed())
+      {
+        myRobot->network->reset_connection();
+      }
+    }
+  }
 }
 
 void loop() {
-  myRobot->joystick->tasks();         // run the engine that captures gamepad data
+  myRobot->network->tasks();  // manage WiFi connection
+  myRobot->joystick->tasks(); // scan/capture gamepad data if available
   if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
   {
     Serial.println("Received joystick data");
-  }                    
+  }     
 }
 ```
 
@@ -175,8 +204,8 @@ myRobot->joystick->is_active();
 ### Example
 
 ```c++
-// Prints a status message whenever a packet is received.
-// Run "cetalib-joystick-client.py" on the host PC to test this sketch.
+// Initialize the joystick module, then receive messages.
+// Prints a status message whenever a gamepad packet is received.
 
 #include <cetalib.h>
 
@@ -185,20 +214,37 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 void setup() {
   Serial.begin(115200);
   delay(5000);
-  if(!myRobot->joystick->initialize())
+  myRobot->board->initialize();
+  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  if (!myRobot->network->connect())
   {
-    Serial.println("Joystick Initialization failed. Stopping.");
-    while(1);
+    myRobot->network->provision();
   }
-  Serial.println("Joystick Initialization success!");
+  // Attempt to start the joystick server
+  if (!myRobot->joystick->initialize())
+  {
+    Serial.println("Failed to initialize Joystick server!");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      // blink the USER LED to indicate error
+      myRobot->board->tasks();
+      // sample the USER SWITCH to reset WiFi credentials and reboot 
+      if(myRobot->board->is_button_pressed())
+      {
+        myRobot->network->reset_connection();
+      }
+    }
+  }
 }
 
 void loop() {
-  myRobot->joystick->tasks();         // run the task that captures gamepad data
+  myRobot->network->tasks();  // manage WiFi connection
+  myRobot->joystick->tasks(); // scan/capture gamepad data if available
   if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
   {
     Serial.println("Received joystick data");
-  }                    
+  }     
 }
 ```
 
@@ -286,17 +332,33 @@ void setup() {
   Serial.begin(115200);
   delay(5000);
   myRobot->board->initialize();
-  if(!myRobot->joystick->initialize())
+  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  if (!myRobot->network->connect())
   {
-    Serial.println("Joystick Initialization failed. Stopping.");
-    while(1);
+    myRobot->network->provision();
   }
-  Serial.println("Joystick Initialization success!");
+  // Attempt to start the joystick server
+  if (!myRobot->joystick->initialize())
+  {
+    Serial.println("Failed to initialize Joystick server!");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      // blink the USER LED to indicate error
+      myRobot->board->tasks();
+      // sample the USER SWITCH to reset WiFi credentials and reboot 
+      if(myRobot->board->is_button_pressed())
+      {
+        myRobot->network->reset_connection();
+      }
+    }
+  }
 }
 
 void loop() {
+  myRobot->network->tasks();          // manage WiFi connection
+  myRobot->joystick->tasks();         // run the task that captures gamepad data 
   myRobot->board->tasks();            // run the task that maintains USER LED state
-  myRobot->joystick->tasks();         // run the task that captures gamepad data
   if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
   {
     joystick_data = myRobot->joystick->get_data(); // point to the latest gamepad data
@@ -310,7 +372,7 @@ void loop() {
       Serial.printf("Action B is Pressed. Turning USER LED OFF\r\n");
       myRobot->board->led_off();
     }
-  }                    
+  }
 }
 ```
 
@@ -322,6 +384,8 @@ void loop() {
 * [get_data()](<#gamepad-get_datavoid>)
 * [get_left_tank_effort()](<#float-get_left_tank_effortvoid>)
 * [get_right_tank_effort()](<#float-get_right_tank_effortvoid>)
+* [get_arcade_throttle_effort()](<#float-get_arcade_throttle_effortvoid>)
+* [get_arcade_turn_effort()](<#float-get_arcade_turn_effortvoid>)
 
 ## `float get_left_tank_effort(void)`
 ## `float get_right_tank_effort(void)`
@@ -367,16 +431,32 @@ float leftDriveEffort, rightDriveEffort; // motor effort parameters
 void setup() {
   Serial.begin(115200);
   delay(5000);
-  myRobot->diffDrive->initialize(false, false); // adjust parameters for forward motion in your robot
-  if(!myRobot->joystick->initialize())
+  myRobot->diffDrive->initialize(false, false); // adjust parameters for forward motion
+  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  if (!myRobot->network->connect())
   {
-    Serial.println("Joystick Initialization failed. Stopping.");
-    while(1);
+    myRobot->network->provision();
   }
-  Serial.println("Joystick Initialization success!");
+  // Attempt to start the joystick server
+  if (!myRobot->joystick->initialize())
+  {
+    Serial.println("Failed to initialize Joystick server!");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      // blink the USER LED to indicate error
+      myRobot->board->tasks();
+      // sample the USER SWITCH to reset WiFi credentials and reboot 
+      if(myRobot->board->is_button_pressed())
+      {
+        myRobot->network->reset_connection();
+      }
+    }
+  }
 }
 
 void loop() {
+  myRobot->network->tasks();          // manage WiFi connection
   myRobot->joystick->tasks();         // run the task that captures gamepad data
   if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
   {
@@ -385,6 +465,7 @@ void loop() {
     myRobot->diffDrive->set_efforts(leftDriveEffort, rightDriveEffort);
   }                    
 }
+
 ```
 
 ### See also
@@ -442,16 +523,32 @@ float leftDriveEffort, rightDriveEffort; // motor effort parameters
 void setup() {
   Serial.begin(115200);
   delay(5000);
-  myRobot->diffDrive->initialize(false, false); // adjust parameters for forward motion in your robot
-  if(!myRobot->joystick->initialize())
+  myRobot->diffDrive->initialize(false, false); // adjust parameters for forward motion
+  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  if (!myRobot->network->connect())
   {
-    Serial.println("Joystick Initialization failed. Stopping.");
-    while(1);
+    myRobot->network->provision();
   }
-  Serial.println("Joystick Initialization success!");
+  // Attempt to start the joystick server
+  if (!myRobot->joystick->initialize())
+  {
+    Serial.println("Failed to initialize Joystick server!");
+    myRobot->board->led_blink(10);
+    while (1)
+    {
+      // blink the USER LED to indicate error
+      myRobot->board->tasks();
+      // sample the USER SWITCH to reset WiFi credentials and reboot 
+      if(myRobot->board->is_button_pressed())
+      {
+        myRobot->network->reset_connection();
+      }
+    }
+  }
 }
 
 void loop() {
+  myRobot->network->tasks();          // manage WiFi connection
   myRobot->joystick->tasks();         // run the task that captures gamepad data
   if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
   {
@@ -460,6 +557,7 @@ void loop() {
     myRobot->diffDrive->set_efforts(leftDriveEffort, rightDriveEffort);
   }                    
 }
+
 ```
 
 ### See also

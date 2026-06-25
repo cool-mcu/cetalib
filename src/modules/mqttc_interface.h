@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2025 dBm Signal Dynamics Inc.
+ * Copyright (C) 2026 dBm Signal Dynamics Inc.
  *
  * File:            mqttc_interface.h
  * Project:         
- * Date:            Aug 18, 2025
+ * Date:            June 12, 2026
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -36,14 +36,14 @@
 struct MQTTC_INTERFACE
 {
   // Connect to the broker and subscribe for all notifications
-  bool (*connect)(const char *MySSID, const char *MyPass, const char *MQbroker, int MQport,
+  bool (*connect)(const char *MQbroker, int MQport,
                   const char *MQusername, const char *MQpassword, const char *subTopicIDs[],
-                  int size_subTopicIDs);    // Connect to WiFi AP & Broker.
-  void (*disconnect)(void);                                         // Disconnect from the Broker & AP
+                  int size_subTopicIDs);    // Connect to a MQTT Broker & Subscribe to all topics.
   void (*tasks)(void);                                              // Run mqttc background tasks
-  void (*send_message)(const char *pubTopic, char *jsonPubPayload); // Publish serialized JSON payload to a topic
-  int (*is_message_available)(const char *subTopic);                // Check if JSON message has been received for a specific subscription topic        
-  char* (*receive_message)(void);                                   // Retrieve JSON payload for deserialization
+  void (*send_message)(const char *pubTopic, char *pubPayload); // Publish a character string payload to a topic
+  bool (*is_message_available)(const char *subTopic);                // Check if message string has been received for a specific subscription topic        
+  char* (*receive_message)(void);                                   // Retrieve message string payload for processing
+  bool (*is_connected)(void);                                       // Check if MQTT Session is active
 };
 
 /*** Public Function Prototypes ***********************************************/

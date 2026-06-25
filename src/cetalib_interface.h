@@ -38,6 +38,7 @@
  #include "./modules/diffDrive_interface.h"
  #include "./modules/oled_interface.h"
  #include "./modules/joystick_interface.h"
+ #include "./modules/network_interface.h"
  
  /*** Macros *******************************************************************/
  
@@ -56,6 +57,7 @@
    const struct DIFFDRIVE_INTERFACE *diffDrive;      // Pointer to a DIFFDRIVE_INTERFACE instance
    const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
    const struct JOYSTICK_INTERFACE *joystick;        // Pointer to a JOYSTICK_INTERFACE instance
+   const struct NETWORK_INTERFACE *network;          // Pointer to a NETWORK_INTERFACE instance
  };
 
  #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
@@ -71,6 +73,7 @@
    const struct DIFFDRIVE_INTERFACE *diffDrive;      // Pointer to a DIFFDRIVE_INTERFACE instance 
    const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
    const struct JOYSTICK_INTERFACE *joystick;        // Pointer to a JOYSTICK_INTERFACE instance
+   const struct NETWORK_INTERFACE *network;          // Pointer to a NETWORK_INTERFACE instance
  };
  
  #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
@@ -86,7 +89,7 @@
    const struct DIFFDRIVE_INTERFACE *diffDrive;      // Pointer to a DIFFDRIVE_INTERFACE instance
    // const struct OLED_INTERFACE *oled;                // Pointer to a OLED_INTERFACE instance
    const struct JOYSTICK_INTERFACE *joystick;        // Pointer to a JOYSTICK_INTERFACE instance
-   
+   const struct NETWORK_INTERFACE *network;          // Pointer to a NETWORK_INTERFACE instance   
  };
 
  #else

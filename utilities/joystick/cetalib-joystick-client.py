@@ -2,14 +2,19 @@
 # Copyright (C) 2026 dBm Signal Dynamics Inc
 #
 # File:     cetalib-joystick-client.py
-# Version:  0.0.1
-# Date:     March 30, 2026
+# Version:  0.0.2
+# Date:     June 15, 2026
 #
 # Description:
 #
 # This Python script captures raw HID reports from a Logitech F310 Gamepad and
-# streams them as raw bytes over UDP to a XRP, XRP Beta, or CETA IoT Robot running
-# the CETALIB "joystick" library using the default IP:Port 192.168.42.1:8888.
+# streams them as raw bytes over a UDP socket to a XRP, XRP Beta, or CETA IoT Robot running
+# sketches that use the CETALIB "joystick" library.
+#
+# The Robot's Joystick UDP Server Port number is 8888.
+#
+# Make sure to locate the IP address of the robot before running this script.
+# 
 # The F310 must be set to "D" mode.
 #
 
@@ -18,6 +23,7 @@ import time
 import socket
 import signal
 import sys
+import ipaddress  # Added for strict IPv4 validation
 
 # Logitech F310 IDs
 LOGITECH_VID = 0x046d
@@ -37,9 +43,26 @@ def find_f310():
             return device['path']
     return None
 
+def get_valid_ip():
+    while True:
+        user_input = input("Enter target IPv4 address: ").strip()
+        
+        if not user_input:
+            print("Input cannot be empty. Please try again.\n")
+            continue
+            
+        try:
+            # Strict validation: will catch incomplete addresses like "192.168.1"
+            ip_obj = ipaddress.IPv4Address(user_input)
+            return str(ip_obj)  # Returns the clean, verified IP string
+        except ValueError:
+            print(f"Error: '{user_input}' is not a valid IPv4 address (must be X.X.X.X format). Please try again.\n")
+
 def main():
-    print("--- CETALIB Joystick UDP Publisher v0.0.1 ---")
-    ip = "192.168.42.1"
+    print("--- CETALIB Joystick UDP Publisher v0.0.2 ---")
+    
+    # Loop until a valid IPv4 address is entered
+    ip = get_valid_ip()
     port = 8888
 
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -47,7 +70,8 @@ def main():
 
     path = find_f310()
     if not path:
-        print("F310 not found."); return
+        print("F310 not found.")
+        return
 
     try:
         device = hid.device()

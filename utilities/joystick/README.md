@@ -1,6 +1,6 @@
 # CETALIB Joystick UDP Publisher
 
-This Python script captures raw HID reports from a **Logitech F310 Gamepad** and streams them as raw bytes over UDP to a specified target (default: 192.168.42.1:8888). It is meant to be used with robots that are running sketches using the **cetalib joystick library**.
+This Python script captures raw HID reports from a **Logitech F310 Gamepad** and streams them as raw bytes over UDP to a server at a specified IP address (port:8888). It is meant to be used with robots that are running sketches using the **cetalib joystick library**.
 
 **The F310 must be configured in D-Mode using the switch at the bottom-side of the gamepad:**
 
@@ -59,7 +59,7 @@ Next, ensure your F310 is plugged in, then execute:
 
 * python cetalib-joystick-client.py
 
-You should see a successful connection and display of raw gamepad data when activating the various switches.
+Enter the robot's IP address when requested. You should see a successful connection and display of raw gamepad data when activating the various switches.
 
 <img src="../../assets/cetalib-joystick-client-macos.jpg?raw=true">
 

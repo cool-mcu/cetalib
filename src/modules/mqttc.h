@@ -1,18 +1,18 @@
 /*
- * Copyright (C) 2025 dBm Signal Dynamics Inc.
+ * Copyright (C) 2026 dBm Signal Dynamics Inc.
  *
  * File:            mqttc.h
  * Project:         
- * Date:            Aug 18, 2025
+ * Date:            June 12, 2026
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "mqttc" (MQTT Client) driver interface functions
- *
- * This library uses the "WiFi" library implementation in Arduino-Pico:
- * https://github.com/earlephilhower/arduino-pico/tree/master/libraries/WiFi/src 
  * 
- * This library also uses the ArduinoMqttClient library:
+ * This library uses the "WiFi" library implementation in Arduino-Pico:
+ * https://github.com/earlephilhower/arduino-pico/tree/master/libraries/WiFi/src
+ * 
+ * This library uses the ArduinoMqttClient library:
  * https://github.com/arduino-libraries/ArduinoMqttClient 
  * 
  * Hardware Configurations Supported:
@@ -36,16 +36,10 @@
 #include "mqttc_interface.h"
 
 /*** Macros *******************************************************************/
-#if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-#define MQTTC_STAT_LED_PIN LED_BUILTIN
-                                  // Indicates mqttc connection status
-                                  // ON:        connected to MQTT broker
-                                  // OFF:       disconnected
-                                  // Flashing:  trying to re/connect
 
-#endif
-                                  #define MAX_SUBSCRIBE_TOPIC_IDS 10 // Max number of subscribe topics to be defined
-#define CONN_STATUS_SAMPLE_INTERVAL 30000 // Connection status sampling nterval (in mS)
+#define MAX_SUBSCRIBE_TOPIC_IDS 10 // Max number of subscribe topics to be defined
+#define MQTTC_CONN_STATUS_SAMPLE_INTERVAL 5000 // Connection status sampling interval (in mS)
+#define MQTTC_RECONNECT_INTERVAL 5000 //  Broker Reconnect interval
 
 /*** Custom Data Types ********************************************************/
 
@@ -55,15 +49,22 @@ struct MQTTC_RECEIVE_MSG
   char inPayload[128]; // message payload for most recently received subscription message
 };
 
+// Enums for tracking mqtt client state
+typedef enum {
+    MQTTC_STATE_DISCONNECTED,
+    MQTTC_STATE_ATTEMPTING_CONNECTION,
+    MQTTC_STATE_CONNECTED
+} MqttcState_t;
+
 
 /*** Public Function Prototypes ***********************************************/
-bool  mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker, int MQport,
+bool  mqttc_connect(const char *MQbroker, int MQport,
                     const char *MQusername, const char *MQpassword, const char *subTopicIDs[],
                     int size_subTopicIDs);   // Connect to WiFi AP & Broker.
-void  mqttc_disconnect(void);                                           // Disconnect from the Broker & AP
 void  mqttc_tasks(void);                                                // Run mqttc background tasks
-void  mqttc_send_message(const char *pubTopic, char *jsonPubPayload);   // Publish serialized JSON payload to a topic
-int   mqttc_is_message_available(const char *subTopic);                 // Check if JSON message has been received for a specific subscription topic        
-char* mqttc_receive_message(void);                                      // Retrieve JSON payload for deserialization
+void  mqttc_send_message(const char *pubTopic, char *pubPayload);   // Publish a character string payload to a topic
+bool  mqttc_is_message_available(const char *subTopic);                 // Check if message string has been received for a specific subscription topic            
+char* mqttc_receive_message(void);                                      // Retrieve message string payload for processing
+bool  mqttc_is_connected(void);                                         // Check if MQTT Session is active
 
 #endif /* MQTTC_H_ */

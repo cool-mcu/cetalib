@@ -41,6 +41,7 @@ extern const struct MQTTC_INTERFACE MQTTC;
 extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE;
 extern const struct OLED_INTERFACE OLED;
 extern const struct JOYSTICK_INTERFACE JOYSTICK;
+extern const struct NETWORK_INTERFACE NETWORK;
 
 extern const struct CETALIB_INTERFACE CETALIB = {
   .board = &BOARD,
@@ -52,7 +53,8 @@ extern const struct CETALIB_INTERFACE CETALIB = {
   .mqttc = &MQTTC,
   .diffDrive = &DIFFDRIVE,
   .oled = &OLED,
-  .joystick = &JOYSTICK
+  .joystick = &JOYSTICK,
+  .network = &NETWORK
 };
 
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
@@ -66,7 +68,7 @@ extern const struct MQTTC_INTERFACE MQTTC;
 extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE;
 extern const struct OLED_INTERFACE OLED;
 extern const struct JOYSTICK_INTERFACE JOYSTICK;
-
+extern const struct NETWORK_INTERFACE NETWORK;
 
 
 
@@ -80,7 +82,8 @@ extern const struct CETALIB_INTERFACE CETALIB = {
   .mqttc = &MQTTC,
   .diffDrive = &DIFFDRIVE,
   .oled = &OLED,
-  .joystick = &JOYSTICK
+  .joystick = &JOYSTICK,
+  .network = &NETWORK
 };
 
 #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
@@ -94,7 +97,7 @@ extern const struct MQTTC_INTERFACE MQTTC;
 extern const struct DIFFDRIVE_INTERFACE DIFFDRIVE;
 //extern const struct OLED_INTERFACE OLED;  // oled module not yet working on this platform
 extern const struct JOYSTICK_INTERFACE JOYSTICK;
-
+extern const struct NETWORK_INTERFACE NETWORK;
 
 
 
@@ -107,7 +110,8 @@ extern const struct CETALIB_INTERFACE CETALIB = {
   .rangefinder = &RANGEFINDER,
   .mqttc = &MQTTC,
   .diffDrive = &DIFFDRIVE,
-  .joystick = &JOYSTICK
+  .joystick = &JOYSTICK,
+  .network = &NETWORK
   //.oled = &OLED
 };
 

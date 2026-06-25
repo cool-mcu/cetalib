@@ -55,7 +55,7 @@ const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
 void setup() {
   // initialize motors to spin in their default forward directions.
-  myRobot->diffDrive->initialize(false, false);
+  myRobot->diffDrive->initialize(true, true);
 }
 
 void loop() {
@@ -106,7 +106,7 @@ float right_effort = 0.2f;
 
 void setup() {
   myRobot->board->initialize();
-  myRobot->diffDrive->initialize(false, false);
+  myRobot->diffDrive->initialize(true, true);
   myRobot->diffDrive->set_efforts(left_effort, right_effort);
 }
 
@@ -159,7 +159,7 @@ float right_effort = 0.2f;
 
 void setup() {
   myRobot->board->initialize();
-  myRobot->diffDrive->initialize(false, false);
+  myRobot->diffDrive->initialize(true, true);
   myRobot->diffDrive->set_efforts(left_effort, right_effort);
 }
 

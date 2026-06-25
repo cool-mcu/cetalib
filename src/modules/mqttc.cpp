@@ -1,18 +1,18 @@
 /*
- * Copyright (C) 2025 dBm Signal Dynamics Inc.
+ * Copyright (C) 2026 dBm Signal Dynamics Inc.
  *
  * File:            mqttc.cpp
  * Project:         
- * Date:            Aug 18, 2025
+ * Date:            June 12, 2026
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
  * cetalib "mqttc" (MQTT Client) driver interface functions
- *
+ * 
  * This library uses the "WiFi" library implementation in Arduino-Pico:
  * https://github.com/earlephilhower/arduino-pico/tree/master/libraries/WiFi/src
  * 
- * This library also uses the ArduinoMqttClient library:
+ * This library uses the ArduinoMqttClient library:
  * https://github.com/arduino-libraries/ArduinoMqttClient 
  * 
  * Hardware Configurations Supported:
@@ -40,6 +40,7 @@
 #include <time.h>                   // Required for BearSSL APIs
 #include "mqttc_certs.h"            // broker root CA certificate
 #include "mqttc.h"                  // "mqttc" API declarations
+#include "network.h"                // "network" APIs used
 
 /*** Symbolic Constants used in this module ***********************************/
 #define SERIAL_PORT Serial  // Default to Serial
@@ -52,10 +53,14 @@
 static char mqttcOutBuffer[256];
 
 // mqttc paramters
+MqttcState_t MqttcState = MQTTC_STATE_DISCONNECTED;
+// MQTT Connection Monitoring Variables ("connectionTasks()" function)
+static unsigned long MqttcConnStatusCurrentSampleTime, MqttcConnStatusPrevSampleTime;
+static const long MqttcConnStatusSampleInterval = MQTTC_CONN_STATUS_SAMPLE_INTERVAL;
+static unsigned long MqttcReconnectStartTime;
+
 
 // WiFi Parameters
-static char ssid[64];                                  // WiFi SSID of AP - defined in application layer, passed via "connect()" API                      
-static char passPhrase[64];                            // WiFi Passphrase of AP - defined in application layer, passed via "connect()" API 
 static byte macAddr[6];                                // WiFi radio IEEE MAC address used to generate ClientID
 
 // TCP Client Connection Parameters 
@@ -84,11 +89,11 @@ static int subTopicSize;                               // use to save the size o
 // define the function interface
 extern const struct MQTTC_INTERFACE MQTTC = {
     .connect                = &mqttc_connect,
-    .disconnect             = &mqttc_disconnect,
     .tasks                  = &mqttc_tasks,
     .send_message           = &mqttc_send_message,
     .is_message_available   = &mqttc_is_message_available,
     .receive_message        = &mqttc_receive_message,
+    .is_connected           = &mqttc_is_connected,
 };
 
 // create a structure for reception of messages (topic & payload)
@@ -106,41 +111,27 @@ BearSSL::X509List hivemqcert(hivemq_root_CA_cert);
 BearSSL::X509List mosquittocert(mosquitto_root_CA_cert);
 BearSSL::X509List emqxcert(emqx_root_CA_cert);
 
-
-// WiFi & TCP Connection Monitoring Variables ("connectionTasks()" function)
-static unsigned long connStatusCurrentSampleTime, connStatusPrevSampleTime;
-static const long connStatusSampleInterval = CONN_STATUS_SAMPLE_INTERVAL;    // Network Connection testing interval
-
 /*** Private Function Prototypes **********************************************/
-static void wifiConnect(void);                          // Connect to WiFi access network
-static void mqttClientConnect(void);                    // Connect to the MQTT broker using an unsecure (TCP) connection
-static void mqttsClientConnect(void);                   // Connect to the MQTT broker using a secure (TLS) connection
-static void mqttClientDisconnect(void);                 // Disconnect from an insecure MQTT broker connection (TCP) and WiFi AP
-static void mqttsClientDisconnect(void);                // Disconnect from a secure MQTT broker connection (TLS) and WiFi AP
+static bool mqttClientConnect(void);                    // Connect to the MQTT broker using an unsecure (TCP) connection
+static bool mqttsClientConnect(void);                   // Connect to the MQTT broker using a secure (TLS) connection
 static void mqttClientOnMessage(int messageSize);       // Call-back function, processes all subscribed messages from unsecure broker connection
 static void mqttsClientOnMessage(int messageSize);      // Call-back function, processes all subscribed messages from secure broker connection
-static void connectionTasks(void);                      // Monitor WiFi and TCP connection and reconnect if required (unsecure connection)
-static void connectionTasksSecure(void);                // Monitor WiFi and TCP connection and reconnect if required (secure connection)
 static void setClock(void);                             // Set time via NTP, as required for x.509 certificate validation
 
 /*** Public Function Definitions **********************************************/
 
-bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker, int MQport,
+// mqttc_connect() - only call after connected to a network!
+
+bool mqttc_connect(const char *MQbroker, int MQport,
                     const char *MQusername, const char *MQpassword, const char *subTopicIDs[],
                     int size_subTopicIDs)
-{
-  
-  // check if WiFi already in use by "joystick" module
-  if(WiFi.status() == WL_CONNECTED)
+{ 
+  if(!network_is_ready())
   {
-      SERIAL_PORT.println("WiFi already in use. Cannot start STA");
-      return false;
+    // Network is not connected, return!
+    return false;
   }
   
-  // Save SSID & Passphrase
-  strcpy(ssid, MySSID);
-  strcpy(passPhrase, MyPass);
-
   // Save the MQTT broker URL, port, MQTT Username and MQTT Password
   strcpy(broker, MQbroker);
   port = MQport;
@@ -160,19 +151,20 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
       useTLS = true;
       break;
   }
-  
-  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-  // Initialize MQTTC CONNECTION STATUS LED
-  pinMode(MQTTC_STAT_LED_PIN, OUTPUT);     // set digital pin as output
-  digitalWrite(MQTTC_STAT_LED_PIN, 0);     // initialize LED state
+
+  // Create a unique ClientID
+  WiFi.macAddress(macAddr);     // read/save the mac address of the radio
+  #if defined(ARDUINO_RASPBERRY_PI_PICO_W)
+  sprintf(clientID, "cetaiotrobot-%02x%02x%02x%02x%02x%02x", macAddr[0], macAddr[1], macAddr[2], macAddr[3], macAddr[4], macAddr[5]);
+  #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
+  sprintf(clientID, "xrprobot-%02x%02x%02x%02x%02x%02x", macAddr[0], macAddr[1], macAddr[2], macAddr[3], macAddr[4], macAddr[5]);
+  #elif defined(ARDUINO_SPARKFUN_XRP_CONTROLLER_BETA)
+  sprintf(clientID, "xrpbetarobot-%02x%02x%02x%02x%02x%02x", macAddr[0], macAddr[1], macAddr[2], macAddr[3], macAddr[4], macAddr[5]);
+  #else
+   #error Unsupported board selection
   #endif
 
-  // Attempt to connect to Wifi network (blocking code):
-  wifiConnect();
-
-  // Create a unique ClientID/Topic Prefix
-  sprintf(clientID, "cetaiotrobot-%02x%02x%02x%02x%02x%02x", macAddr[5], macAddr[4], macAddr[3], macAddr[2], macAddr[1], macAddr[0]);
-  sprintf(mqttcOutBuffer, "clientID: %s\r\n", clientID);
+  sprintf(mqttcOutBuffer, "\r\nMQTT ClientID: %s\r\n", clientID);
   SERIAL_PORT.print(mqttcOutBuffer);
   
   // Create/Save the subscription topic list if supplied
@@ -218,17 +210,23 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
     }
   }
 
-  // Attempt to connect to Broker (blocking code)
+  // Attempt to connect to Broker
   if(useTLS)
   {
-    mqttsClientConnect();
+    if(!mqttsClientConnect())
+    {
+      return false; // failed to connect to the desired broker
+    }
   }
   else
   {
-    mqttClientConnect();
+    if(!mqttClientConnect())
+    {
+      return false; // failed to connect to the desired broker
+    }
   }
 
-  // Set the MQTT subscription receive callback
+  // Set the MQTT subscription receive callback function
   if(useTLS)
   {
     mqttsClient.onMessage(mqttsClientOnMessage);
@@ -255,87 +253,327 @@ bool mqttc_connect(const char *MySSID, const char *MyPass, const char *MQbroker,
       }
       SERIAL_PORT.print("Waiting for messages on topic: ");
       SERIAL_PORT.println(subTopic[i]);
-      SERIAL_PORT.println();
     }
   }
 
-  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-  // if you get here, you are connected and ready to go!
-  digitalWrite(MQTTC_STAT_LED_PIN, 1);
-  #endif
+  // Initialize timeout for socket monitoring in mqttc_tasks()
+  MqttcConnStatusPrevSampleTime = 0;
 
-  // Initialize timeout for connectTasks()
-  connStatusPrevSampleTime = 0;
-
+  // MQTT Client is ready to send/receive messages!
   return true;
-
-}
-
-void mqttc_disconnect(void)
-{
-  if(useTLS)
-  {
-    mqttsClientDisconnect();
-  }
-  else
-  {
-    mqttClientDisconnect();
-  }
 }
 
 void mqttc_tasks(void)
 {
-  // Check WiFi & TCP connection status and reconnect if neccesary
-  if(useTLS)
+  if(network_is_ready())
   {
-    connectionTasksSecure();
-  }
-  else
-  {
-    connectionTasks();
-  }
+    switch(MqttcState)
+    {
+      case MQTTC_STATE_CONNECTED:
+        // Call poll() regularly to allow the MqttClientLibrary to receive MQTT messages
+        // and send MQTT keep alive messages which avoids being disconnected by the broker
+        if(useTLS)
+        {
+          mqttsClient.poll();
+        }
+        else
+        {
+          mqttClient.poll();
+        }
+        // Check TCP/TLS connection status and reconnect if neccesary
+        MqttcConnStatusCurrentSampleTime = millis();
+        if ((MqttcConnStatusCurrentSampleTime - MqttcConnStatusPrevSampleTime) >= MqttcConnStatusSampleInterval)
+        {
+          MqttcConnStatusPrevSampleTime = MqttcConnStatusCurrentSampleTime;
+          if(useTLS)
+          { 
+            if(!mqttsClient.connected())
+            {
+              mqttsClient.flush();
+              mqttsClient.stop();
+              SERIAL_PORT.println();
+              SERIAL_PORT.println("[MQTTC Manager] TLS Status: Disconnected...attempting to reconnect");
+              // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
+              mqttsClient.setId(clientID);
+              // Set the MQTT Username & Password if defined
+              if((userName[0] != '\0') && (userPass[0] != '\0'))
+              {
+                mqttsClient.setUsernamePassword(userName, userPass);
+              }
+              // Select the correct server root CA certificate to use for the TLS connection
+              if(strstr(broker, "adafruit"))
+              {
+                secureWifiClient.setTrustAnchors(&aiocert);
+              }
+              else if(strstr(broker, "hivemq"))
+              {
+                secureWifiClient.setTrustAnchors(&hivemqcert);
+              }
+              else if(strstr(broker, "emqx"))
+              {
+                secureWifiClient.setTrustAnchors(&emqxcert);
+              }
+              else
+              {
+                // unsupported broker, use mosquitto certificate (connection will fail)
+                secureWifiClient.setTrustAnchors(&mosquittocert);
+              }
+              setClock();
+              mqttsClient.connect(broker, port);
+              if(mqttsClient.connected())
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TLS Status: Connected to the MQTT broker!");
+                MqttcState = MQTTC_STATE_CONNECTED;
+                // Subscribe to the topicID for all defined IN messages
+                if(subTopicSize)
+                {       
+                  for(int i=0; i < subTopicSize; i++)
+                  {
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Subscribing to topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                    mqttsClient.subscribe(subTopic[i], subQoS);
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Waiting for messages on topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                  }
+                }
+                // Set the MQTT subscription receive callback function
+                mqttsClient.onMessage(mqttsClientOnMessage);
+              }
+              else
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TLS Status: Connection failed...attempting to reconnect");
+                MqttcState = MQTTC_STATE_ATTEMPTING_CONNECTION;
+                MqttcReconnectStartTime = millis();
+              }
+            }
+          }
+          else
+          {
+            if(!mqttClient.connected())
+            {
+              mqttClient.flush();
+              mqttClient.stop();
+              SERIAL_PORT.println();
+              SERIAL_PORT.println("[MQTTC Manager] TCP Status: Disconnected...attempting to reconnect");
+              // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
+              mqttClient.setId(clientID);
+              // Set the MQTT Username & Password if defined
+              if((userName[0] != '\0') && (userPass[0] != '\0'))
+              {
+                mqttClient.setUsernamePassword(userName, userPass);
+              }
+              mqttClient.connect(broker, port);
+              if(mqttClient.connected())
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TCP Status: Connected to the MQTT broker!");
+                MqttcState = MQTTC_STATE_CONNECTED;
+                // Subscribe to the topicID for all defined IN messages
+                if(subTopicSize)
+                {       
+                  for(int i=0; i < subTopicSize; i++)
+                  {
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Subscribing to topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                    mqttClient.subscribe(subTopic[i], subQoS);
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Waiting for messages on topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                  }
+                }
+                // Set the MQTT subscription receive callback function
+                mqttClient.onMessage(mqttClientOnMessage);
+              }
+              else
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TCP Status: Connection failed...attempting to reconnect");
+                MqttcState = MQTTC_STATE_ATTEMPTING_CONNECTION;
+                MqttcReconnectStartTime = millis();
+              }
+            }
+          }
+        }
+        break;
 
-  // Call poll() regularly to allow the MqttClientLibrary to receive MQTT messages
-  // and sens MQTT keep alive messages which avoids being disconnected by the broker
-  if(useTLS)
-  {
-    mqttsClient.poll();
+        case MQTTC_STATE_ATTEMPTING_CONNECTION:
+          // Retry the connection to the broker non-blockingly every xx seconds
+          if((millis() - MqttcReconnectStartTime) > MQTTC_RECONNECT_INTERVAL)
+          {
+            if(useTLS)
+            {
+              SERIAL_PORT.println();
+              SERIAL_PORT.println("[MQTTC Manager] TLS Status: Attempting to reconnect...");
+              // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
+              mqttsClient.setId(clientID);
+              // Set the MQTT Username & Password if defined
+              if((userName[0] != '\0') && (userPass[0] != '\0'))
+              {
+                mqttsClient.setUsernamePassword(userName, userPass);
+              }
+              // Select the correct server root CA certificate to use for the TLS connection
+              if(strstr(broker, "adafruit"))
+              {
+                secureWifiClient.setTrustAnchors(&aiocert);
+              }
+              else if(strstr(broker, "hivemq"))
+              {
+                secureWifiClient.setTrustAnchors(&hivemqcert);
+              }
+              else if(strstr(broker, "emqx"))
+              {
+                secureWifiClient.setTrustAnchors(&emqxcert);
+              }
+              else
+              {
+                // unsupported broker, use mosquitto certificate (connection will fail)
+                secureWifiClient.setTrustAnchors(&mosquittocert);
+              }
+              setClock();
+              mqttsClient.connect(broker, port);
+              if(mqttsClient.connected())
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TLS Status: Connected to the MQTT broker!");
+                MqttcState = MQTTC_STATE_CONNECTED;
+                // Subscribe to the topicID for all defined IN messages
+                if(subTopicSize)
+                {       
+                  for(int i=0; i < subTopicSize; i++)
+                  {
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Subscribing to topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                    mqttsClient.subscribe(subTopic[i], subQoS);
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Waiting for messages on topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                  }
+                }
+                // Set the MQTT subscription receive callback function
+                mqttsClient.onMessage(mqttsClientOnMessage);
+              }
+              else
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TLS Status: Connection failed..attempting to reconnect");
+                MqttcReconnectStartTime = millis();
+              }
+            }
+            else
+            {
+              SERIAL_PORT.println();
+              SERIAL_PORT.println("[MQTTC Manager] TCP Status: Attempting to reconnect...");
+              // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
+              mqttClient.setId(clientID);
+              // Set the MQTT Username & Password if defined
+              if((userName[0] != '\0') && (userPass[0] != '\0'))
+              {
+                mqttClient.setUsernamePassword(userName, userPass);
+              }
+              mqttClient.connect(broker, port);
+              if(mqttClient.connected())
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TCP Status: Connected to the MQTT broker!");
+                MqttcState = MQTTC_STATE_CONNECTED;
+                // Subscribe to the topicID for all defined IN messages
+                if(subTopicSize)
+                {       
+                  for(int i=0; i < subTopicSize; i++)
+                  {
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Subscribing to topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                    mqttClient.subscribe(subTopic[i], subQoS);
+                    SERIAL_PORT.println();
+                    SERIAL_PORT.print("[MQTTC Manager] Waiting for messages on topic: ");
+                    SERIAL_PORT.println(subTopic[i]);
+                  }
+                }
+                // Set the MQTT subscription receive callback function
+                mqttClient.onMessage(mqttClientOnMessage);
+              }
+              else
+              {
+                SERIAL_PORT.println();
+                SERIAL_PORT.println("[MQTTC Manager] TCP Status: Connection failed..attempting to reconnect");
+                MqttcReconnectStartTime = millis();
+              }
+            }
+          }
+          break;
+
+        case MQTTC_STATE_DISCONNECTED:
+          // First time here after WiFi access is restored...
+          // Trigger state change to "ATTEMPTING_CONNECTION" to restart session
+          MqttcState = MQTTC_STATE_ATTEMPTING_CONNECTION;
+          MqttcReconnectStartTime = millis();
+          break;
+
+        default:
+          break;
+    }
   }
   else
   {
-    mqttClient.poll();
+    if(MqttcState == MQTTC_STATE_CONNECTED)
+    {
+      // WiFi dropped, so kill the dependent socket
+      if(useTLS)
+      {
+        SERIAL_PORT.println();
+        SERIAL_PORT.println("[MQTTC Manager] Interface reported DOWN. Dropping active MQTT session.");
+        mqttsClient.flush();
+        mqttsClient.stop();
+        MqttcState = MQTTC_STATE_DISCONNECTED;
+      }
+      else
+      {
+        SERIAL_PORT.println();
+        SERIAL_PORT.println("[MQTTC Manager] Interface reported DOWN. Dropping active MQTT session.");
+        mqttClient.flush();
+        mqttClient.stop();
+        MqttcState = MQTTC_STATE_DISCONNECTED;
+      }
+    }
   }
 }
 
-void mqttc_send_message(const char *pubTopic, char *jsonPubPayload)
+void mqttc_send_message(const char *pubTopic, char *pubPayload)
 {
   if(useTLS)
   {
-    mqttsClient.beginMessage(pubTopic, strlen(jsonPubPayload), retained, pubQoS, dup);
-    mqttsClient.print(jsonPubPayload);
+    mqttsClient.beginMessage(pubTopic, strlen(pubPayload), retained, pubQoS, dup);
+    mqttsClient.print(pubPayload);
     mqttsClient.endMessage();
-    //sprintf(mqttcOutBuffer, "pub topic: %s\tpayload: %s\r\n", outTopic, jsonPubPayload);
+    //sprintf(mqttcOutBuffer, "pub topic: %s\tpayload: %s\r\n", outTopic, pubPayload);
     //SERIAL_PORT.print(mqttcOutBuffer);
   }
   else
   {
-    mqttClient.beginMessage(pubTopic, strlen(jsonPubPayload), retained, pubQoS, dup);
-    mqttClient.print(jsonPubPayload);
+    mqttClient.beginMessage(pubTopic, strlen(pubPayload), retained, pubQoS, dup);
+    mqttClient.print(pubPayload);
     mqttClient.endMessage();
-    //sprintf(mqttcOutBuffer, "pub topic: %s\tpayload: %s\r\n", outTopic, jsonPubPayload);
+    //sprintf(mqttcOutBuffer, "pub topic: %s\tpayload: %s\r\n", outTopic, pubPayload);
     //SERIAL_PORT.print(mqttcOutBuffer);
   }
 }
 
-int mqttc_is_message_available(const char *subTopic)
+bool mqttc_is_message_available(const char *subTopic)
 {
   if(0 == strcmp(mqttcRxMessage.inTopic, subTopic))
   {
-    return 1;
+    return true;
   }
   else
   {
-    return 0;
+    return false;
   }
 }
 
@@ -348,79 +586,49 @@ char* mqttc_receive_message(void)
   return temp;
 }
 
-/*** Private Function Definitions *********************************************/
-
-void wifiConnect(void){
-    // attempt to connect to Wifi network:
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-    digitalWrite(MQTTC_STAT_LED_PIN, 0);
-    #endif
-    SERIAL_PORT.print("\nAttempting to connect to WPA SSID: ");
-    SERIAL_PORT.println(ssid);
-    while (WiFi.begin(ssid, passPhrase) != WL_CONNECTED) {
-        // failed, retry
-        SERIAL_PORT.print(".");
-        delay(1000);
-        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        digitalWrite(MQTTC_STAT_LED_PIN, 1);
-        delay(100);
-        digitalWrite(MQTTC_STAT_LED_PIN, 0);
-        delay(100);
-        #endif
-    }
-
-    // once you are connected :
-    WiFi.macAddress(macAddr);     // read/save the mac address of the radio
-    SERIAL_PORT.println("You're connected to the network");
+bool mqttc_is_connected(void)
+{
+  if(MqttcState == MQTTC_STATE_CONNECTED)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
-void mqttClientConnect(void){
+/*** Private Function Definitions *********************************************/
+
+bool mqttClientConnect(void){
     // attempt insecure connection to MQTT Broker
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-    digitalWrite(MQTTC_STAT_LED_PIN, 0);
-    #endif
     SERIAL_PORT.print("\nAttempting to connect to the MQTT broker: ");
     SERIAL_PORT.println(broker);
-    while(!mqttClient.connect(broker, port)){
+    int attempts = 0;
+    while((!mqttClient.connect(broker, port)) && attempts < 20)
+    {
         // failed, retry
         SERIAL_PORT.print(".");
         delay(500);
-        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        digitalWrite(MQTTC_STAT_LED_PIN, 1);
-        delay(100);
-        digitalWrite(MQTTC_STAT_LED_PIN, 0);
-        delay(100);
-        digitalWrite(MQTTC_STAT_LED_PIN, 1);
-        delay(100);
-        digitalWrite(MQTTC_STAT_LED_PIN, 0);
-        delay(100);
-        #endif
+        attempts++;
     }
-
-    // once you are connected :
-    SERIAL_PORT.println("You're connected to the MQTT broker!");
-    SERIAL_PORT.println();
-
+    if(mqttClient.connected())
+    {
+      SERIAL_PORT.println("You're connected to the MQTT broker!");
+      SERIAL_PORT.println();
+      MqttcState = MQTTC_STATE_CONNECTED;
+      return true;
+    }
+    else
+    {
+      SERIAL_PORT.println("\nMQTT Client Connection failed or timed out.");
+      MqttcState = MQTTC_STATE_DISCONNECTED;
+      return false;
+    }
 }
 
-void mqttClientDisconnect(void)
-{
-  // disconnect from the broker
-  mqttClient.flush();
-  mqttClient.stop();
-  // disconnect from WiFi AP
-  WiFi.end();
-  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-  // turn off CONNECTION led
-  digitalWrite(MQTTC_STAT_LED_PIN, 0);
-  #endif
-}
-
-void mqttsClientConnect(void){
+bool mqttsClientConnect(void){
     // attempt secure connection to MQTT Broker
-    #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-    digitalWrite(MQTTC_STAT_LED_PIN, 0);
-    #endif
     SERIAL_PORT.print("\nAttempting to connect to the MQTT broker: ");
     SERIAL_PORT.println(broker);
     // Select the correct server root CA certificate to use for the TLS connection
@@ -443,39 +651,28 @@ void mqttsClientConnect(void){
     }
     //secureWifiClient.setTrustAnchors(&cert);
     setClock();
-    while(!mqttsClient.connect(broker, port)){
+    int attempts = 0;
+    while((!mqttsClient.connect(broker, port)) && attempts < 20)
+    {
         // failed, retry
         SERIAL_PORT.print(".");
         delay(500);
-        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        digitalWrite(MQTTC_STAT_LED_PIN, 1);
-        delay(100);
-        digitalWrite(MQTTC_STAT_LED_PIN, 0);
-        delay(100);
-        digitalWrite(MQTTC_STAT_LED_PIN, 1);
-        delay(100);
-        digitalWrite(MQTTC_STAT_LED_PIN, 0);
-        delay(100);
-        #endif
+        attempts++;
+    }
+    if(mqttClient.connected())
+    {
+      SERIAL_PORT.println("You're connected to the MQTT broker!");
+      SERIAL_PORT.println();
+      MqttcState = MQTTC_STATE_CONNECTED;
+      return true;
+    }
+    else
+    {
+      SERIAL_PORT.println("\nMQTT Client Connection failed or timed out.");
+      MqttcState = MQTTC_STATE_DISCONNECTED;
+      return false;
     }
 
-    // once you are connected :
-    SERIAL_PORT.println("You're connected to the MQTT broker!");
-    SERIAL_PORT.println();
-
-}
-
-void mqttsClientDisconnect(void)
-{
-  // disconnect from the broker
-  mqttsClient.flush();
-  mqttsClient.stop();
-  // disconnect from WiFi AP
-  WiFi.end();
-  // turn off CONNECTION led
-  #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-  digitalWrite(MQTTC_STAT_LED_PIN, 0);
-  #endif
 }
 
 // Set time via NTP, as required for x.509 validation
@@ -531,154 +728,3 @@ void mqttsClientOnMessage(int messageSize) {
     //SERIAL_PORT.print(mqttcOutBuffer);
 }
 
-void connectionTasks(void)
-{
-  connStatusCurrentSampleTime = millis();               // get the current time
-  // if 10s has elapsed, check the status of both WiFi and TCP connection and reconnect if required
-  if ((connStatusCurrentSampleTime - connStatusPrevSampleTime) >= connStatusSampleInterval)
-  {
-    connStatusPrevSampleTime = connStatusCurrentSampleTime;
-    if(WiFi.status() == WL_CONNECTED)
-    {
-      SERIAL_PORT.println("WiFi Status: connected");
-      if(!mqttClient.connected())
-      {
-        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        digitalWrite(MQTTC_STAT_LED_PIN, 0);       // turn off CONNECT status LED
-        #endif
-        mqttClient.flush();
-        mqttClient.stop();
-        SERIAL_PORT.println("TCP Status: disconnected..attempting to reconnect");
-        // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
-        mqttClient.setId(clientID);
-        mqttClientConnect();
-        mqttClient.onMessage(mqttClientOnMessage);
-        // Subscribe to the topicID for all defined IN messages
-        if(subTopicSize)
-        {
-          for(int i=0; i < subTopicSize; i++)
-          {
-            SERIAL_PORT.print("Subscribing to topic: ");
-            SERIAL_PORT.println(subTopic[i]);
-            mqttClient.subscribe(subTopic[i], subQoS);
-            SERIAL_PORT.print("Waiting for messages on topic: ");
-            SERIAL_PORT.println(subTopic[i]);
-            SERIAL_PORT.println();
-          }
-        }
-        
-        connStatusPrevSampleTime = 0;
-        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        digitalWrite(MQTTC_STAT_LED_PIN, 1);       // turn on CONNECT status LED
-        #endif
-      }
-      else
-      {
-        SERIAL_PORT.println("TCP Status: connected");
-      }
-    }
-    else
-    {
-      SERIAL_PORT.println("WiFi Status: disconnected..attempting to reconnect WiFi annd TCP");
-      mqttClient.flush();
-      mqttClient.stop();
-      wifiConnect();
-      mqttClient.setId(clientID);
-      mqttClientConnect();
-      mqttClient.onMessage(mqttClientOnMessage);
-      if(subTopicSize)
-      {
-        for(int i=0; i < subTopicSize; i++)
-        {
-          SERIAL_PORT.print("Subscribing to topic: ");
-          SERIAL_PORT.println(subTopic[i]);
-          mqttClient.subscribe(subTopic[i], subQoS);
-          SERIAL_PORT.print("Waiting for messages on topic: ");
-          SERIAL_PORT.println(subTopic[i]);
-          SERIAL_PORT.println();
-        }
-      }
-      
-      connStatusPrevSampleTime = 0;
-      #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-      digitalWrite(MQTTC_STAT_LED_PIN, 1);
-      #endif
-    }
-  }
-}
-
-void connectionTasksSecure(void)
-{
-  connStatusCurrentSampleTime = millis();               // get the current time
-  // if 10s has elapsed, check the status of both WiFi and TCP connection and reconnect if required
-  if ((connStatusCurrentSampleTime - connStatusPrevSampleTime) >= connStatusSampleInterval)
-  {
-    connStatusPrevSampleTime = connStatusCurrentSampleTime;
-    if(WiFi.status() == WL_CONNECTED)
-    {
-      SERIAL_PORT.println("WiFi Status: connected");
-      if(!mqttsClient.connected())
-      {
-        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        digitalWrite(MQTTC_STAT_LED_PIN, 0);       // turn off CONNECT status LED
-        #endif
-        mqttsClient.flush();
-        mqttsClient.stop();
-        SERIAL_PORT.println("TCP Status: disconnected..attempting to reconnect");
-        // reconnect to the broker, using the same MQTT Client initialization as in mqttc_connect()..
-        mqttsClient.setId(clientID);
-        mqttsClientConnect();
-        mqttsClient.onMessage(mqttsClientOnMessage);
-        // Subscribe to the topicID for all defined IN messages
-        if(subTopicSize)
-        {
-          for(int i=0; i < subTopicSize; i++)
-          {
-            SERIAL_PORT.print("Subscribing to topic: ");
-            SERIAL_PORT.println(subTopic[i]);
-            mqttsClient.subscribe(subTopic[i], subQoS);
-            SERIAL_PORT.print("Waiting for messages on topic: ");
-            SERIAL_PORT.println(subTopic[i]);
-            SERIAL_PORT.println();
-          }
-        }
-        
-        connStatusPrevSampleTime = 0;
-        #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-        digitalWrite(MQTTC_STAT_LED_PIN, 1);       // turn on CONNECT status LED
-        #endif
-      }
-      else
-      {
-        SERIAL_PORT.println("TCP Status: connected");
-      }
-    }
-    else
-    {
-      SERIAL_PORT.println("WiFi Status: disconnected..attempting to reconnect WiFi annd TCP");
-      mqttsClient.flush();
-      mqttsClient.stop();
-      wifiConnect();
-      mqttsClient.setId(clientID);
-      mqttsClientConnect();
-      mqttsClient.onMessage(mqttsClientOnMessage);
-      if(subTopicSize)
-      {
-        for(int i=0; i < subTopicSize; i++)
-        {
-          SERIAL_PORT.print("Subscribing to topic: ");
-          SERIAL_PORT.println(subTopic[i]);
-          mqttsClient.subscribe(subTopic[i], subQoS);
-          SERIAL_PORT.print("Waiting for messages on topic: ");
-          SERIAL_PORT.println(subTopic[i]);
-          SERIAL_PORT.println();
-        }
-      }
-      
-      connStatusPrevSampleTime = 0;
-      #if defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(ARDUINO_SPARKFUN_XRP_CONTROLLER)
-      digitalWrite(MQTTC_STAT_LED_PIN, 1);
-      #endif
-    }
-  }
-}
