@@ -3,7 +3,7 @@
  *
  * File:            network_interface.h
  * Project:         
- * Date:            June 07, 2026
+ * Date:            July 24, 2026
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -32,6 +32,7 @@
 /*** Custom Data Types ********************************************************/
 struct NETWORK_INTERFACE
 {
+  void (*initialize)(void);                   // Initialize LittleFS and I/O pins
   bool (*connect)(void);                      // Attempt to connect using saved WiFi credentials from file
   void (*provision)(void);                    // (Blocking) Execute WiFI Provisioning service on 192.168.4.1
   void (*tasks)(void);                        // Network Manager: Monitors/updates WiFi connection state, and attempts to re-connect using stored parameters if needed
@@ -39,6 +40,7 @@ struct NETWORK_INTERFACE
   bool (*is_ready)(void);                     // Is the WiFi STA connected to the AP?
   char* (*get_IPAddr)(void);                  // Returns a pointer to the WiFi STA IP Address as a C string
   void (*reset_connection)(void);             // Deletes "wifi_cred.txt" and reboots the system
+  void (*clear_credentials)(void);            // Deletes "wifi_cred.txt" only
 };
 
 /*** Public Function Prototypes ***********************************************/

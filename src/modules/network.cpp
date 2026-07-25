@@ -3,7 +3,7 @@
  *
  * File:            network.cpp
  * Project:         
- * Date:            June 07, 2026
+ * Date:            July 24, 2026
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -92,12 +92,14 @@ const String logo_base64 = "iVBORw0KGgoAAAANSUhEUgAABIgAAAEsCAYAAAComYicAAAACXBI
 
 // define the function interface
 extern const struct NETWORK_INTERFACE NETWORK = {
+    .initialize               = &network_initialize,
     .connect                  = &network_connect,
     .provision                = &network_provision,
     .tasks                    = &network_tasks,
     .is_ready                 = &network_is_ready,
     .get_IPAddr               = &network_get_IPAddr,
     .reset_connection         = &network_reset_connection,
+    .clear_credentials        = &network_clear_credentials,
 };
 
 // network manager variables
@@ -136,7 +138,7 @@ static void nmStartConnection(void);
 
 /*** Public Function Definitions **********************************************/
 
-bool network_connect(void)
+void network_initialize(void)
 {
   // initialize STATUS LED and RESET BUTTON
   pinMode(RESET_BUTTON_PIN, INPUT_PULLUP);
@@ -146,7 +148,9 @@ bool network_connect(void)
   digitalWrite(NETWORK_STAT_LED_PIN, 0);     // initialize LED state
 
   LittleFS.begin();
-
+}
+bool network_connect(void)
+{
   // attempt to connect to AP using stored credentials...
   if(loadSavedWiFi())
   {
@@ -338,6 +342,16 @@ void network_reset_connection(void)
   SERIAL_PORT.println("[Network Manager] Deleting saved WiFi Credentials...and Rebooting!");
   delay(1000);
   watchdog_reboot(0, 0, 0);
+}
+
+void network_clear_credentials(void)
+{
+  if (LittleFS.exists(config_file)) {
+    LittleFS.remove(config_file);
+  }
+  SERIAL_PORT.println();
+  SERIAL_PORT.println("[Network Manager] Deleting saved WiFi Credentials!");
+  delay(1000);
 }
 
 /*** Private Function Definitions *********************************************/

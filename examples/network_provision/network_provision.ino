@@ -17,7 +17,10 @@
   - The web home page scans for local WiFi networks when loading
   - Select a network from the pull-down menu, enter the passphrase, them press "Connect Robot"
 
-  NOTE: To re-scan local WiFi networks, simply refresh your browser at any time
+  NOTEs:
+  - To force the provisioning server to re-scan local WiFi networks, simply refresh your browser at any time
+  - The stored WiFi credentials are erased on reset if the USER SWITCH is pressed. This allows you to change networks
+    without uploading a new sketch!
   
   Hardware Configurations Supported:
 
@@ -35,7 +38,7 @@
         Serial Monitor may be used at all times to display WiFi Provisioning status
   
 
-  updated 07 Jun 2026
+  updated 24 July 2026
   by dBm Signal Dynamics Inc.
 
 */
@@ -52,12 +55,17 @@ void setup() {
   Serial.begin(115200);
   while(!Serial);
   myRobot->board->initialize();
-  myRobot->board->led_pattern(ledPattern);
+  myRobot->network->initialize();
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
   }
   Serial.printf("Local IP Address: %s\r\n", myRobot->network->get_IPAddr());
+  myRobot->board->led_pattern(ledPattern);
 }
 
 // the loop function runs over and over again forever

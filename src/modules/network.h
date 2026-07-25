@@ -3,7 +3,7 @@
  *
  * File:            network.h
  * Project:         
- * Date:            June 07, 2026
+ * Date:            July 24, 2026
  * Framework:       Arduino w. Arduino-Pico Core Pkge by Earl Philhower
  *                  (https://github.com/earlephilhower/arduino-pico)
  * 
@@ -61,6 +61,7 @@ typedef enum {
 } NetworkState_t;
 
 /*** Public Function Prototypes ***********************************************/
+void network_initialize(void);        // Initialize LittleFS and I/O pins
 bool network_connect(void);           // Attempt to connect using saved WiFi credentials from file
 void network_provision(void);         // (Blocking) Execute WiFI Provisioning service on 192.168.4.1
 void network_tasks(void);             // Network Manager: Monitors/updates WiFi connection state, and attempts to re-connect using stored parameters if needed
@@ -68,5 +69,6 @@ void network_tasks(void);             // Network Manager: Monitors/updates WiFi 
 bool network_is_ready(void);          // Is the WiFi STA connected to the AP?
 char* network_get_IPAddr(void);       // Returns a pointer to the WiFi STA IP Address as a C string
 void network_reset_connection(void);  // Deletes "wifi_cred.txt" and reboots the system
+void network_clear_credentials(void); // Deletes "wifi_cred.txt" only
 
 #endif /* NETWORK_H_ */

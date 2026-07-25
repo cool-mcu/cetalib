@@ -24,11 +24,83 @@ For detailed lessons covering WiFi networking concepts, schematics, and step-by-
 
 ## Methods:
 
+* [initialize()](#void-initializevoid)
 * [connect()](#bool-connectvoid)
 * [provision()](#void-provisionvoid)
 * [tasks()](#void-tasksvoid)
 * [is_ready()](#bool-is_readyvoid)
 * [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
+* [reset_connection()](#void-reset_connectionvoid)
+
+## `void initialize(void)`
+
+Initializes the LittleFS and I/O pins needed for the module
+
+### Syntax
+
+```c
+myRobot->network->initialize();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* Use this method in setup() before calling any other network methods
+
+### Example
+
+```c
+// Initialize the "network" module
+// Attempt to connect to the saved network
+// Launch the provisioning server if connection fails
+
+#include <cetalib.h>
+
+// define & initialize a pointer to the CETALIB functions
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+int ledPattern = 1;   // USER LED heartbeat pattern
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  myRobot->board->initialize();
+  myRobot->network->initialize();
+  // attempt to connect using stored credentials
+  if (!myRobot->network->connect())
+  {
+    // could not connect to WiFi, so run the provisioning service
+    myRobot->network->provision();
+  }
+  Serial.printf("Connected to WiFi! Local IP Address: %s\r\n", myRobot->network->get_IPAddr());
+  myRobot->board->led_pattern(ledPattern);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  myRobot->network->tasks();  // Monitor WiFi connection and USER SWITCH
+                              // Press/hold the USER SWITCH for 3 seconds to trigger the provisioning service again
+  myRobot->board->tasks();    // Execute USER LED blink pattern                
+}
+```
+
+### See also
+
+* [initialize()](#void-initializevoid)
+* [connect()](#bool-connectvoid)
+* [provision()](#void-provisionvoid)
+* [tasks()](#void-tasksvoid)
+* [is_ready()](#bool-is_readyvoid)
+* [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
 * [reset_connection()](#void-reset_connectionvoid)
 
 ## `bool connect(void)`
@@ -102,11 +174,13 @@ void loop() {
 
 ### See also
 
+* [initialize()](#void-initializevoid)
 * [connect()](#bool-connectvoid)
 * [provision()](#void-provisionvoid)
 * [tasks()](#void-tasksvoid)
 * [is_ready()](#bool-is_readyvoid)
 * [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
 * [reset_connection()](#void-reset_connectionvoid)
 
 ## `void provision(void)`
@@ -182,11 +256,13 @@ void loop() {
 
 ### See also
 
+* [initialize()](#void-initializevoid)
 * [connect()](#bool-connectvoid)
 * [provision()](#void-provisionvoid)
 * [tasks()](#void-tasksvoid)
 * [is_ready()](#bool-is_readyvoid)
 * [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
 * [reset_connection()](#void-reset_connectionvoid)
 
 ## `void tasks(void)`
@@ -249,11 +325,13 @@ void loop() {
 
 ### See also
 
+* [initialize()](#void-initializevoid)
 * [connect()](#bool-connectvoid)
 * [provision()](#void-provisionvoid)
 * [tasks()](#void-tasksvoid)
 * [is_ready()](#bool-is_readyvoid)
 * [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
 * [reset_connection()](#void-reset_connectionvoid)
 
 ## `bool is_ready(void)`
@@ -326,11 +404,13 @@ void loop() {
 
 ### See also
 
+* [initialize()](#void-initializevoid)
 * [connect()](#bool-connectvoid)
 * [provision()](#void-provisionvoid)
 * [tasks()](#void-tasksvoid)
 * [is_ready()](#bool-is_readyvoid)
 * [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
 * [reset_connection()](#void-reset_connectionvoid)
 
 ## `const char* getIPAddr(void)`
@@ -407,11 +487,84 @@ void loop() {
 
 ### See also
 
+* [initialize()](#void-initializevoid)
 * [connect()](#bool-connectvoid)
 * [provision()](#void-provisionvoid)
 * [tasks()](#void-tasksvoid)
 * [is_ready()](#bool-is_readyvoid)
 * [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
+* [reset_connection()](#void-reset_connectionvoid)
+
+## `void clear_credentials(void)`
+
+Deletes existing WiFi credentials. Can be used to trigger the provisioning server
+during **setup()**.
+
+### Syntax
+
+```c
+myRobot->network->clear_credentials();
+```
+### Parameters
+
+* None.
+
+### Returns
+
+* None.
+
+### Notes
+
+* Use in **setup()** to erase existing credentials with switch press.
+
+### Example
+
+```c
+// Delete existing WiFi credentials if USER SWITCH is pressed upon RESET
+// Will trigger provisioning service in setup()
+
+#include <cetalib.h>
+
+// define & initialize a pointer to the CETALIB functions
+const struct CETALIB_INTERFACE *myRobot = &CETALIB;
+
+int ledPattern = 1;   // USER LED heartbeat pattern
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  myRobot->board->initialize();
+  myRobot->network->initialize();
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
+  if (!myRobot->network->connect())
+  {
+    myRobot->network->provision();
+  }
+  Serial.printf("Local IP Address: %s\r\n", myRobot->network->get_IPAddr());
+  myRobot->board->led_pattern(ledPattern);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  myRobot->network->tasks(); // Monitor WiFi connection
+  myRobot->board->tasks();   // Execute USER LED blink pattern                
+}
+```
+
+### See also
+
+* [initialize()](#void-initializevoid)
+* [connect()](#bool-connectvoid)
+* [provision()](#void-provisionvoid)
+* [tasks()](#void-tasksvoid)
+* [is_ready()](#bool-is_readyvoid)
+* [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
 * [reset_connection()](#void-reset_connectionvoid)
 
 ## `void reset_connection(void)`
@@ -438,7 +591,7 @@ myRobot->network->reset_connection();
 ### Example
 
 ```c
-// Delete existing WiFi credentials and reboot if USER SWITCH is pressed
+// Delete existing WiFi credentials AND reboot if USER SWITCH is pressed
 // Will trigger provisioning service in setup()
 
 #include <cetalib.h>
@@ -472,9 +625,11 @@ void loop() {
 
 ### See also
 
+* [initialize()](#void-initializevoid)
 * [connect()](#bool-connectvoid)
 * [provision()](#void-provisionvoid)
 * [tasks()](#void-tasksvoid)
 * [is_ready()](#bool-is_readyvoid)
 * [getIPAddr()](#const-char-getipaddrvoid)
+* [clear_credentials()](#void-clear_credentialsvoid)
 * [reset_connection()](#void-reset_connectionvoid)
