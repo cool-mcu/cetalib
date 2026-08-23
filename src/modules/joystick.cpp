@@ -119,7 +119,7 @@ bool joystick_init(void)
   
   // Start the UDP Server
   SERIAL_PORT.println();
-  SERIAL_PORT.print("UDP server started on port ");
+  SERIAL_PORT.print("Joystick UDP server started on port ");
   SERIAL_PORT.println(localPort);
   joystickUdpServer.begin(localPort);
   joystickState = JOYSTICK_STATE_SERVER_IS_UP;

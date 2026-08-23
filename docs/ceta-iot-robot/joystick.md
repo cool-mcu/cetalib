@@ -59,7 +59,12 @@ void setup() {
   Serial.begin(115200);
   delay(5000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -71,20 +76,15 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->joystick->tasks(); // capture gamepad data
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->joystick->tasks(); // Capture gamepad data
 }
 ```
 
@@ -136,7 +136,12 @@ void setup() {
   Serial.begin(115200);
   delay(5000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -148,21 +153,16 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->joystick->tasks(); // scan/capture gamepad data if available
-  if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->joystick->tasks(); // Scan/capture gamepad data if available
+  if(myRobot->joystick->is_active())  // Process joystick data if active
   {
     Serial.println("Received joystick data");
   }     
@@ -205,6 +205,8 @@ myRobot->joystick->is_active();
 
 ```c++
 // Initialize the joystick module, then receive messages.
+// Examine Serial messages to obtain your robot's IP address.
+// Run "cetalib-joystick-client.py" on the host PC to test this sketch.
 // Prints a status message whenever a gamepad packet is received.
 
 #include <cetalib.h>
@@ -215,7 +217,12 @@ void setup() {
   Serial.begin(115200);
   delay(5000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -227,21 +234,16 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->joystick->tasks(); // scan/capture gamepad data if available
-  if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->joystick->tasks(); // Scan/capture gamepad data if available
+  if(myRobot->joystick->is_active())  // Process joystick data if active
   {
     Serial.println("Received joystick data");
   }     
@@ -320,7 +322,7 @@ joystick_data->isBackPressed;   // bool: Back button status
 ### Example
 
 ```c++
-// Monitors Action buttons "A" and B" to control the USER LED
+// Monitors Joystick "Action" buttons "A" and B" to control the USER LED
 
 #include <cetalib.h>
 
@@ -332,7 +334,12 @@ void setup() {
   Serial.begin(115200);
   delay(5000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -344,24 +351,19 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();          // manage WiFi connection
-  myRobot->joystick->tasks();         // run the task that captures gamepad data 
-  myRobot->board->tasks();            // run the task that maintains USER LED state
-  if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
+  myRobot->network->tasks();          // Manage WiFi connection
+  myRobot->joystick->tasks();         // Run the task that captures gamepad data 
+  myRobot->board->tasks();            // Run the task that maintains USER LED state
+  if(myRobot->joystick->is_active())  // If there's new gamepad data available, process it
   {
-    joystick_data = myRobot->joystick->get_data(); // point to the latest gamepad data
+    joystick_data = myRobot->joystick->get_data(); // Point to the latest gamepad data
     if (joystick_data->actionButtons.isAPressed)
     {
       Serial.printf("Action A is Pressed. Turning USER LED ON\r\n");
@@ -425,14 +427,19 @@ myRobot->diffDrive->set_efforts(leftEffort, rightEffort);
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
-GAMEPAD* joystick_data; // define a pointer to the captured gamepad data
-float leftDriveEffort, rightDriveEffort; // motor effort parameters
+GAMEPAD* joystick_data; // Define a pointer to the captured gamepad data
+float leftDriveEffort, rightDriveEffort; // Motor effort parameters
 
 void setup() {
   Serial.begin(115200);
   delay(5000);
-  myRobot->diffDrive->initialize(false, false); // adjust parameters for forward motion
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->diffDrive->initialize(false, false); // Adjust parameters for forward motion
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -444,28 +451,22 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();          // manage WiFi connection
-  myRobot->joystick->tasks();         // run the task that captures gamepad data
+  myRobot->network->tasks();          // Manage WiFi connection
+  myRobot->joystick->tasks();         // Run the task that captures gamepad data
   if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
   {
-    leftDriveEffort = myRobot->joystick->get_left_tank_effort();    // read/format leftStickY
-    rightDriveEffort = myRobot->joystick->get_right_tank_effort();  // read/format rightStickY
+    leftDriveEffort = myRobot->joystick->get_left_tank_effort();    // Read/format leftStickY
+    rightDriveEffort = myRobot->joystick->get_right_tank_effort();  // Read/format rightStickY
     myRobot->diffDrive->set_efforts(leftDriveEffort, rightDriveEffort);
   }                    
 }
-
 ```
 
 ### See also
@@ -517,14 +518,19 @@ myRobot->diffDrive->set_efforts(leftEffort, rightEffort);
 
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;
 
-GAMEPAD* joystick_data; // define a pointer to the captured gamepad data
-float leftDriveEffort, rightDriveEffort; // motor effort parameters
+GAMEPAD* joystick_data; // Define a pointer to the captured gamepad data
+float leftDriveEffort, rightDriveEffort; // Motor effort parameters
 
 void setup() {
   Serial.begin(115200);
   delay(5000);
-  myRobot->diffDrive->initialize(false, false); // adjust parameters for forward motion
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->diffDrive->initialize(false, false); // Adjust parameters for forward motion
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -536,28 +542,22 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();          // manage WiFi connection
-  myRobot->joystick->tasks();         // run the task that captures gamepad data
-  if(myRobot->joystick->is_active())  // if there's new gamepad data available, process it
+  myRobot->network->tasks();          // Manage WiFi connection
+  myRobot->joystick->tasks();         // Run the task that captures gamepad data
+  if(myRobot->joystick->is_active())  // If there's new gamepad data available, process it
   {
-    leftDriveEffort = myRobot->joystick->get_arcade_throttle_effort();    // read/format leftStickY
-    rightDriveEffort = myRobot->joystick->get_arcade_turn_effort();       // read/format rightStickX
+    leftDriveEffort = myRobot->joystick->get_arcade_throttle_effort();    // Read/format leftStickY
+    rightDriveEffort = myRobot->joystick->get_arcade_turn_effort();       // Read/format rightStickX
     myRobot->diffDrive->set_efforts(leftDriveEffort, rightDriveEffort);
   }                    
 }
-
 ```
 
 ### See also

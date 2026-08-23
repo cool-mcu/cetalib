@@ -52,7 +52,7 @@ myRobot->mqttc->connect(...);
 
 ```c
 // Provision a WiFi connection (if needed), then
-// Connect to the public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection.
+// Connect to the public Mosquitto Broker (broker.emqx.io), then simply maintain the connection.
 // Publish and subscribe topic variables are defined but not used.
 // Look for messages on the Serial port to confirm connection success.
 
@@ -63,7 +63,7 @@ myRobot->mqttc->connect(...);
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;            
 
 // MQTT Broker URL, Username, Password
-const char MQTTbroker[] = "test.mosquitto.org";
+const char MQTTbroker[] = "broker.emqx.io";
 int MQTTport = 1883;    // EDIT: 1883 for open connection, or 8883 for secure connection
 const char MQTTusername[] = "";
 const char MQTTpassword[] = "";
@@ -81,7 +81,12 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -89,24 +94,19 @@ void setup() {
   // Attempt to connect to the MQTT Broker
   if (!myRobot->mqttc->connect(MQTTbroker, MQTTport, MQTTusername, MQTTpassword, subscribeTopicIDs, num_subscribeTopicIDs))
   {
-    Serial.println("Failed to initialize MQTT Client!. Stopping.");
+    Serial.println("Failed to initialize MQTT Client!");
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->mqttc->tasks();    // manage MQTT client connection
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->mqttc->tasks();    // Manage MQTT client connection
 }
 ```
 
@@ -144,7 +144,7 @@ myRobot->mqttc->tasks();
 ### Example
 
 ```c
-// Connect to the Public Mosquitto Broker (test.mosquitto.org), then simply maintain the connection by calling the "tasks()" function
+// Connect to the Public Mosquitto Broker (broker.emqx.io), then simply maintain the connection by calling the "tasks()" function
 
 // THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
 
@@ -153,7 +153,7 @@ myRobot->mqttc->tasks();
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;            
 
 // MQTT Broker URL, Username, Password
-const char MQTTbroker[] = "test.mosquitto.org";
+const char MQTTbroker[] = "broker.emqx.io";
 int MQTTport = 1883;    // EDIT: 1883 for open connection, or 8883 for secure connection
 const char MQTTusername[] = "";
 const char MQTTpassword[] = "";
@@ -171,7 +171,12 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -183,20 +188,15 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->mqttc->tasks();    // manage MQTT client connection
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->mqttc->tasks();    // Manage MQTT client connection
 }
 ```
 
@@ -236,7 +236,7 @@ if (myRobot->mqttc->is_connected())
 ### Example
 
 ```c
-// Connect to the Public Mosquitto Broker (test.mosquitto.org), then publish a counter value every time the button is pressed, as long as the connection is valid.
+// Connect to the Public Mosquitto Broker (broker.emqx.io), then publish a counter value every time the button is pressed, as long as the connection is valid.
 // Run the MQTTX MQTT Client App or the IoT MQTT Panel App to subscribe/view the data.
 
 // THIS BROKER IS A PUBLIC SERVICE. DO NOT SHARE SENSITIVE DATA
@@ -247,7 +247,7 @@ if (myRobot->mqttc->is_connected())
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;            
 
 // MQTT Broker URL, Username, Password
-const char MQTTbroker[] = "test.mosquitto.org";
+const char MQTTbroker[] = "broker.emqx.io";
 int MQTTport = 1883;    // EDIT: 1883 for open connection, or 8883 for secure connection
 const char MQTTusername[] = "";
 const char MQTTpassword[] = "";
@@ -269,7 +269,12 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -281,22 +286,17 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->mqttc->tasks();    // manage MQTT client connection
-  myRobot->board->tasks();    // manage USER LED and USER SWITCH
-  // publish data to the broker if connected
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->mqttc->tasks();    // Manage MQTT client connection
+  myRobot->board->tasks();    // Manage USER LED and USER SWITCH
+  // Publish data to the broker if connected
   if(myRobot->mqttc->is_connected())
   {
     if(myRobot->board->is_button_pressed())
@@ -343,7 +343,7 @@ myRobot->mqttc->send_message(pubTopic, pubPayload);
 ### Example
 
 ```c
-// Connect to the Public Mosquitto Broker (test.mosquitto.org),
+// Connect to the Public Mosquitto Broker (broker.emqx.io),
 // Then publish a JSON formatted C string every time the button is pressed
 // Run the MQTTX MQTT Client App or the IoT MQTT Panel App to subscribe/view the data.
 
@@ -355,7 +355,7 @@ myRobot->mqttc->send_message(pubTopic, pubPayload);
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;            
 
 // MQTT Broker URL, Username, Password
-const char MQTTbroker[] = "test.mosquitto.org";
+const char MQTTbroker[] = "broker.emqx.io";
 int MQTTport = 1883;    // EDIT: 1883 for open connection, or 8883 for secure connection
 const char MQTTusername[] = "";
 const char MQTTpassword[] = "";
@@ -377,7 +377,12 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -389,22 +394,17 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->mqttc->tasks();    // manage MQTT client connection
-  myRobot->board->tasks();    // manage USER LED and USER SWITCH
-  // publish data to the broker if connected
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->mqttc->tasks();    // Manage MQTT client connection
+  myRobot->board->tasks();    // Manage USER LED and USER SWITCH
+  // Publish data to the broker if connected
   if(myRobot->mqttc->is_connected())
   {
     if(myRobot->board->is_button_pressed())
@@ -459,7 +459,7 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 ### Example
 
 ```c
-// Connect to the Public Mosquitto Broker (test.mosquitto.org)
+// Connect to the Public Mosquitto Broker (broker.emqx.io)
 // Define an "led Control" subscription topic and payload buffer
 // Print received messages to the Serial port
 // Publish a counter value when the USER SWITCH is pressed
@@ -473,7 +473,7 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;            
 
 // MQTT Broker URL, Username, Password
-const char MQTTbroker[] = "test.mosquitto.org";
+const char MQTTbroker[] = "broker.emqx.io";
 int MQTTport = 1883;    // EDIT: 1883 for open connection, or 8883 for secure connection
 const char MQTTusername[] = "";
 const char MQTTpassword[] = "";
@@ -497,7 +497,12 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -509,31 +514,26 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->mqttc->tasks();    // manage MQTT client connection
-  myRobot->board->tasks();    // manage USER LED and USER SWITCH
-  // exchange data with the broker if connected
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->mqttc->tasks();    // Manage MQTT client connection
+  myRobot->board->tasks();    // Manage USER LED and USER SWITCH
+  // Exchange data with the broker if connected
   if(myRobot->mqttc->is_connected())
   {
-    // send data if ready
+    // Send data if ready
     if(myRobot->board->is_button_pressed())
     {
       sprintf(pubPayload, "{\"robotCount\": %d}", robotCount++);
       myRobot->mqttc->send_message(counterTopic, pubPayload);
     }
-    // receive data if available
+    // Receive data if available
     if (myRobot->mqttc->is_message_available(ledControlTopic))
     {
       strcpy(subPayload, myRobot->mqttc->receive_message());
@@ -585,7 +585,7 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 ### Example
 
 ```c
-// Connect to the Public Mosquitto Broker (test.mosquitto.org)
+// Connect to the Public Mosquitto Broker (broker.emqx.io)
 // Define an "led Control" subscription topic and payload buffer
 // Print received messages to the Serial port
 // Publish a counter value when the USER SWITCH is pressed
@@ -599,7 +599,7 @@ if (myRobot->mqttc->is_message_available("CETAIoTRobot/in/ledControl"))
 const struct CETALIB_INTERFACE *myRobot = &CETALIB;            
 
 // MQTT Broker URL, Username, Password
-const char MQTTbroker[] = "test.mosquitto.org";
+const char MQTTbroker[] = "broker.emqx.io";
 int MQTTport = 1883;    // EDIT: 1883 for open connection, or 8883 for secure connection
 const char MQTTusername[] = "";
 const char MQTTpassword[] = "";
@@ -623,7 +623,12 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
   myRobot->board->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     myRobot->network->provision();
@@ -635,31 +640,26 @@ void setup() {
     myRobot->board->led_blink(10);
     while (1)
     {
-      // blink the USER LED to indicate error
+      // Blink the USER LED to indicate error
       myRobot->board->tasks();
-      // sample the USER SWITCH to reset WiFi credentials and reboot 
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
 }
 
 void loop() {
-  myRobot->network->tasks();  // manage WiFi connection
-  myRobot->mqttc->tasks();    // manage MQTT client connection
-  myRobot->board->tasks();    // manage USER LED and USER SWITCH
-  // exchange data with the broker if connected
+  myRobot->network->tasks();  // Manage WiFi connection
+  myRobot->mqttc->tasks();    // Manage MQTT client connection
+  myRobot->board->tasks();    // Manage USER LED and USER SWITCH
+  // Exchange data with the broker if connected
   if(myRobot->mqttc->is_connected())
   {
-    // send data if ready
+    // Send data if ready
     if(myRobot->board->is_button_pressed())
     {
       sprintf(pubPayload, "{\"robotCount\": %d}", robotCount++);
       myRobot->mqttc->send_message(counterTopic, pubPayload);
     }
-    // receive data if available
+    // Receive data if available
     if (myRobot->mqttc->is_message_available(ledControlTopic))
     {
       strcpy(subPayload, myRobot->mqttc->receive_message());

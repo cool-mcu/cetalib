@@ -81,7 +81,12 @@ void setup() {
   delay(2000);
   myRobot->board->initialize();
   myRobot->reflectance->initialize();
-  // Attempt to connect to WiFi AP using existing credentials, or provision a new WiFi Connection
+  myRobot->network->initialize();
+  // Provision the WiFi connection
+  if (0 == myRobot->board->get_button_level())
+  {
+    myRobot->network->clear_credentials();
+  }
   if (!myRobot->network->connect())
   {
     Serial.println("Failed to connect to AP. WiFi provisioning started...");
@@ -93,19 +98,11 @@ void setup() {
   {
     Serial.println();
     Serial.println("Failed to initialize MQTT Client!");
-    Serial.println("- Update Broker Address, or");
-    Serial.println("- Press BUTTON to switch WiFi Network, or");
-    Serial.println("- Update sketch: Call 'network->connect()' and 'network->provision()' before calling 'mqttc->connect()'");
     myRobot->board->led_blink(10);
     while (1)
     {
       // blink the USER LED to indicate joystick error
       myRobot->board->tasks();
-      // sample USER SWITCH to reset WiFi credentials and reboot
-      if(myRobot->board->is_button_pressed())
-      {
-        myRobot->network->reset_connection();
-      }
     }
   }
   Serial.println("\nConnected to the Broker...\n");
