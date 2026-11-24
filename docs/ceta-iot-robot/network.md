@@ -267,7 +267,11 @@ void loop() {
 
 ## `void tasks(void)`
 
-Monitors/updates WiFi connection state, and attempts to re-connect using stored parameters if needed. Also monitors the USER SWITCH - if pressed for 3 seconds, deletes WiFI credentials and reboots system (ensure that **provision()** is called in **setup()** to capture new WiFi credentials).
+Monitors/updates WiFi connection state, and attempts to re-connect using stored parameters if needed.
+
+Also monitors the USER SWITCH to update WiFi access point credentials.
+
+Press/Hold the USER SWITCH until the USER LED starts blinking at 10x per second, then release the USER SWITCH. The current WiFi credentials are then deleted, and the robot sketch is restarted. Ensure that the **connect()** and **provision()** functions are called in **setup()** as shown below to trigger the WiFi provisioning server after reboot.
 
 ### Syntax
 

@@ -21,7 +21,11 @@ This Python script captures raw HID reports from a **Logitech F310 Gamepad** and
 ### 2. Create a Virtual Environment
 Isolating dependencies is recommended to keep your system Python clean.
 
-Navigate to the folder containing the "cetalib-joystick-client.py" python script, then enter the following:
+Navigate to the cetalib library sub-folder containing the "cetalib-joystick-client.py" python script:
+
+cd "../sketches/libraries/cetalib-1.x.y/utilities/joystick"
+
+then enter the following:
 
 Windows 11 (PowerShell/CMD):
 * python -m venv .venv

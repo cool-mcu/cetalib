@@ -29,6 +29,7 @@
 #include <LittleFS.h>
 #include <string.h>
 #include "network.h"
+#include "board.h"
 
 // Sanity check: Ensure a filesystem partition has been allocated in the IDE Tools menu
 #if defined(FS_START) && defined(FS_END)
@@ -632,6 +633,13 @@ void checkResetButton(void) {
       if (LittleFS.exists(config_file)) {
         LittleFS.remove(config_file);
       }
+      digitalWrite(NETWORK_STAT_LED_PIN, 0);
+      board_led_blink(10);
+      while(!digitalRead(RESET_BUTTON_PIN))
+      {
+        board_tasks();
+      }
+      board_led_off();
       SERIAL_PORT.printf("\r\nDeleting saved WiFi Credentials...and Rebooting!\r\n");
       delay(1000);
       watchdog_reboot(0, 0, 0);
